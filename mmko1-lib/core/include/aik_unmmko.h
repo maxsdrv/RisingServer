@@ -32,6 +32,8 @@ public:
     {
         return unmmko1_pack_cw(_addr, _rx_tx, _subaddr, _word_count);
     }
+/* Self-control and testing */
+    bool self_test();
 private:
     class PrivateData; //PIMPL
     std::unique_ptr<PrivateData> m_data; //pointer on class PIMPL

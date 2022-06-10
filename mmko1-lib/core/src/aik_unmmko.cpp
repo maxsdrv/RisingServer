@@ -1,20 +1,27 @@
 #include "aik_unmmko.h"
-#include "common.h"
+#include "UpdateCommon.h"
 
 class AikMmkoInterface::PrivateData
 {
 public:
+    PrivateData();
+public:
+    ViSession m_session; //Mezonin session ID
+    ViStatus m_status;
     static const int NO_SWD = 0xFF;
+    bool base_bus; //current line by MKO
 private:
-    //current line by MKO
-    bool base_bus;
 };
+AikMmkoInterface::PrivateData::PrivateData() : base_bus(true), m_session(0),
+                                               m_status(VI_SUCCESS)
+{
+    std::cout << std::string(__FUNCTION__ ) << std::endl;
+}
 
-AikMmkoInterface::AikMmkoInterface(CARD_NUM card, CORE_NUM core)
+AikMmkoInterface::AikMmkoInterface()
     : m_data(std::make_unique<PrivateData>())
 {
-    /* m_data->m_session = 0; //example PIMPL work */
-
+    std::cout << std::string(__FUNCTION__ ) << std::endl;
 }
 AikMmkoInterface::~AikMmkoInterface()
 {
@@ -23,14 +30,6 @@ AikMmkoInterface::~AikMmkoInterface()
 
 bool AikMmkoInterface::self_test()
 {
-    ViStatus status = VI_SUCCESS;
-    std::string software_version;
-    std::string hardware_version;
-    int16_t result_code;
-    std::string message;
-
-
-    return false;
 }
 
 

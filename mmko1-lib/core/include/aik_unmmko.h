@@ -22,7 +22,7 @@ struct AB_PARAMS
 class AikMmkoInterface
 {
 public:
-    explicit AikMmkoInterface(CARD_NUM card, CORE_NUM core);
+    explicit AikMmkoInterface();
     ~AikMmkoInterface();
 
 /* methods of working with mmko1*/

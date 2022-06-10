@@ -9,7 +9,8 @@
 int main(int argc, char *argv[])
 {
     std::cout << "Test MMKO1: " << std::endl;
-    AikMmkoInterface aik_test {static_cast<CARD_NUM>(1), static_cast<CORE_NUM>(1)}; /* declare instance MMKO
+    AikMmkoInterface aik_test {};
+    /*AikMmkoInterface aik_test {static_cast<CARD_NUM>(1), static_cast<CORE_NUM>(1)};*/ /* declare instance MMKO
                                                                                       * with parameters*/
 
     /*ViStatus status = VI_SUCCESS;

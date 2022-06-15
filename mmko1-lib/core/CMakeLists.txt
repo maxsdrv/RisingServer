@@ -11,6 +11,6 @@ include_directories(include/ enums/ $ENV{HOME}../../usr/local/vxipnp/linux/unmmk
 
 file(GLOB_RECURSE SOURCE ./src/*.cpp)
 
-add_executable(${PROJECT_NAME} ${SOURCE} main.cpp include/UpdateCommon.h)
+add_executable(${PROJECT_NAME} ${SOURCE} main.cpp)
 
 target_link_libraries(mmko1 libunmmko1.so libunmbase.so libvisa.so)

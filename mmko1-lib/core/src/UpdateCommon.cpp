@@ -162,7 +162,70 @@ void UpdateCommon::close_device() const
     if (VI_SUCCESS == found)
         return;
 }
-void UpdateCommon::print_message(ViUInt32 messages_count, unmmko1_message* messages) const
+void UpdateCommon::print_message(ViUInt32 messages_count, unmmko1_message *messages) const
 {
+    ViUInt32 message_index = 0;
+    for (message_index = 0; message_index < messages_count; ++message_index)
+    {
+        ViUInt16 data_word_index = 0;
+        unmmko1_message message = messages[message_index];
+        uint64_t timestamp = (((uint64_t) message.timestamp_high) << 32) + message.timestamp_low;
+        printf("%llu %s\n", timestamp, (message.activity & UNMMKO1_MSG_ACT_BUS_A) ? "(A)" : "(B)");
 
+        if (message.activity & UNMMKO1_MSG_ACT_CWD_1)
+            printf("CW1 %x\n", message.command.command_word_1);
+        if (message.activity & UNMMKO1_MSG_ACT_CWD_2)
+            printf("CW2 %x\n", message.command.command_word_2);
+
+        if (0 != message.command.data_words_count)
+        {
+            printf("DWS_C (%u):", message.command.data_words_count);
+            for (data_word_index = 0; data_word_index < message.command.data_words_count; ++data_word_index)
+                printf(" %x", message.command.data_words[data_word_index]);
+            printf("\n");
+        }
+
+        if (message.activity & UNMMKO1_MSG_ACT_SWD_1)
+        {
+            printf("SW1 %x\n", message.response_1.status_word);
+            if (0 != message.response_1.data_words_count)
+            {
+                printf("DWS_R1 (%u):", message.response_1.data_words_count);
+                for (data_word_index = 0; data_word_index < message.response_1.data_words_count; ++data_word_index)
+                    printf(" %x", message.response_1.data_words[data_word_index]);
+                printf("\n");
+            }
+        }
+        if (message.activity & UNMMKO1_MSG_ACT_SWD_2)
+        {
+            printf("SW2 %x\n", message.response_2.status_word);
+            if (0 != message.response_2.data_words_count)
+            {
+                printf("DWS_R2 (%u):", message.response_2.data_words_count);
+                for (data_word_index = 0; data_word_index < message.response_2.data_words_count; ++data_word_index)
+                    printf(" %x", message.response_2.data_words[data_word_index]);
+                printf("\n");
+            }
+        }
+
+        printf("State:\n");
+        if (UNMMKO1_MSG_ERR_OK == message.error)
+            printf("   OK\n");
+        if (message.error & UNMMKO1_MSG_ERR_NO_RESPONSE)
+            printf("   No response\n");
+        if (message.error & UNMMKO1_MSG_ERR_ANY_ERROR_BIT)
+            printf("   Any error bit\n");
+        if (message.error & UNMMKO1_MSG_ERR_PROTOCOL)
+            printf("   Protocol error\n");
+        if (message.error & UNMMKO1_MSG_ERR_DATA_COUNT)
+            printf("   Data count error\n");
+        if (message.error & UNMMKO1_MSG_ERR_MANCHECTER)
+            printf("   Manchester error\n");
+        if (message.error & UNMMKO1_MSG_ERR_SYSTEM)
+            printf("   System error\n");
+
+        printf("\n");
+    }
+
+    fflush(stdout);
 }

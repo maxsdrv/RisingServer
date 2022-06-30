@@ -1,5 +1,7 @@
 #pragma once
 
+#define CC_SAFE_DELETE(p)           do { delete (p); (p) = nullptr; } while(0)
+
 const int max_subaddress_data_size = 64;
 
 enum class CARD_NUM

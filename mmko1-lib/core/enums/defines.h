@@ -1,6 +1,9 @@
 #pragma once
 
-#define CC_SAFE_DELETE(p)           do { delete (p); (p) = nullptr; } while(0)
+
+/** defines for error and closeDevice function */
+#define ERROR "error"
+#define CL_DV "close_device"
 
 const int max_subaddress_data_size = 64;
 

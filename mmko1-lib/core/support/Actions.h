@@ -3,25 +3,24 @@
 
 #include <functional>
 
-class CallFunc {
+#include "UpdateCommon.h"
+
+class CallFunc : public UpdateCommon {
 public:
-    static CallFunc* create(const std::function<void()>& func);
+    static ViStatus error();
+    static void closeDevice();
 
     CallFunc(const CallFunc& ) = delete;
     CallFunc& operator=(const CallFunc& ) = delete;
     CallFunc(CallFunc&& ) = delete;
     CallFunc& operator=(CallFunc&& ) = delete;
 
-   /** initialize the action with the std::function<void()>
-    *
-    */
-    bool initWithFunction(const std::function<void()>& func);
-private:
-    CallFunc() = default ;
+public:
+    CallFunc() = default;
     ~CallFunc() = default;
 
-    /** function that will be called */
-    std::function<void()>& _function;
+private:
+    bool initWithFunc(const std::string& type);
 };
 
 

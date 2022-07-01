@@ -1,6 +1,7 @@
 #include <cstring>
 
 #include "UpdateCommon.h"
+#include "Actions.h"
 
 UpdateCommon::UpdateCommon()
     : m_resource_name(), m_position(nullptr),
@@ -35,7 +36,9 @@ ViStatus UpdateCommon::search_unmmko1()
 
     //Open session to VISA
     if (viOpenDefaultRM(&resource_manager_session) < 0)
-        error();
+    {
+        CallFunc::error();
+    }
     //Find devices
     if (viFindRsrc(resource_manager_session, search_pattern,
                    &find_list, &count, address) < 0)
@@ -46,9 +49,11 @@ ViStatus UpdateCommon::search_unmmko1()
     //go through all found devices
     for (index = 0; index < count; ++index)
     {
-        //Devices weren't find
+        //Devices weren't found
         if (index && viFindNext(find_list, address) < 0)
+        {
             error();
+        }
 
         //Open device
         if (viOpen(resource_manager_session, address, VI_NULL, VI_NULL, &device_session))
@@ -145,6 +150,7 @@ int UpdateCommon::unmbase_check(int32_t status)
 }
 int UpdateCommon::unmko_check(int32_t status)
 {
+    search_unmmko1();
     return 0;
 }
 void UpdateCommon::error() const

@@ -2,15 +2,13 @@
 
 #include <memory>
 #include <iostream>
+#include <unmmko1.h>
+#include <unmbase.h>
 
 #include "defines.h"
 
-extern "C"
-{
-#include "unmmko1.h"
-#include "unmbase.h"
-}
-
+/** Forward declaration */
+class UpdateCommon;
 
 struct AB_PARAMS
 {

@@ -1,35 +1,12 @@
-/* It is wrapper class based on common.h which wrote on C.  */
+/* It is wrapper class based on common.h which wrote on C. */
+
 #pragma once
 
 #include <iostream>
 #include <boost/format.hpp>
 #include <visa.h>
-#include <unmbase.h>
-#include <unmmko1.h>
 
-#ifdef _WIN32
-#include <conio.h>
-#include <windows.h>
-int key_pressed() {
-    return _kbhit();
-}
-#else
-#include <unistd.h>
-int key_pressed() {
-    return 0;
-}
-void Sleep(int msec) {
-    int sec;
-    int usec;
-
-    sec = msec / 1000;
-    usec = (msec % 1000) * 1000;
-    if (sec > 0)
-        sleep(sec);
-    if (usec > 0)
-        usleep(usec);
-}
-#endif
+#include "aik_unmmko.h"
 
 using boost::format;
 
@@ -38,15 +15,18 @@ class UpdateCommon
 public:
     UpdateCommon();
     ~UpdateCommon() { std::cout << "~UpdateCommon()" << std::endl; }
-private:
+protected:
     ViChar m_resource_name[256];
     ViUInt16 *m_position;
+private:
     const ViSession m_carrier_session, m_session;
 
+protected:
     //search variables mmko
     ViSession resource_manager_session;
     ViStatus found = VI_ERROR_RSRC_NFOUND;
     ViSession device_session;
+
 private:
     /* methods for checking errors */
     /* Check errors, when called function of Mezonin Driver MKO */

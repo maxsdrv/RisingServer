@@ -1,4 +1,5 @@
 #include "aik_unmmko.h"
+#include "UpdateCommon.h"
 
 class AikMmkoInterface::PrivateData
 {

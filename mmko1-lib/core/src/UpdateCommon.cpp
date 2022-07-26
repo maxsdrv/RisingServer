@@ -3,47 +3,45 @@
 #include "UpdateCommon.h"
 #include "Actions.h"
 
-UpdateCommon::UpdateCommon()
-    : m_resource_name(), m_position(nullptr),
+UpdateCommon::UpdateCommon() :
       m_carrier_session(0), m_session(0),
       resource_manager_session(0),
       device_session(0)
 {
 }
-
-void UpdateCommon::process_unmmko1_error(ViSession session, ViStatus status)
+void UpdateCommon::processUnmmko1Error(ViStatus status) const
 {
     ViChar str[256];
-    unmmko1_error_message(session, status, str);
+    unmmko1_error_message(m_session, status, str);
     std::cout << format("Returns status code %i with message %s\n") % status % str;
 }
-void UpdateCommon::process_unmbase_error(ViSession session, ViStatus status)
+void UpdateCommon::processUnmbaseError(ViStatus status) const
 {
     ViChar str[256];
-    unmbase_error_message(session, status, str);
+    unmbase_error_message(m_session, status, str);
     std::cout << format("Returns status code %i with message %s\n") % status % str;
 }
 
 ViStatus UpdateCommon::search_unmmko1()
 {
-    ViString search_pattern = "?*[0-9]?*::?*::INSTR";
+    std::string search_pattern = "?*[0-9]?*::?*::INSTR";
     ViFindList find_list = 0;
     ViUInt32 index = 0, count = 0;
     ViSession carrier_session = 0;
     ViUInt16 interface_type = 0;
-    ViInt16 mezzanine_number = 1;
+    ViUInt16 mezzanine_number = 1;
     char address[256]{};
 
     //Open session to VISA
     if (viOpenDefaultRM(&resource_manager_session) < 0)
     {
-        CallFunc::error();
+        CallFunc::error(resource_manager_session, found, _format);
     }
     //Find devices
-    if (viFindRsrc(resource_manager_session, search_pattern,
+    if (viFindRsrc(resource_manager_session, const_cast<char*>(search_pattern.c_str()),
                    &find_list, &count, address) < 0)
     {
-        error();
+        CallFunc::error(resource_manager_session, found, _format);
     }
 
     //go through all found devices
@@ -52,7 +50,7 @@ ViStatus UpdateCommon::search_unmmko1()
         //Devices weren't found
         if (index && viFindNext(find_list, address) < 0)
         {
-            error();
+            CallFunc::error(resource_manager_session, found, _format);
         }
 
         //Open device
@@ -71,29 +69,29 @@ ViStatus UpdateCommon::search_unmmko1()
             //Don't work with devices on slot 0
             if (viGetAttribute(device_session, VI_ATTR_SLOT, &slot_number) < 0 || 0 == slot_number)
             {
-                close_device();
+                CallFunc::close_device(device_session, found);
             }
 
             //Request manufacturer ID and device model code
             if (viGetAttribute(device_session, VI_ATTR_MANF_ID, &manufactory_id) < 0)
             {
-                close_device();
+                CallFunc::close_device(device_session, found);
             }
             if (viGetAttribute(device_session, VI_ATTR_MODEL_CODE, &model_code) < 0)
             {
-                close_device();
+                CallFunc::close_device(device_session, found);
             }
 
             // Compare ID with ID of different Mezzanine Carrier versions
             if (UN_MANUFACTURER_ID != manufactory_id)
             {
-                close_device();
+                CallFunc::close_device(device_session, found);
             }
             model_code &= 0x0fff;
             if (UNMBASE_MODEL_CODE != model_code && UNMBASEU_MODEL_CODE != model_code
                 && UNMBASE_MODEL_ARMVXI != model_code)
             {
-                close_device();
+                CallFunc::close_device(device_session, found);
             }
         }
 
@@ -108,33 +106,33 @@ ViStatus UpdateCommon::search_unmmko1()
 
                 if (viLock(device_session, VI_EXCLUSIVE_LOCK, 2000, nullptr, nullptr) < 0)
                 {
-                    close_device();
+                    CallFunc::close_device(device_session, found);
                 }
                 status = viQueryf(device_session, "*IDN?\n", "%t", idn);
                 viUnlock(device_session);
 
                 if (status < 0)
-                    close_device();
 
                 if (0 != strncmp(idn, UNMBASE_MEZABOX_IDN, strlen(UNMBASE_MEZABOX_IDN)))
-                    close_device();
+                    CallFunc::close_device(device_session, found);
             }
         }
 
         //Initialize Mezzanine Carrier and read mezzanine codes
         if (unmbase_init(address, VI_ON, VI_ON, &carrier_session) < 0)
-            close_device();
+            CallFunc::close_device(device_session, found);
 
         for (mezzanine_number = 1; mezzanine_number <= 8; ++mezzanine_number)
         {
             ViInt16 present, model_code;
-            if (unmbase_m_type_q(carrier_session, mezzanine_number, &present, &model_code) < 0 || 0 == present)
+            if (unmbase_m_type_q(carrier_session, static_cast<ViInt16>(mezzanine_number),
+                                 &present, &model_code) < 0 || 0 == present)
                 continue;
 
             if (UNMMKO1_MODEL_CODE == (model_code & 0x0fff))
             {
-                strcpy(m_resource_name, address);
-                *m_position = static_cast<ViUInt16>(mezzanine_number);
+                _format.first = address;
+                *_format.second = mezzanine_number;
                 found = VI_SUCCESS;
                 break;
             }
@@ -144,31 +142,7 @@ ViStatus UpdateCommon::search_unmmko1()
 
     return found;
 }
-int UpdateCommon::unmbase_check(int32_t status)
-{
-    return 0;
-}
-int UpdateCommon::unmko_check(int32_t status)
-{
-    search_unmmko1();
-    return 0;
-}
-void UpdateCommon::error() const
-{
-    if (resource_manager_session)
-        viClose(resource_manager_session);
-
-    if (VI_SUCCESS == found)
-        format("Mezzanine MKO found at %s on %i position") % m_resource_name % *m_position;
-
-}
-void UpdateCommon::close_device() const
-{
-    viClose(device_session);
-    if (VI_SUCCESS == found)
-        return;
-}
-void UpdateCommon::print_message(ViUInt32 messages_count, unmmko1_message *messages) const
+void UpdateCommon::printMessage(ViUInt32 messages_count, unmmko1_message *messages)
 {
     ViUInt32 message_index = 0;
     for (message_index = 0; message_index < messages_count; ++message_index)

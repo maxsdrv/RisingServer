@@ -5,10 +5,13 @@
 #include <unmmko1.h>
 #include <unmbase.h>
 
-#include "defines.h"
+#include "../defines/defines.h"
+#include "../enums/GeneralEnums.h"
 
 /** Forward declaration */
 class UpdateCommon;
+
+const int MAX_SUB_ADDRESS = 64;
 
 struct AB_PARAMS
 {

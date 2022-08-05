@@ -1,0 +1,1 @@
+/usr/bin/c++ -rdynamic CMakeFiles/mmko1.dir/src/UpdateCommon.cpp.o CMakeFiles/mmko1.dir/src/aik_unmmko.cpp.o CMakeFiles/mmko1.dir/main.cpp.o -o mmko1   -L/home/maxim../../usr/local/vxipnp/linux/bin  -Wl,-rpath,/home/maxim../../usr/local/vxipnp/linux/bin -lunmmko1 -lunmbase -lvisa 

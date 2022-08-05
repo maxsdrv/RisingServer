@@ -1,0 +1,17 @@
+[
+{
+  "directory": "/home/maxim/projects-okb44/aik/lib_for_unmmko_driver/mmko1-lib/core/build-tags",
+  "command": "/usr/bin/c++  -I/home/maxim/projects-okb44/aik/lib_for_unmmko_driver/mmko1-lib/core/include -I/home/maxim/projects-okb44/aik/lib_for_unmmko_driver/mmko1-lib/core/enums -I/home/maxim../../usr/local/vxipnp/linux/unmmko1 -I/home/maxim../../usr/local/vxipnp/linux/include -I/home/maxim/projects-okb44/aik/lib_for_unmmko_driver/mmko1-lib/core/support -std=gnu++17 -o CMakeFiles/mmko1.dir/src/UpdateCommon.cpp.o -c /home/maxim/projects-okb44/aik/lib_for_unmmko_driver/mmko1-lib/core/src/UpdateCommon.cpp",
+  "file": "/home/maxim/projects-okb44/aik/lib_for_unmmko_driver/mmko1-lib/core/src/UpdateCommon.cpp"
+},
+{
+  "directory": "/home/maxim/projects-okb44/aik/lib_for_unmmko_driver/mmko1-lib/core/build-tags",
+  "command": "/usr/bin/c++  -I/home/maxim/projects-okb44/aik/lib_for_unmmko_driver/mmko1-lib/core/include -I/home/maxim/projects-okb44/aik/lib_for_unmmko_driver/mmko1-lib/core/enums -I/home/maxim../../usr/local/vxipnp/linux/unmmko1 -I/home/maxim../../usr/local/vxipnp/linux/include -I/home/maxim/projects-okb44/aik/lib_for_unmmko_driver/mmko1-lib/core/support -std=gnu++17 -o CMakeFiles/mmko1.dir/src/aik_unmmko.cpp.o -c /home/maxim/projects-okb44/aik/lib_for_unmmko_driver/mmko1-lib/core/src/aik_unmmko.cpp",
+  "file": "/home/maxim/projects-okb44/aik/lib_for_unmmko_driver/mmko1-lib/core/src/aik_unmmko.cpp"
+},
+{
+  "directory": "/home/maxim/projects-okb44/aik/lib_for_unmmko_driver/mmko1-lib/core/build-tags",
+  "command": "/usr/bin/c++  -I/home/maxim/projects-okb44/aik/lib_for_unmmko_driver/mmko1-lib/core/include -I/home/maxim/projects-okb44/aik/lib_for_unmmko_driver/mmko1-lib/core/enums -I/home/maxim../../usr/local/vxipnp/linux/unmmko1 -I/home/maxim../../usr/local/vxipnp/linux/include -I/home/maxim/projects-okb44/aik/lib_for_unmmko_driver/mmko1-lib/core/support -std=gnu++17 -o CMakeFiles/mmko1.dir/main.cpp.o -c /home/maxim/projects-okb44/aik/lib_for_unmmko_driver/mmko1-lib/core/main.cpp",
+  "file": "/home/maxim/projects-okb44/aik/lib_for_unmmko_driver/mmko1-lib/core/main.cpp"
+}
+]

@@ -8,7 +8,7 @@ link_directories($ENV{HOME}../../usr/local/vxipnp/linux/bin)
 
 include_directories(include/ enums/ $ENV{HOME}../../usr/local/vxipnp/linux/unmmko1/
         $ENV{HOME}../../usr/local/vxipnp/linux/include/)
-include_directories(support/)
+include_directories(support/ defines/ enums/)
 
 file(GLOB_RECURSE SOURCE ./src/*.cpp support/*.cpp)
 

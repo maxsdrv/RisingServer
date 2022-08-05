@@ -5,11 +5,9 @@
 #include <unmmko1.h>
 #include <unmbase.h>
 
-#include "../defines/defines.h"
-#include "../enums/GeneralEnums.h"
+#include "defines.h"
+#include "GeneralEnums.h"
 
-/** Forward declaration */
-class UpdateCommon;
 
 const int MAX_SUB_ADDRESS = 64;
 

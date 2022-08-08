@@ -4,6 +4,7 @@
  * it necessary because there was goto defines and is not convenient methods used to
  * old C code */
 
+
 class SearchUnmmko {
 public:
 	SearchUnmmko(ViChar resource_name_[], ViUInt16* position_)
@@ -17,7 +18,7 @@ private:
 	ViUInt16* position;
 public:
 	ViSession resource_manager_session = 0;
-	ViString search_pattern = "?*[0-9]?*::?*::INSTR";
+	std::string search_pattern = "?*[0-9]?*::?*::INSTR";
 	ViFindList find_list{};
 	ViStatus found = VI_ERROR_RSRC_NFOUND;
 	ViUInt32 index = 0, count = 0;
@@ -49,7 +50,7 @@ public:
 			Error();
 
 		// Find devices
-		if (viFindRsrc(resource_manager_session, search_pattern, &find_list, &count, address)<0)
+		if (viFindRsrc(resource_manager_session, const_cast<char*>(search_pattern.c_str()), &find_list, &count, address)<0)
 			Error();
 
 		// Pass to all found devices

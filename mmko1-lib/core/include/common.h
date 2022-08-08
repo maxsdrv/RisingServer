@@ -5,12 +5,13 @@
 #include <vpptype.h>
 #include <unmbase.h>
 #include <unmmko1.h>
-#include <stdio.h>
-#include <string.h>
-#include <stdint.h>
-#include <stdlib.h>
+#include <cstdio>
+#include <cstring>
+#include <cstdint>
+#include <cstdlib>
 
 #include "Actions.h"
+#include "SFileLogger.h"
 
 static ViChar resource_name[256];
 static ViUInt16 position = 0;
@@ -48,6 +49,7 @@ void process_unmmko1_error(ViSession session, ViStatus status)
 	ViChar str[256];
 	unmmko1_error_message(session, status, str);
 	printf("Returnes status code %ld with message: %s\n", status, str);
+	SFileLogger::getInstance().writeToLog(status, str);
 }
 
 //! Проверка ошибок, используется при вызове функций драйвера Носителя Мезонинов
@@ -56,6 +58,7 @@ void process_unmbase_error(ViSession session, ViStatus status)
 	ViChar str[256];
 	unmbase_error_message(session, status, str);
 	printf("Returnes status code %ld with message: %s\n", status, str);
+	SFileLogger::getInstance().writeToLog(status, str);
 }
 
 //! Макрос для проверки ошибок при работе с UNMKO
@@ -69,119 +72,6 @@ void process_unmbase_error(ViSession session, ViStatus status)
     printf("%s %d %s ", __FILE__, __LINE__, __FUNCTION__); \
     process_unmbase_error(carrier_session, status); return status; } \
     else
-
-//! Поиск мезонина MKO
-//! \param resource_name Адрес Носителя Мезонинов, на котором найден мезонин MKO
-//! \param position Позиция мезонина MKO на Носителе Мезонинов
-//! \returns VI_TRUE в случае, если найден мезонин MKO, VI_FALSE - в противном случае
-/*ViStatus search_unmmko1(ViChar resource_name[], ViUInt16* position)
-{
-	ViSession resource_manager_session = 0;
-	ViString search_pattern = "?*[0-9]?*::?*::INSTR";
-	ViFindList find_list;
-	ViStatus found = VI_ERROR_RSRC_NFOUND;
-	ViUInt32 index = 0, count = 0;
-	ViSession device_session = 0, carrier_session = 0;
-	ViUInt16 interface_type = 0;
-	ViInt16 mezzanine_number = 1;
-	char address[256];
-
-	// Открываем сессию с VISA
-	if (viOpenDefaultRM(&resource_manager_session)<0)
-		goto Error;
-
-	// Поиск устройств
-	if (viFindRsrc(resource_manager_session, search_pattern, &find_list, &count, address)<0)
-		goto Error;
-
-	// Проходим по всем найденным устройствам
-	for (index = 0; index<count; ++index) {
-		// Устройства не найдены
-		if (index && viFindNext(find_list, address)<0)
-			goto Error;
-
-		// Открываем устройство
-		if (viOpen(resource_manager_session, address, VI_NULL, VI_NULL, &device_session)<0)
-			continue;
-
-		// Считываем тип интерфейса
-		viGetAttribute(device_session, VI_ATTR_INTF_TYPE, &interface_type);
-
-		// Тип интерфейса VXI или GPIB-VXI
-		if (VI_INTF_VXI==interface_type || VI_INTF_GPIB_VXI==interface_type) {
-			ViUInt32 slot_number = 0;
-			ViUInt16 manufactory_id = 0, model_code = 0;
-
-			// Не работаем с устройствами в слоте 0
-			if (viGetAttribute(device_session, VI_ATTR_SLOT, &slot_number)<0 || 0==slot_number)
-				goto CloseDevice;
-
-			// Запрашиваем идентификатор производителя и код модели устройства
-			if (viGetAttribute(device_session, VI_ATTR_MANF_ID, &manufactory_id)<0)
-				goto CloseDevice;
-			if (viGetAttribute(device_session, VI_ATTR_MODEL_CODE, &model_code)<0)
-				goto CloseDevice;
-
-			// Сравниваем идентификаторы с идентификаторами различных версий Носителей Мезонинов
-			if (UN_MANUFACTURER_ID!=manufactory_id)
-				goto CloseDevice;
-			model_code &= 0x0fff;
-			if (UNMBASE_MODEL_CODE!=model_code && UNMBASEU_MODEL_CODE!=model_code && UNMBASE_MODEL_ARMVXI!=model_code)
-				goto CloseDevice;
-		}
-			// Тип интерфейса VXI или GPIB-VXI
-		else if (VI_INTF_TCPIP==interface_type || VI_INTF_USB==interface_type || VI_INTF_GPIB==interface_type
-				|| VI_INTF_ASRL==interface_type) {
-			ViChar idn[256];
-			ViStatus status = VI_SUCCESS;
-
-			if (viLock(device_session, VI_EXCLUSIVE_LOCK, 2000, 0, 0)<0)
-				goto CloseDevice;
-
-			status = viQueryf(device_session, "*IDN?\n", "%t", idn);
-			viUnlock(device_session);
-
-			if (status<0)
-				goto CloseDevice;
-
-			if (0!=strncmp(idn, UNMBASE_MEZABOX_IDN, strlen(UNMBASE_MEZABOX_IDN)))
-				goto CloseDevice;
-		}
-
-		// Инициализируем Носитель Мезонинов и считываем коды мезонинов
-		if (unmbase_init(address, VI_ON, VI_ON, &carrier_session)<0)
-			goto CloseDevice;
-
-		for (mezzanine_number = 1; mezzanine_number<=8; ++mezzanine_number) {
-			ViInt16 present, model_code;
-			if (unmbase_m_type_q(carrier_session, mezzanine_number, &present, &model_code)<0 || 0==present)
-				continue;
-
-			if (UNMMKO1_MODEL_CODE==(model_code & 0x0fff)) {
-				strcpy(resource_name, address);
-				*position = (ViUInt16)mezzanine_number;
-				found = VI_SUCCESS;
-				break;
-			}
-		}
-
-		unmbase_close(carrier_session);
-
-	CloseDevice:
-		viClose(device_session);
-		if (VI_SUCCESS==found)
-			break;
-	}
-
-Error:
-	if (resource_manager_session)
-		viClose(resource_manager_session);
-
-	if (VI_SUCCESS==found)
-		printf("Mezzanine MKO found at %s on %d position\n", resource_name, *position);
-
-	return found;
-}*/
 
 void print_messages(ViUInt32 messages_count, unmmko1_message* messages)
 {

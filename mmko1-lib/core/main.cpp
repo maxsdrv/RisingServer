@@ -1,12 +1,14 @@
 #include <iostream>
 
-#include "aik_unmmko.h"
+#include "AikUnmmko.h"
 #include "common.h"
 
 
 int main(int argc, char *argv[])
 {
-    std::cout << "Test MMKO1: " << std::endl;
+	const std::string log_name {"../../core/logs/common_log.txt"}; //file for logging
+	SFileLogger::getInstance().openLogFile(log_name);
+
 
     ViStatus status = VI_SUCCESS;
     ViChar software_version[256];
@@ -14,7 +16,7 @@ int main(int argc, char *argv[])
     ViInt16 result_code;
     ViChar message[256];
 
-	auto su = std::make_unique<SearchUnmmko>(resource_name, &position);
+	/*auto su = std::make_unique<SearchUnmmko>(resource_name, &position);
 	unmkocheck(su.get()->search());
     unmbasecheck(unmbase_init(resource_name, VI_TRUE, VI_TRUE, &carrier_session));
     unmkocheck(unmmko1_init(resource_name, VI_TRUE, VI_TRUE, &session));
@@ -23,7 +25,7 @@ int main(int argc, char *argv[])
     // Информация о мезонине
     unmkocheck(unmmko1_revision_query(session, software_version, hardware_version));
     printf("Software version: %s\n", software_version);
-    printf("Hardware version: %s\n", hardware_version);
+    printf("Hardware version: %s\n", hardware_version);*/
     // Проводим самоконтроль мезонина
     unmkocheck(unmmko1_self_test(session, &result_code, message));
     printf("Selftest result: %s (%d)\n", message, result_code);
@@ -38,6 +40,8 @@ int main(int argc, char *argv[])
 
     unmkocheck(unmmko1_close(session));
     unmbasecheck(unmbase_close(carrier_session));
+
+	SFileLogger::getInstance().closeLogFile();
 
     return 0;
 }

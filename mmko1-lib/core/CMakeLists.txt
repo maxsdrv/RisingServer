@@ -6,12 +6,20 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 link_directories($ENV{HOME}../../usr/local/vxipnp/linux/bin)
 
+set(SUPPORT)
+list(APPEND SUPPORT
+        support/Actions.h
+        support/SCurDateTime.cpp
+        support/SCurDateTime.h
+        support/SFileLogger.cpp
+        support/SFileLogger.h)
+
 include_directories(include/ enums/ $ENV{HOME}../../usr/local/vxipnp/linux/unmmko1/
         $ENV{HOME}../../usr/local/vxipnp/linux/include/)
-include_directories(support/ defines/ enums/)
+include_directories(defines enums support logs)
 
-file(GLOB_RECURSE SOURCE ./src/*.cpp support/*.cpp)
+file(GLOB_RECURSE SOURCE ./src/*.cpp)
 
-add_executable(${PROJECT_NAME} ${SOURCE} main.cpp)
+add_executable(${PROJECT_NAME} ${SOURCE} ${SUPPORT} main.cpp)
 
 target_link_libraries(mmko1 libunmmko1.so libunmbase.so libvisa.so)

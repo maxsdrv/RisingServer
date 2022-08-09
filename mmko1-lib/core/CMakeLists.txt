@@ -7,8 +7,10 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 link_directories($ENV{HOME}../../usr/local/vxipnp/linux/bin)
 
 set(SUPPORT)
+
 list(APPEND SUPPORT
         support/Actions.h
+        support/Actions.cpp
         support/SCurDateTime.cpp
         support/SCurDateTime.h
         support/SFileLogger.cpp

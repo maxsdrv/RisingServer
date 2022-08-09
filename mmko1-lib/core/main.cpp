@@ -1,24 +1,16 @@
 #include <iostream>
 
 #include "AikUnmmko.h"
-#include "common.h"
+#include "Actions.h"
 
 
 int main(int argc, char *argv[])
 {
 	const std::string log_name {"../../core/logs/common_log.txt"}; //file for logging
 	SFileLogger::getInstance().openLogFile(log_name);
+	AikMmkoInterface mmko_interface;
 
-
-    ViStatus status = VI_SUCCESS;
-    ViChar software_version[256];
-    ViChar hardware_version[256];
-    ViInt16 result_code;
-    ViChar message[256];
-
-	/*auto su = std::make_unique<SearchUnmmko>(resource_name, &position);
-	unmkocheck(su.get()->search());
-    unmbasecheck(unmbase_init(resource_name, VI_TRUE, VI_TRUE, &carrier_session));
+    /*unmbasecheck(unmbase_init(resource_name, VI_TRUE, VI_TRUE, &carrier_session));
     unmkocheck(unmmko1_init(resource_name, VI_TRUE, VI_TRUE, &session));
     unmkocheck(unmmko1_connect(session, carrier_session, position, VI_TRUE, VI_TRUE));
 
@@ -26,20 +18,9 @@ int main(int argc, char *argv[])
     unmkocheck(unmmko1_revision_query(session, software_version, hardware_version));
     printf("Software version: %s\n", software_version);
     printf("Hardware version: %s\n", hardware_version);*/
-    // Проводим самоконтроль мезонина
-    unmkocheck(unmmko1_self_test(session, &result_code, message));
-    printf("Selftest result: %s (%d)\n", message, result_code);
 
-    // Проводим тест обмена
-    unmkocheck(unmmko1_test_exchange(session, &result_code, message));
-    printf("Exchange test result: %s (%d)\n", message, result_code);
-
-    // Проводим тест памяти
-    unmkocheck(unmmko1_test_memory(session, &result_code, message));
-    printf("Memory test result: %s (%d)\n", message, result_code);
-
-    unmkocheck(unmmko1_close(session));
-    unmbasecheck(unmbase_close(carrier_session));
+   /*unmkocheck(unmmko1_close(session));
+    unmbasecheck(unmbase_close(carrier_session));*/
 
 	SFileLogger::getInstance().closeLogFile();
 

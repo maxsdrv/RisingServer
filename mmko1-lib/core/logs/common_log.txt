@@ -1,0 +1,1 @@
+Tue Aug  9 15:04:38 2022 Returnes status code with message: -1073807343 Insufficient location information or the requested device or resource is not present in the system.

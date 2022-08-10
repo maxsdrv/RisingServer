@@ -16,45 +16,34 @@
 #include "SFileLogger.h"
 #include "defines.h"
 
+struct Condition {
+	ViStatus cStatus;
+	ViSession cSession;
+};
 
-//! Макрос для проверки ошибок при работе с UNMKO
-#define unmkocheck(f) if ((status = (f)) < 0) { \
-    printf("%s %d %s ", __FILE__, __LINE__, __FUNCTION__); \
-    process_unmmko1_error(session, status); return status; } \
-    else
-
-//! Макрос для проверки ошибок
-#define unmbasecheck(f) if ((status = (f)) < 0) { \
-    printf("%s %d %s ", __FILE__, __LINE__, __FUNCTION__); \
-    process_unmbase_error(carrier_session, status); return status; } \
-    else
-
-void process_unmmko1_error(ViSession session, ViStatus status);
-void process_unmbase_error(ViSession session, ViStatus status);
-void print_messages(ViUInt32 messages_count, unmmko1_message* messages);
-
-//static ViChar resource_name[256];
-//static ViUInt16 position = 0;
-static ViSession session = 0;
-
-class SearchUnmmko {
+class Common {
 public:
-	SearchUnmmko();
-	~SearchUnmmko() { MKOTEXT("~SearchUnmmko()"); }
+	Common();
+	~Common() { MKOTEXT("~SearchUnmmko()"); }
 
 public:
 	std::string resourceName{}; // address mezzanine carrier which found MKO
-	ViUInt16* position; // position mezzanine MKO on mezzanine carrier
+	ViUInt16 position; // position mezzanine MKO on mezzanine carrier
 
-	ViSession resource_manager_session;
+	ViStatus status;
+	ViSession session;
+	ViSession resourceManagerSession;
 	std::string search_pattern = "?*[0-9]?*::?*::INSTR";
-	ViFindList find_list{}; // uint32_t
+	ViFindList findList{}; // uint32_t
 	ViStatus found = VI_ERROR_RSRC_NFOUND;
 	ViUInt32 index, count;
-	ViSession device_session, carrier_session;
-	ViUInt16 interface_type;
-	ViInt16 mezzanine_number;
+	ViSession deviceSession, carrierSession;
+	ViUInt16 interfaceType;
+	ViInt16 mezzanineNumber;
 	ViChar address[256]{};
 
 	int32_t search(); // method for search mezzanine MKO
+	[[nodiscard]] bool processUnmmkoError() const;
+	[[nodiscard]] bool processUnmbaseError() const;
+	ViStatus getStatus();
 };

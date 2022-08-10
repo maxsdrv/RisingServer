@@ -2,14 +2,22 @@
 
 #include "AikUnmmko.h"
 #include "Actions.h"
+#include "TestMmko.h"
+
+void testPol() {
+	ITestMmko* test = new TestMmko;
+	test->InitialiseMezzanine();
+	test->GetInfoMezz();
+	test->SelfTest();
+	delete test;
+}
 
 
 int main(int argc, char *argv[])
 {
 	const std::string log_name {"../../core/logs/common_log.txt"}; //file for logging
 	SFileLogger::getInstance().openLogFile(log_name);
-	AikMmkoInterface mmko_interface;
-
+	testPol();
     /*unmbasecheck(unmbase_init(resource_name, VI_TRUE, VI_TRUE, &carrier_session));
     unmkocheck(unmmko1_init(resource_name, VI_TRUE, VI_TRUE, &session));
     unmkocheck(unmmko1_connect(session, carrier_session, position, VI_TRUE, VI_TRUE));

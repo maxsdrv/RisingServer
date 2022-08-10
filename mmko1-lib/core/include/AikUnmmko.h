@@ -8,6 +8,7 @@
 #include "GeneralEnums.h"
 
 class Actions;
+class ITestMmko;
 
 const int MAX_SUB_ADDRESS = 64;
 //static ViStatus status = VI_SUCCESS;
@@ -37,6 +38,7 @@ public:
 /* Getters and Setters */
 	[[nodiscard]] int32_t getStatus() const { return status; }
 	[[nodiscard]] int getInfoMezzanine();
+
 private:
     class PrivateData; //PIMPL
     std::unique_ptr<PrivateData> m_data; //pointer on class PIMPL

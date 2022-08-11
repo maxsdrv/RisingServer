@@ -1,5 +1,20 @@
 #include "Actions.h"
 
+int key_pressed() {
+	return 0;
+}
+void Sleep(int msec) {
+	int sec;
+	int usec;
+
+	sec = msec / 1000;
+	usec = (msec % 1000) * 1000;
+	if (sec > 0)
+		sleep(sec);
+	if (usec > 0)
+		usleep(usec);
+}
+
 Common::Common()
 		:
 		status(VI_SUCCESS),
@@ -116,6 +131,7 @@ int32_t Common::search()
 
 	return this->found;
 }
+//! Проверка ошибок, используется при вызове функций драйвера мезонина MKO
 bool Common::processUnmmkoError() const
 {
 	ViChar str[256];
@@ -129,6 +145,7 @@ bool Common::processUnmmkoError() const
 
 	return true;
 }
+//! Проверка ошибок, используется при вызове функций драйвера Носителя Мезонинов
 bool Common::processUnmbaseError() const
 {
 	ViChar str[256];
@@ -158,29 +175,12 @@ ViStatus Common::getStatus()
 
 	return status;
 }
-
-//! Проверка ошибок, используется при вызове функций драйвера мезонина MKO
-void process_unmmko1_error(ViSession session, ViStatus status)
-{
-	ViChar str[256];
-	unmmko1_error_message(session, status, str);
-	printf("Returnes status code %ld with message: %s\n", status, str);
-	SFileLogger::getInstance().writeToLog(status, str);
-}
-
-//! Проверка ошибок, используется при вызове функций драйвера Носителя Мезонинов
-void process_unmbase_error(ViSession session, ViStatus status)
-{
-	ViChar str[256];
-	unmbase_error_message(session, status, str);
-	printf("Returnes status code %ld with message: %s\n", status, str);
-	SFileLogger::getInstance().writeToLog(status, str);
-}
-
-void print_messages(ViUInt32 messages_count, unmmko1_message* messages)
+void Common::printMessages(uint32_t messagesCount, unmmko1_message* messages)
 {
 	ViUInt32 message_index = 0;
-	for (message_index = 0; message_index<messages_count; ++message_index) {
+	if (messagesCount <= 0) std::cerr << "MESSAGES::NOT::FOUND\n";
+
+	for (message_index = 0; message_index < messagesCount; ++message_index) {
 		ViUInt16 data_word_index = 0;
 		unmmko1_message message = messages[message_index];
 		uint64_t timestamp = (((uint64_t)message.timestamp_high) << 32)+message.timestamp_low;

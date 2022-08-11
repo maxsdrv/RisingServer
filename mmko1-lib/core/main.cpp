@@ -6,9 +6,10 @@
 
 void testPol() {
 	ITestMmko* test = new TestMmko;
-	test->InitialiseMezzanine();
-	test->GetInfoMezz();
+	test->Init();
 	test->SelfTest();
+	test->MonitorConfigure();
+	test->Close();
 	delete test;
 }
 

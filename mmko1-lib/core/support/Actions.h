@@ -16,10 +16,15 @@
 #include "SFileLogger.h"
 #include "defines.h"
 
-struct Condition {
-	ViStatus cStatus;
-	ViSession cSession;
-};
+#ifdef _WIN32
+#include <conio.h>
+#include <windows.h>
+int key_pressed();
+#else
+#include <unistd.h>
+int key_pressed();
+void Sleep(int msec);
+#endif
 
 class Common {
 public:
@@ -45,5 +50,7 @@ public:
 	int32_t search(); // method for search mezzanine MKO
 	[[nodiscard]] bool processUnmmkoError() const;
 	[[nodiscard]] bool processUnmbaseError() const;
+	static void printMessages(uint32_t messagesCount, unmmko1_message* message);
+
 	ViStatus getStatus();
 };

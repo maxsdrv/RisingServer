@@ -14,9 +14,16 @@ public:
 	virtual void Init() = 0; // Base initialisation Mezzanine MMKO
 	virtual void SelfTest() = 0; // make test with Mezzanine
 	virtual void Close() = 0; // close connect Mezzanine MKO and carrier Mezzanine
-/* Methods for monitoring messages */
-	virtual int32_t MonitorConfigure() = 0; // Work Mezzanine in Bus Monitor Mode
-	virtual int32_t SendMessage(const std::vector<uint16_t>& words) = 0; // Sending individual messages
+
+	/* method creates 16-bit command word from fields
+	 * address - address terminal device
+	 * rx_tx - Reception/transmission bit(reception - 0, transmission - 1
+	 * subaddress - subaddress/manage mode
+	 * word_count - count of words/manage command code
+	 * */
+	virtual int PackCw(uint16_t address, uint16_t RxTx, uint16_t subAddress, uint16_t wordCount) = 0;
+
 protected:
+
 };
 

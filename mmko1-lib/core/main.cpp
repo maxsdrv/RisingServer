@@ -6,9 +6,9 @@
 
 void testPol() {
 	ITestMmko* test = new TestMmko;
+
 	test->Init();
 	test->SelfTest();
-	test->MonitorConfigure();
 	test->Close();
 	delete test;
 }

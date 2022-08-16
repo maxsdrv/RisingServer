@@ -17,9 +17,7 @@ public:
 	void SelfTest() override; // Mezzanine self-test, info, version, memory test
 	void Close() override; // close connect Mezzanine MKO and carrier Mezzanine
 
-	/* Message monitoring */
-	int32_t MonitorConfigure() override;
-	int32_t SendMessage(const std::vector<uint16_t>& words) override;
+	int PackCw(uint16_t address, uint16_t RxTx, uint16_t subAddress, uint16_t wordCount) override;
 private:
 	std::unique_ptr<Common> searchMko;
 	bool statusInit;

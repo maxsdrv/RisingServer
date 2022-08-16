@@ -34,9 +34,6 @@ int32_t Common::search()
 	auto Error = [this]() {
 	  if (resourceManagerSession)
 		  viClose(resourceManagerSession);
-
-	  if (VI_SUCCESS==found)
-		  printf("Mezzanine MKO found at %s on %d position\n", resourceName.c_str(), position);
 	};
 	auto CloseDevice = [this]() {
 	  viClose(deviceSession);
@@ -118,7 +115,7 @@ int32_t Common::search()
 				continue;
 
 			if (UNMMKO1_MODEL_CODE==(model_code & 0x0fff)) {
-				strcpy(const_cast<char*>(resourceName.c_str()), address);
+				strcpy(resourceName, address);
 				position = (ViUInt16)mezzanineNumber;
 				found = VI_SUCCESS;
 				break;
@@ -128,6 +125,9 @@ int32_t Common::search()
 		unmbase_close(carrierSession);
 
 	}
+
+	if (VI_SUCCESS==found)
+		  printf("Mezzanine MKO found at %s on %d position\n", resourceName, position);
 
 	return this->found;
 }
@@ -166,7 +166,7 @@ ViStatus Common::getStatus()
 	if (!processUnmbaseError()) {
 		throw std::runtime_error("ERROR::UNMBASE::INIT");
 	}
-	unmbase_init(const_cast<char*>(resourceName.c_str()), VI_TRUE, VI_TRUE,
+	unmbase_init(resourceName, VI_TRUE, VI_TRUE,
 			&carrierSession);
 
 	if (!processUnmmkoError()) {

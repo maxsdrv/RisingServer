@@ -19,7 +19,10 @@
 #ifdef _WIN32
 #include <conio.h>
 #include <windows.h>
-int key_pressed();
+int key_pressed()
+{
+	return _kbhit();
+}
 #else
 #include <unistd.h>
 int key_pressed();
@@ -32,7 +35,7 @@ public:
 	~Common() { MKOTEXT("~SearchUnmmko()"); }
 
 public:
-	std::string resourceName{}; // address mezzanine carrier which found MKO
+	char resourceName[256]; // address mezzanine carrier which found MKO
 	ViUInt16 position; // position mezzanine MKO on mezzanine carrier
 
 	ViStatus status;

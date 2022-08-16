@@ -19,9 +19,13 @@ list(APPEND SUPPORT
         support/SFileLogger.h)
 list(APPEND HEADERS
         include/ITestMmko.h
-        include/TestMmko.h)
+        include/TestMmko.h
+        include/MonitorMode.h
+        include/ControllerMode.h)
 list(APPEND SOURCE
-        src/TestMmko.cpp)
+        src/TestMmko.cpp
+        src/MonitorMode.cpp
+        src/ControllerMode.cpp)
 
 include_directories(include/ enums/ $ENV{HOME}../../usr/local/vxipnp/linux/unmmko1/
         $ENV{HOME}../../usr/local/vxipnp/linux/include/)

@@ -11,6 +11,7 @@ public:
 	/* *Template methods for send singly message* */
 	template <class T>
 	auto BaseTransmitCmd(T address, T subAddr, T wordCount);
+	/* get instance of TestMmko */
 	static TestMmko* createController();
 
 private:

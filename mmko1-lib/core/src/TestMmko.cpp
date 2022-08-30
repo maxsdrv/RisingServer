@@ -2,11 +2,16 @@
 #include "TestMmko.h"
 #include "Actions.h"
 
+unmmko1_bus TestMmko::mBus = UNMMKO1_BUS_A;
 
-TestMmko::TestMmko() : searchMko(std::make_unique<Common>()),
-					   statusInit(false)
+TestMmko::TestMmko(unmmko1_bus bus)
 {
+	mBus = bus;
+	commands->activity = bus;
+
+	MKOTEXT("TestMmko()");
 }
+
 TestMmko::~TestMmko() {
 	MKOTEXT("~TestMmko()");
 	statusInit = false;
@@ -14,16 +19,16 @@ TestMmko::~TestMmko() {
 void TestMmko::Init()
 {
 	try {
-		searchMko->getStatus();
+		common->getStatus();
 	}
 	catch (const std::exception& ex) {
 		std::cerr << ex.what() << '\n';
 	}
 
-	unmmko1_init(searchMko->resourceName,
-			VI_TRUE, VI_TRUE, &searchMko->session);
+	unmmko1_init(common->resourceName,
+			VI_TRUE, VI_TRUE, &common->session);
 
-	unmmko1_connect(searchMko->session, searchMko->carrierSession, searchMko->position,
+	unmmko1_connect(common->session, common->carrierSession, common->position,
 			VI_TRUE, VI_TRUE);
 
 	statusInit = true;
@@ -35,31 +40,42 @@ void TestMmko::SelfTest()
 	char softwareVersion[256];
 	char hardwareVersion[256];
 
-	unmmko1_self_test(searchMko->session, &resultCode, message);
+	unmmko1_self_test(common->session, &resultCode, message);
 	printf("Self-test result: %s (%d)\n", message, resultCode);
 	SFileLogger::getInstance().writeToLog(resultCode, message);
 
-	unmmko1_revision_query(searchMko->session, softwareVersion, hardwareVersion);
+	unmmko1_revision_query(common->session, softwareVersion, hardwareVersion);
 	std::cout << "Software version: " << softwareVersion << '\n' <<
 			  "Hardware version: " << hardwareVersion << '\n';
 
-	unmmko1_test_exchange(searchMko->session, &resultCode, message);
+	unmmko1_test_exchange(common->session, &resultCode, message);
 	printf("Exchange test result: %s (%d)\n", message, resultCode);
 
-	unmmko1_test_memory(searchMko->session, &resultCode, message);
+	unmmko1_test_memory(common->session, &resultCode, message);
 	printf("Memory test result: %s (%d)\n", message, resultCode);
 }
 
 void TestMmko::Close()
 {
-	unmmko1_close(searchMko->session);
-	unmbase_close(searchMko->carrierSession);
+	unmmko1_close(common->session);
+	unmbase_close(common->carrierSession);
+
 }
 
 int TestMmko::PackCw(uint16_t address, uint16_t RxTx, uint16_t subAddress, uint16_t wordCount)
 {
 	return unmmko1_pack_cw(address, RxTx, subAddress, wordCount);
 }
+TestMmko* TestMmko::create()
+{
+	auto* p1 = new TestMmko(mBus);
+
+	return p1;
+}
+
+
+
+
 
 
 

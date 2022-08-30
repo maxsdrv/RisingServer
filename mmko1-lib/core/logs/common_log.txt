@@ -1,2 +1,1 @@
-Tue Aug 16 15:10:19 2022 Returnes status code with message: -1073807343 Insufficient location information or the requested device or resource is not present in the system.
-Tue Aug 16 15:10:19 2022 Returnes status code with message: 0 
+Tue Aug 30 16:06:17 2022 Returnes status code with message: -1073807343 Insufficient location information or the requested device or resource is not present in the system.

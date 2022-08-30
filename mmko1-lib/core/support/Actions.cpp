@@ -26,6 +26,7 @@ Common::Common()
 {
 }
 
+
 int32_t Common::search()
 {
 	std::cout << "Debug information about calling method search" << '\n';

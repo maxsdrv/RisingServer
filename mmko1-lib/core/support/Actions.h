@@ -35,7 +35,7 @@ public:
 	~Common() { MKOTEXT("~SearchUnmmko()"); }
 
 public:
-	char resourceName[256]; // address mezzanine carrier which found MKO
+	char resourceName[256]{}; // address mezzanine carrier which found MKO
 	ViUInt16 position; // position mezzanine MKO on mezzanine carrier
 
 	ViStatus status;
@@ -51,8 +51,8 @@ public:
 	ViChar address[256]{};
 
 	int32_t search(); // method for search mezzanine MKO
-	[[nodiscard]] bool processUnmmkoError() const;
-	[[nodiscard]] bool processUnmbaseError() const;
+	bool processUnmmkoError() const;
+	bool processUnmbaseError() const;
 	static void printMessages(uint32_t messagesCount, unmmko1_message* message);
 
 	ViStatus getStatus();

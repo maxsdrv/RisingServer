@@ -7,13 +7,19 @@
 
 class ControllerMode : public TestMmko {
 public:
+    ControllerMode() = default;
 	~ControllerMode() override { MKOTEXT("~ControllerMode()"); }
 	/* *Template methods for send singly message* */
 	template <class T>
 	auto BaseTransmitCmd(T address, T subAddr, T wordCount);
 	/* get instance of TestMmko */
 	static TestMmko* createController();
-
+    /* noncopyable class */
+public:
+    ControllerMode(const ControllerMode&) = delete;
+    ControllerMode(ControllerMode&&) = delete;
+    ControllerMode& operator=(const ControllerMode&) = delete;
+    ControllerMode& operator=(ControllerMode&&) = delete;
 private:
 };
 

@@ -2,5 +2,5 @@
 
 TestMmko* ControllerMode::createController()
 {
-	return TestMmko::create();
+    return nullptr;
 }

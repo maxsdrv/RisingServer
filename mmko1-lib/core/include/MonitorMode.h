@@ -2,7 +2,7 @@
 
 #include "ITestMmko.h"
 
-class MonitorMode : public ITestMmko {
+class MonitorMode {
 public:
 
 private:

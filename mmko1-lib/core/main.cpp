@@ -5,15 +5,14 @@
 #include "TestMmko.h"
 #include "ControllerMode.h"
 
+
+
 void testPol() {
 	/*ITestMmko* test = new TestMmko(UNMMKO1_BUS_A);
 	test->Init();
 	test->SelfTest();
 	test->Close();
 	delete test;*/
-	auto instance = ControllerMode::createController();
-	instance->Init();
-	delete instance;
 }
 
 

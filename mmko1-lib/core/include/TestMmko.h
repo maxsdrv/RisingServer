@@ -5,15 +5,16 @@
 
 class TestMmko : public ITestMmko {
 public:
+    TestMmko() = default;
 	explicit TestMmko(unmmko1_bus bus);
 	~TestMmko() override;
 
-	static TestMmko* create();
 	void Init() override;
 	void SelfTest() override; // Mezzanine self-test, info, version, memory test
 	void Close() override; // close connect Mezzanine MKO and carrier Mezzanine
-
+    /* Create command word */
 	int PackCw(uint16_t address, uint16_t RxTx, uint16_t subAddress, uint16_t wordCount) override;
+
 protected:
 	bool statusInit{}; // stores condition of initialise unmmko1 and unmbase
 
@@ -27,8 +28,11 @@ protected:
 			return 1;
 		}
 	}
+
+    std::unique_ptr<Common> common;
+	std::unique_ptr<unmmko1_command> commands;
 private:
-	static unmmko1_bus mBus;
+
 };
 
 

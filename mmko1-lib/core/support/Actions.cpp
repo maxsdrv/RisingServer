@@ -24,6 +24,7 @@ Common::Common()
 		count(0), deviceSession(0),
 		carrierSession(0), interfaceType(0), mezzanineNumber(1)
 {
+    MKOTEXT("Common()");
 }
 
 

@@ -2,13 +2,12 @@
 #include "TestMmko.h"
 #include "Actions.h"
 
-unmmko1_bus TestMmko::mBus = UNMMKO1_BUS_A;
 
-TestMmko::TestMmko(unmmko1_bus bus)
+TestMmko::TestMmko(unmmko1_bus bus) :
+                                    common(std::make_unique<Common>()),
+                                    commands(std::make_unique<unmmko1_command>())
 {
-	mBus = bus;
 	commands->activity = bus;
-
 	MKOTEXT("TestMmko()");
 }
 
@@ -25,11 +24,11 @@ void TestMmko::Init()
 		std::cerr << ex.what() << '\n';
 	}
 
-	unmmko1_init(common->resourceName,
-			VI_TRUE, VI_TRUE, &common->session);
+	checkProcess(unmmko1_init(common->resourceName,
+			VI_TRUE, VI_TRUE, &common->session));
 
-	unmmko1_connect(common->session, common->carrierSession, common->position,
-			VI_TRUE, VI_TRUE);
+	checkProcess(unmmko1_connect(common->session, common->carrierSession, common->position,
+			VI_TRUE, VI_TRUE));
 
 	statusInit = true;
 }
@@ -66,12 +65,9 @@ int TestMmko::PackCw(uint16_t address, uint16_t RxTx, uint16_t subAddress, uint1
 {
 	return unmmko1_pack_cw(address, RxTx, subAddress, wordCount);
 }
-TestMmko* TestMmko::create()
-{
-	auto* p1 = new TestMmko(mBus);
 
-	return p1;
-}
+
+
 
 
 

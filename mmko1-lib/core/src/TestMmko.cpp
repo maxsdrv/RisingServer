@@ -1,18 +1,16 @@
-
 #include "TestMmko.h"
-#include "Actions.h"
-
 
 TestMmko::TestMmko(unmmko1_bus bus) :
+								    statusInit(false),
                                     common(std::make_unique<Common>()),
                                     commands(std::make_unique<unmmko1_command>())
 {
 	commands->activity = bus;
-	MKOTEXT("TestMmko()");
+	MKOTEXT("TestMmko()", statusInit);
 }
 
 TestMmko::~TestMmko() {
-	MKOTEXT("~TestMmko()");
+//	MKOTEXT("~TestMmko()");
 	statusInit = false;
 }
 void TestMmko::Init()
@@ -24,11 +22,11 @@ void TestMmko::Init()
 		std::cerr << ex.what() << '\n';
 	}
 
-	checkProcess(unmmko1_init(common->resourceName,
-			VI_TRUE, VI_TRUE, &common->session));
+	unmmko1_init(common->resourceName,
+			VI_TRUE, VI_TRUE, &common->session);
 
-	checkProcess(unmmko1_connect(common->session, common->carrierSession, common->position,
-			VI_TRUE, VI_TRUE));
+	unmmko1_connect(common->session, common->carrierSession, common->position,
+			VI_TRUE, VI_TRUE);
 
 	statusInit = true;
 }
@@ -65,6 +63,15 @@ int TestMmko::PackCw(uint16_t address, uint16_t RxTx, uint16_t subAddress, uint1
 {
 	return unmmko1_pack_cw(address, RxTx, subAddress, wordCount);
 }
+void TestMmko::setBus(unmmko1_bus bus)
+{
+	commands->activity = bus;
+}
+unmmko1_bus TestMmko::getBus()
+{
+	return static_cast<unmmko1_bus>(commands->activity);
+}
+
 
 
 

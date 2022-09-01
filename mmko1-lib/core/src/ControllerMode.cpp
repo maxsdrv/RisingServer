@@ -1,6 +1,3 @@
 #include "ControllerMode.h"
 
-TestMmko* ControllerMode::createController()
-{
-    return nullptr;
-}
+ControllerMode::ControllerMode(unmmko1_bus bus) : TestMmko(bus) {}

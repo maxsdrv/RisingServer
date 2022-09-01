@@ -1,23 +1,15 @@
 #pragma once
 
-#include <vector>
 #include <unmmko1.h>
 #include <memory>
-#include <boost/type_index.hpp>
 
 #include "defines.h"
 #include "Actions.h"
+#include "Object.h"
 
 class ITestMmko {
 public:
-	/*explicit ITestMmko()
-			:
-			common(std::make_unique<Common>()),
-			commands(std::make_unique<unmmko1_command>())
-	{
-		MKOTEXT("ITestMmko()");
-	};*/
-	virtual ~ITestMmko() { MKOTEXT("~ITestMmko()") }
+	virtual ~ITestMmko() { /*MKOTEXT("~ITestMmko()");*/ }
 
 /* methods for working Mezzanine MKO */
 /* Base methods */
@@ -34,8 +26,8 @@ public:
 	virtual int PackCw(uint16_t address, uint16_t RxTx, uint16_t subAddress, uint16_t wordCount) = 0;
 
 protected:
-//	std::unique_ptr<Common> common;
-//	std::unique_ptr<unmmko1_command> commands;
+	virtual void setBus(unmmko1_bus) = 0;
+	virtual unmmko1_bus getBus() = 0;
 };
 
 

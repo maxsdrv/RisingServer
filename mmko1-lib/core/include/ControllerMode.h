@@ -7,13 +7,12 @@
 
 class ControllerMode : public TestMmko {
 public:
-    ControllerMode() = default;
-	~ControllerMode() override { MKOTEXT("~ControllerMode()"); }
+	ControllerMode() = default;
+	explicit ControllerMode(unmmko1_bus bus);
+	~ControllerMode() override { /*MKOTEXT("~ControllerMode()");*/ }
 	/* *Template methods for send singly message* */
 	template <class T>
-	auto BaseTransmitCmd(T address, T subAddr, T wordCount);
-	/* get instance of TestMmko */
-	static TestMmko* createController();
+	constexpr auto BaseTransmitCmd(T address, T subAddr, T wordCount);
     /* noncopyable class */
 public:
     ControllerMode(const ControllerMode&) = delete;
@@ -24,8 +23,9 @@ private:
 };
 
 template<class T>
-auto ControllerMode::BaseTransmitCmd(T address, T subAddr, T wordCount)
+constexpr auto ControllerMode::BaseTransmitCmd(T address, T subAddr, T wordCount)
 {
+	std::cerr << "BaseTransmitCmd\n";
 	auto cwd = TestMmko::PackCw(address, subAddr, wordCount, 0);
 	*commands = unmmko1_bc_rt(static_cast<unmmko1_bus>(commands->activity), cwd, nullptr);
 	checkProcess(unmmko1_bc_configure(common->session, UNMMKO1_BC_DEFAULT));
@@ -34,6 +34,9 @@ auto ControllerMode::BaseTransmitCmd(T address, T subAddr, T wordCount)
 
 	return common->status;
 }
+
+
+
 
 
 

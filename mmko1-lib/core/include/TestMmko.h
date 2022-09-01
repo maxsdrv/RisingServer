@@ -5,11 +5,10 @@
 
 class TestMmko : public ITestMmko {
 public:
-    TestMmko() = default;
-	explicit TestMmko(unmmko1_bus bus);
+	explicit TestMmko(unmmko1_bus bus = UNMMKO1_BUS_A);
 	~TestMmko() override;
 
-	void Init() override;
+	void Init() override; // Initialise MMKO1 and carrier Mezzanine
 	void SelfTest() override; // Mezzanine self-test, info, version, memory test
 	void Close() override; // close connect Mezzanine MKO and carrier Mezzanine
     /* Create command word */
@@ -32,7 +31,9 @@ protected:
     std::unique_ptr<Common> common;
 	std::unique_ptr<unmmko1_command> commands;
 private:
-
+	/* Getters and Setters */
+	void setBus(unmmko1_bus) override;
+	unmmko1_bus getBus() override;
 };
 
 

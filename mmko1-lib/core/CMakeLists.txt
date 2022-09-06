@@ -30,7 +30,8 @@ list(APPEND SOURCE
         src/Object.cpp)
 
 include_directories(include/ enums/ $ENV{HOME}../../usr/local/vxipnp/linux/unmmko1/
-        $ENV{HOME}../../usr/local/vxipnp/linux/include/)
+$ENV{HOME}../../usr/local/vxipnp/linux/include/)
+
 include_directories(include src defines enums support logs)
 
 

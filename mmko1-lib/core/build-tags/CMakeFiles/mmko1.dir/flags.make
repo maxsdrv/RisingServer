@@ -4,7 +4,7 @@
 # compile CXX with /usr/bin/c++
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I/home/maxim/projects-okb44/aik/lib_for_unmmko_driver/mmko1-lib/core/include -I/home/maxim/projects-okb44/aik/lib_for_unmmko_driver/mmko1-lib/core/enums -I/home/maxim../../usr/local/vxipnp/linux/unmmko1 -I/home/maxim../../usr/local/vxipnp/linux/include -I/home/maxim/projects-okb44/aik/lib_for_unmmko_driver/mmko1-lib/core/support
+CXX_INCLUDES = -I/home/maxim/projects-okb44/aik/lib_for_unmmko_driver/mmko1-lib/core/include -I/home/maxim/projects-okb44/aik/lib_for_unmmko_driver/mmko1-lib/core/enums -I/home/maxim../../usr/local/vxipnp/linux/unmmko1 -I/home/maxim../../usr/local/vxipnp/linux/include -I/home/maxim/projects-okb44/aik/lib_for_unmmko_driver/mmko1-lib/core/src -I/home/maxim/projects-okb44/aik/lib_for_unmmko_driver/mmko1-lib/core/defines -I/home/maxim/projects-okb44/aik/lib_for_unmmko_driver/mmko1-lib/core/support -I/home/maxim/projects-okb44/aik/lib_for_unmmko_driver/mmko1-lib/core/logs
 
 CXX_FLAGS = -std=gnu++17
 

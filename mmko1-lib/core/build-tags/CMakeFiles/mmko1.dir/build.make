@@ -69,38 +69,108 @@ include CMakeFiles/mmko1.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/mmko1.dir/flags.make
 
-CMakeFiles/mmko1.dir/src/UpdateCommon.cpp.o: CMakeFiles/mmko1.dir/flags.make
-CMakeFiles/mmko1.dir/src/UpdateCommon.cpp.o: ../src/UpdateCommon.cpp
-CMakeFiles/mmko1.dir/src/UpdateCommon.cpp.o: CMakeFiles/mmko1.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/maxim/projects-okb44/aik/lib_for_unmmko_driver/mmko1-lib/core/build-tags/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/mmko1.dir/src/UpdateCommon.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/mmko1.dir/src/UpdateCommon.cpp.o -MF CMakeFiles/mmko1.dir/src/UpdateCommon.cpp.o.d -o CMakeFiles/mmko1.dir/src/UpdateCommon.cpp.o -c /home/maxim/projects-okb44/aik/lib_for_unmmko_driver/mmko1-lib/core/src/UpdateCommon.cpp
+CMakeFiles/mmko1.dir/src/TestMmko.cpp.o: CMakeFiles/mmko1.dir/flags.make
+CMakeFiles/mmko1.dir/src/TestMmko.cpp.o: ../src/TestMmko.cpp
+CMakeFiles/mmko1.dir/src/TestMmko.cpp.o: CMakeFiles/mmko1.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/maxim/projects-okb44/aik/lib_for_unmmko_driver/mmko1-lib/core/build-tags/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/mmko1.dir/src/TestMmko.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/mmko1.dir/src/TestMmko.cpp.o -MF CMakeFiles/mmko1.dir/src/TestMmko.cpp.o.d -o CMakeFiles/mmko1.dir/src/TestMmko.cpp.o -c /home/maxim/projects-okb44/aik/lib_for_unmmko_driver/mmko1-lib/core/src/TestMmko.cpp
 
-CMakeFiles/mmko1.dir/src/UpdateCommon.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/mmko1.dir/src/UpdateCommon.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/maxim/projects-okb44/aik/lib_for_unmmko_driver/mmko1-lib/core/src/UpdateCommon.cpp > CMakeFiles/mmko1.dir/src/UpdateCommon.cpp.i
+CMakeFiles/mmko1.dir/src/TestMmko.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/mmko1.dir/src/TestMmko.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/maxim/projects-okb44/aik/lib_for_unmmko_driver/mmko1-lib/core/src/TestMmko.cpp > CMakeFiles/mmko1.dir/src/TestMmko.cpp.i
 
-CMakeFiles/mmko1.dir/src/UpdateCommon.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/mmko1.dir/src/UpdateCommon.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/maxim/projects-okb44/aik/lib_for_unmmko_driver/mmko1-lib/core/src/UpdateCommon.cpp -o CMakeFiles/mmko1.dir/src/UpdateCommon.cpp.s
+CMakeFiles/mmko1.dir/src/TestMmko.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/mmko1.dir/src/TestMmko.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/maxim/projects-okb44/aik/lib_for_unmmko_driver/mmko1-lib/core/src/TestMmko.cpp -o CMakeFiles/mmko1.dir/src/TestMmko.cpp.s
 
-CMakeFiles/mmko1.dir/src/aik_unmmko.cpp.o: CMakeFiles/mmko1.dir/flags.make
-CMakeFiles/mmko1.dir/src/aik_unmmko.cpp.o: ../src/aik_unmmko.cpp
-CMakeFiles/mmko1.dir/src/aik_unmmko.cpp.o: CMakeFiles/mmko1.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/maxim/projects-okb44/aik/lib_for_unmmko_driver/mmko1-lib/core/build-tags/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/mmko1.dir/src/aik_unmmko.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/mmko1.dir/src/aik_unmmko.cpp.o -MF CMakeFiles/mmko1.dir/src/aik_unmmko.cpp.o.d -o CMakeFiles/mmko1.dir/src/aik_unmmko.cpp.o -c /home/maxim/projects-okb44/aik/lib_for_unmmko_driver/mmko1-lib/core/src/aik_unmmko.cpp
+CMakeFiles/mmko1.dir/src/MonitorMode.cpp.o: CMakeFiles/mmko1.dir/flags.make
+CMakeFiles/mmko1.dir/src/MonitorMode.cpp.o: ../src/MonitorMode.cpp
+CMakeFiles/mmko1.dir/src/MonitorMode.cpp.o: CMakeFiles/mmko1.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/maxim/projects-okb44/aik/lib_for_unmmko_driver/mmko1-lib/core/build-tags/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/mmko1.dir/src/MonitorMode.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/mmko1.dir/src/MonitorMode.cpp.o -MF CMakeFiles/mmko1.dir/src/MonitorMode.cpp.o.d -o CMakeFiles/mmko1.dir/src/MonitorMode.cpp.o -c /home/maxim/projects-okb44/aik/lib_for_unmmko_driver/mmko1-lib/core/src/MonitorMode.cpp
 
-CMakeFiles/mmko1.dir/src/aik_unmmko.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/mmko1.dir/src/aik_unmmko.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/maxim/projects-okb44/aik/lib_for_unmmko_driver/mmko1-lib/core/src/aik_unmmko.cpp > CMakeFiles/mmko1.dir/src/aik_unmmko.cpp.i
+CMakeFiles/mmko1.dir/src/MonitorMode.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/mmko1.dir/src/MonitorMode.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/maxim/projects-okb44/aik/lib_for_unmmko_driver/mmko1-lib/core/src/MonitorMode.cpp > CMakeFiles/mmko1.dir/src/MonitorMode.cpp.i
 
-CMakeFiles/mmko1.dir/src/aik_unmmko.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/mmko1.dir/src/aik_unmmko.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/maxim/projects-okb44/aik/lib_for_unmmko_driver/mmko1-lib/core/src/aik_unmmko.cpp -o CMakeFiles/mmko1.dir/src/aik_unmmko.cpp.s
+CMakeFiles/mmko1.dir/src/MonitorMode.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/mmko1.dir/src/MonitorMode.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/maxim/projects-okb44/aik/lib_for_unmmko_driver/mmko1-lib/core/src/MonitorMode.cpp -o CMakeFiles/mmko1.dir/src/MonitorMode.cpp.s
+
+CMakeFiles/mmko1.dir/src/ControllerMode.cpp.o: CMakeFiles/mmko1.dir/flags.make
+CMakeFiles/mmko1.dir/src/ControllerMode.cpp.o: ../src/ControllerMode.cpp
+CMakeFiles/mmko1.dir/src/ControllerMode.cpp.o: CMakeFiles/mmko1.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/maxim/projects-okb44/aik/lib_for_unmmko_driver/mmko1-lib/core/build-tags/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/mmko1.dir/src/ControllerMode.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/mmko1.dir/src/ControllerMode.cpp.o -MF CMakeFiles/mmko1.dir/src/ControllerMode.cpp.o.d -o CMakeFiles/mmko1.dir/src/ControllerMode.cpp.o -c /home/maxim/projects-okb44/aik/lib_for_unmmko_driver/mmko1-lib/core/src/ControllerMode.cpp
+
+CMakeFiles/mmko1.dir/src/ControllerMode.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/mmko1.dir/src/ControllerMode.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/maxim/projects-okb44/aik/lib_for_unmmko_driver/mmko1-lib/core/src/ControllerMode.cpp > CMakeFiles/mmko1.dir/src/ControllerMode.cpp.i
+
+CMakeFiles/mmko1.dir/src/ControllerMode.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/mmko1.dir/src/ControllerMode.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/maxim/projects-okb44/aik/lib_for_unmmko_driver/mmko1-lib/core/src/ControllerMode.cpp -o CMakeFiles/mmko1.dir/src/ControllerMode.cpp.s
+
+CMakeFiles/mmko1.dir/src/Object.cpp.o: CMakeFiles/mmko1.dir/flags.make
+CMakeFiles/mmko1.dir/src/Object.cpp.o: ../src/Object.cpp
+CMakeFiles/mmko1.dir/src/Object.cpp.o: CMakeFiles/mmko1.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/maxim/projects-okb44/aik/lib_for_unmmko_driver/mmko1-lib/core/build-tags/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/mmko1.dir/src/Object.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/mmko1.dir/src/Object.cpp.o -MF CMakeFiles/mmko1.dir/src/Object.cpp.o.d -o CMakeFiles/mmko1.dir/src/Object.cpp.o -c /home/maxim/projects-okb44/aik/lib_for_unmmko_driver/mmko1-lib/core/src/Object.cpp
+
+CMakeFiles/mmko1.dir/src/Object.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/mmko1.dir/src/Object.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/maxim/projects-okb44/aik/lib_for_unmmko_driver/mmko1-lib/core/src/Object.cpp > CMakeFiles/mmko1.dir/src/Object.cpp.i
+
+CMakeFiles/mmko1.dir/src/Object.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/mmko1.dir/src/Object.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/maxim/projects-okb44/aik/lib_for_unmmko_driver/mmko1-lib/core/src/Object.cpp -o CMakeFiles/mmko1.dir/src/Object.cpp.s
+
+CMakeFiles/mmko1.dir/support/Actions.cpp.o: CMakeFiles/mmko1.dir/flags.make
+CMakeFiles/mmko1.dir/support/Actions.cpp.o: ../support/Actions.cpp
+CMakeFiles/mmko1.dir/support/Actions.cpp.o: CMakeFiles/mmko1.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/maxim/projects-okb44/aik/lib_for_unmmko_driver/mmko1-lib/core/build-tags/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/mmko1.dir/support/Actions.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/mmko1.dir/support/Actions.cpp.o -MF CMakeFiles/mmko1.dir/support/Actions.cpp.o.d -o CMakeFiles/mmko1.dir/support/Actions.cpp.o -c /home/maxim/projects-okb44/aik/lib_for_unmmko_driver/mmko1-lib/core/support/Actions.cpp
+
+CMakeFiles/mmko1.dir/support/Actions.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/mmko1.dir/support/Actions.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/maxim/projects-okb44/aik/lib_for_unmmko_driver/mmko1-lib/core/support/Actions.cpp > CMakeFiles/mmko1.dir/support/Actions.cpp.i
+
+CMakeFiles/mmko1.dir/support/Actions.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/mmko1.dir/support/Actions.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/maxim/projects-okb44/aik/lib_for_unmmko_driver/mmko1-lib/core/support/Actions.cpp -o CMakeFiles/mmko1.dir/support/Actions.cpp.s
+
+CMakeFiles/mmko1.dir/support/SCurDateTime.cpp.o: CMakeFiles/mmko1.dir/flags.make
+CMakeFiles/mmko1.dir/support/SCurDateTime.cpp.o: ../support/SCurDateTime.cpp
+CMakeFiles/mmko1.dir/support/SCurDateTime.cpp.o: CMakeFiles/mmko1.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/maxim/projects-okb44/aik/lib_for_unmmko_driver/mmko1-lib/core/build-tags/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/mmko1.dir/support/SCurDateTime.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/mmko1.dir/support/SCurDateTime.cpp.o -MF CMakeFiles/mmko1.dir/support/SCurDateTime.cpp.o.d -o CMakeFiles/mmko1.dir/support/SCurDateTime.cpp.o -c /home/maxim/projects-okb44/aik/lib_for_unmmko_driver/mmko1-lib/core/support/SCurDateTime.cpp
+
+CMakeFiles/mmko1.dir/support/SCurDateTime.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/mmko1.dir/support/SCurDateTime.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/maxim/projects-okb44/aik/lib_for_unmmko_driver/mmko1-lib/core/support/SCurDateTime.cpp > CMakeFiles/mmko1.dir/support/SCurDateTime.cpp.i
+
+CMakeFiles/mmko1.dir/support/SCurDateTime.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/mmko1.dir/support/SCurDateTime.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/maxim/projects-okb44/aik/lib_for_unmmko_driver/mmko1-lib/core/support/SCurDateTime.cpp -o CMakeFiles/mmko1.dir/support/SCurDateTime.cpp.s
+
+CMakeFiles/mmko1.dir/support/SFileLogger.cpp.o: CMakeFiles/mmko1.dir/flags.make
+CMakeFiles/mmko1.dir/support/SFileLogger.cpp.o: ../support/SFileLogger.cpp
+CMakeFiles/mmko1.dir/support/SFileLogger.cpp.o: CMakeFiles/mmko1.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/maxim/projects-okb44/aik/lib_for_unmmko_driver/mmko1-lib/core/build-tags/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/mmko1.dir/support/SFileLogger.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/mmko1.dir/support/SFileLogger.cpp.o -MF CMakeFiles/mmko1.dir/support/SFileLogger.cpp.o.d -o CMakeFiles/mmko1.dir/support/SFileLogger.cpp.o -c /home/maxim/projects-okb44/aik/lib_for_unmmko_driver/mmko1-lib/core/support/SFileLogger.cpp
+
+CMakeFiles/mmko1.dir/support/SFileLogger.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/mmko1.dir/support/SFileLogger.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/maxim/projects-okb44/aik/lib_for_unmmko_driver/mmko1-lib/core/support/SFileLogger.cpp > CMakeFiles/mmko1.dir/support/SFileLogger.cpp.i
+
+CMakeFiles/mmko1.dir/support/SFileLogger.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/mmko1.dir/support/SFileLogger.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/maxim/projects-okb44/aik/lib_for_unmmko_driver/mmko1-lib/core/support/SFileLogger.cpp -o CMakeFiles/mmko1.dir/support/SFileLogger.cpp.s
 
 CMakeFiles/mmko1.dir/main.cpp.o: CMakeFiles/mmko1.dir/flags.make
 CMakeFiles/mmko1.dir/main.cpp.o: ../main.cpp
 CMakeFiles/mmko1.dir/main.cpp.o: CMakeFiles/mmko1.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/maxim/projects-okb44/aik/lib_for_unmmko_driver/mmko1-lib/core/build-tags/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/mmko1.dir/main.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/maxim/projects-okb44/aik/lib_for_unmmko_driver/mmko1-lib/core/build-tags/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/mmko1.dir/main.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/mmko1.dir/main.cpp.o -MF CMakeFiles/mmko1.dir/main.cpp.o.d -o CMakeFiles/mmko1.dir/main.cpp.o -c /home/maxim/projects-okb44/aik/lib_for_unmmko_driver/mmko1-lib/core/main.cpp
 
 CMakeFiles/mmko1.dir/main.cpp.i: cmake_force
@@ -113,19 +183,29 @@ CMakeFiles/mmko1.dir/main.cpp.s: cmake_force
 
 # Object files for target mmko1
 mmko1_OBJECTS = \
-"CMakeFiles/mmko1.dir/src/UpdateCommon.cpp.o" \
-"CMakeFiles/mmko1.dir/src/aik_unmmko.cpp.o" \
+"CMakeFiles/mmko1.dir/src/TestMmko.cpp.o" \
+"CMakeFiles/mmko1.dir/src/MonitorMode.cpp.o" \
+"CMakeFiles/mmko1.dir/src/ControllerMode.cpp.o" \
+"CMakeFiles/mmko1.dir/src/Object.cpp.o" \
+"CMakeFiles/mmko1.dir/support/Actions.cpp.o" \
+"CMakeFiles/mmko1.dir/support/SCurDateTime.cpp.o" \
+"CMakeFiles/mmko1.dir/support/SFileLogger.cpp.o" \
 "CMakeFiles/mmko1.dir/main.cpp.o"
 
 # External object files for target mmko1
 mmko1_EXTERNAL_OBJECTS =
 
-mmko1: CMakeFiles/mmko1.dir/src/UpdateCommon.cpp.o
-mmko1: CMakeFiles/mmko1.dir/src/aik_unmmko.cpp.o
+mmko1: CMakeFiles/mmko1.dir/src/TestMmko.cpp.o
+mmko1: CMakeFiles/mmko1.dir/src/MonitorMode.cpp.o
+mmko1: CMakeFiles/mmko1.dir/src/ControllerMode.cpp.o
+mmko1: CMakeFiles/mmko1.dir/src/Object.cpp.o
+mmko1: CMakeFiles/mmko1.dir/support/Actions.cpp.o
+mmko1: CMakeFiles/mmko1.dir/support/SCurDateTime.cpp.o
+mmko1: CMakeFiles/mmko1.dir/support/SFileLogger.cpp.o
 mmko1: CMakeFiles/mmko1.dir/main.cpp.o
 mmko1: CMakeFiles/mmko1.dir/build.make
 mmko1: CMakeFiles/mmko1.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/maxim/projects-okb44/aik/lib_for_unmmko_driver/mmko1-lib/core/build-tags/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Linking CXX executable mmko1"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/maxim/projects-okb44/aik/lib_for_unmmko_driver/mmko1-lib/core/build-tags/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Linking CXX executable mmko1"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/mmko1.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

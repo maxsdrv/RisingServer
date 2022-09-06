@@ -7,8 +7,14 @@
 
 
 void testPol() {
+	/* Example how to work Transmitting Message by MKO1 */
+	uint16_t dataWords[2]{1,2};
+	auto test = Object::CreateDefaultObject<TestMmko>(UNMMKO1_BUS_A);
 	auto controller = Object::CreateDefaultObject<ControllerMode>();
-	controller->BaseTransmitCmd(0, 0, 0);
+	test->Init();
+	test->SelfTest();
+	controller->baseTransmitCmd(0, 0, 1, dataWords);
+	test->Close();
 }
 
 

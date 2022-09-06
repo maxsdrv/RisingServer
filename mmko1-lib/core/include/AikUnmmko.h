@@ -11,7 +11,6 @@ class Actions;
 class ITestMmko;
 
 const int MAX_SUB_ADDRESS = 64;
-//static ViStatus status = VI_SUCCESS;
 
 struct AB_PARAMS
 {

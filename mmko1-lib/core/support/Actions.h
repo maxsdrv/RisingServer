@@ -32,7 +32,7 @@ void Sleep(int msec);
 class Common {
 public:
 	Common();
-	~Common() { /*MKOTEXT("~Common()"); */ }
+	~Common() { MKOTEXT("~Common()"); }
 
 public:
 	char resourceName[256]{}; // address mezzanine carrier which found MKO

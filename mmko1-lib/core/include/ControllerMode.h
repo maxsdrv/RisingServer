@@ -9,10 +9,13 @@ class ControllerMode : public TestMmko {
 public:
 	ControllerMode() = default;
 	explicit ControllerMode(unmmko1_bus bus);
-	~ControllerMode() override { /*MKOTEXT("~ControllerMode()");*/ }
-	/* *Template methods for send singly message* */
-	template <class T>
-	constexpr auto BaseTransmitCmd(T address, T subAddr, T wordCount);
+	~ControllerMode() override { MKOTEXT("~ControllerMode()"); }
+
+	/* Method for exchange data between bus-controller and terminal-device */
+	int32_t baseTransmitCmd(uint16_t address, uint16_t subAddress, uint16_t wordCount, uint16_t* dataWords);
+	/* Method for exchange messages in format F1
+    * - messages format for transmit data-word from controller to terminal-device */
+	int32_t transmitCmdF1(unmmko1_bus bus, uint16_t address, uint16_t subAddress, uint16_t wordCount, uint16_t *dataWords);
     /* noncopyable class */
 public:
     ControllerMode(const ControllerMode&) = delete;
@@ -20,20 +23,12 @@ public:
     ControllerMode& operator=(const ControllerMode&) = delete;
     ControllerMode& operator=(ControllerMode&&) = delete;
 private:
+	uint16_t mRxTx{}; // TODO data transmit/receive bit, needed will know how this use
+	void setRxTx(uint16_t RxTx);
+	uint16_t getRxTx() const;
 };
 
-template<class T>
-constexpr auto ControllerMode::BaseTransmitCmd(T address, T subAddr, T wordCount)
-{
-	std::cerr << "BaseTransmitCmd\n";
-	auto cwd = TestMmko::PackCw(address, subAddr, wordCount, 0);
-	*commands = unmmko1_bc_rt(static_cast<unmmko1_bus>(commands->activity), cwd, nullptr);
-	checkProcess(unmmko1_bc_configure(common->session, UNMMKO1_BC_DEFAULT));
-	checkProcess(unmmko1_bc_start(common->session));
-	checkProcess(unmmko1_bc_transmit_command(common->session, *commands));
 
-	return common->status;
-}
 
 
 

@@ -1,0 +1,23 @@
+{
+  "configurations": {
+    "Python: Attach To Vim": {
+      "variables": {
+        "port": "5678",
+        "host": "localhost"
+      },
+      "adapter": "vscode-cpptools",
+      "configuration": {
+        "request": "attach"
+      }
+    },
+    "CPP: Run current script": {
+      "adapter": "vscode-cpptools",
+      "configuration": {
+        "request": "launch",
+        "program": "/home/maxim/projects-okb44/aik/lib_for_unmmko_driver/mmko1-lib/build/bin/mmko1",
+        "args": [ "*${args:--update-gadget-config}" ],
+        "justMyCode#json": "${justMyCode:true}"
+      }
+    }
+  }
+}

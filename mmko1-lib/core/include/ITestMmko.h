@@ -9,7 +9,7 @@
 
 class ITestMmko {
 public:
-	virtual ~ITestMmko() { /*MKOTEXT("~ITestMmko()");*/ }
+	virtual ~ITestMmko() { MKOTEXT("~ITestMmko()"); }
 
 /* methods for working Mezzanine MKO */
 /* Base methods */
@@ -23,11 +23,11 @@ public:
 	 * subaddress - subaddress/manage mode
 	 * word_count - count of words/manage command code
 	 * */
-	virtual int PackCw(uint16_t address, uint16_t RxTx, uint16_t subAddress, uint16_t wordCount) = 0;
+	virtual uint16_t PackCw(uint16_t address, uint16_t RxTx, uint16_t subAddress, uint16_t wordCount) = 0;
 
 protected:
 	virtual void setBus(unmmko1_bus) = 0;
-	virtual unmmko1_bus getBus() = 0;
+	virtual unmmko1_bus getBus() const = 0;
 };
 
 

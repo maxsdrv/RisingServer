@@ -1,3 +1,0 @@
-/home/maxim/projects-okb44/aik/lib_for_unmmko_driver/mmko1-lib/core/build-tags/CMakeFiles/mmko1.dir
-/home/maxim/projects-okb44/aik/lib_for_unmmko_driver/mmko1-lib/core/build-tags/CMakeFiles/edit_cache.dir
-/home/maxim/projects-okb44/aik/lib_for_unmmko_driver/mmko1-lib/core/build-tags/CMakeFiles/rebuild_cache.dir

@@ -1,2 +1,4 @@
 /mmko1-lib/.idea/
 /mmko1-lib/build/
+/mmko1-lib/core/.cache/
+/mmko1-lib/core/build-tags/

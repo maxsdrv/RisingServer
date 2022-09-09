@@ -1,34 +1,36 @@
 #include "TestMmko.h"
 
-bool TestMmko::statusInit = false;
-
-TestMmko::TestMmko(unmmko1_bus bus_) :
-									bus(bus_),
-                                    common(std::make_unique<Common>())
+TestMmko::TestMmko(unmmko1_bus bus_)
+		:
+		lineBus(bus_),
+		common(std::make_unique<Common>()),
+		initStatus(false)
 {
 	MKOTEXT("TestMmko()");
 }
 
 TestMmko::~TestMmko() {
+	initStatus = false;
 	MKOTEXT("~TestMmko()");
-	statusInit = false;
 }
 void TestMmko::Init()
 {
+	common->status = common->search();
 	try {
-		common->getStatus();
+		common->processUnmbaseError();
+		common->processUnmmkoError();
 	}
-	catch (const std::exception& ex) {
+    catch (MkoErrors& ex) {
+
 		std::cerr << ex.what() << '\n';
 	}
-
 	unmmko1_init(common->resourceName,
 			VI_TRUE, VI_TRUE, &common->session);
 
 	unmmko1_connect(common->session, common->carrierSession, common->position,
 			VI_TRUE, VI_TRUE);
 
-	statusInit = true;
+	initStatus = true;
 }
 void TestMmko::SelfTest()
 {
@@ -52,28 +54,34 @@ void TestMmko::SelfTest()
 	printf("Memory test result: %s (%d)\n", message, resultCode);
 }
 
-void TestMmko::Close()
+void TestMmko::CloseSession()
 {
 	unmmko1_close(common->session);
 	unmbase_close(common->carrierSession);
-
+	initStatus = false;
 }
-uint16_t TestMmko::PackCw(uint16_t address, uint16_t RxTx, uint16_t subAddress, uint16_t wordCount)
+int32_t TestMmko::getStatus() const
 {
-	return unmmko1_pack_cw(address, RxTx, subAddress, wordCount);
+	return common->status;
 }
-void TestMmko::setBus(unmmko1_bus bus_)
+unmmko1_bus TestMmko::getLine() const
 {
-	bus = bus_;
+	return lineBus;
 }
-unmmko1_bus TestMmko::getBus() const
+uint32_t TestMmko::getSession() const
 {
-	return bus;
+	return common->session;
 }
 bool TestMmko::isInit() const
 {
-	return statusInit > 0;
+	return !initStatus;
 }
+
+
+
+
+
+
 
 
 

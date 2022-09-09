@@ -2,43 +2,28 @@
 
 /* Base class for Init and Self-test MMKO1 */
 
-#include <vector>
+#include <unmmko1.h>
+#include <memory>
 
-#include "ITestMmko.h"
+#include "defines.h"
+#include "Actions.h"
 
-class TestMmko : public ITestMmko {
+class TestMmko {
 public:
-	explicit TestMmko(unmmko1_bus bus = UNMMKO1_BUS_A);
-	~TestMmko() override;
-
-	void Init() override; // Initialise MMKO1 and carrier Mezzanine
-	void SelfTest() override; // Mezzanine self-test, info, version, memory test
-	void Close() override; // close connect Mezzanine MKO and carrier Mezzanine
-    /* Create command word */
-	uint16_t PackCw(uint16_t address, uint16_t RxTx, uint16_t subAddress, uint16_t wordCount) override;
-public:
-	static bool statusInit; // stores condition of initialise unmmko1 and unmbase
-protected:
-	//static bool statusInit; // stores condition of initialise unmmko1 and unmbase
-	bool isInit() const;
-	/* *Test*  expression for checking condition of Status Unmmko1
-	 * TO DO return value */
-	inline ViStatus checkProcess(ViStatus status) {
-		if (status < 0) {
-			return common->processUnmmkoError();
-		}
-		else {
-			return 1;
-		}
-	}
-
-    std::unique_ptr<Common> common; // class pointer Actions
-	std::vector<std::shared_ptr<unmmko1_command>> commands; // struct commands vector
-	unmmko1_bus bus; // bus condition
-private:
+	explicit TestMmko(unmmko1_bus bus_);
+	~TestMmko();
+	void Init(); // Initialise MMKO1 and carrier Mezzanine
+	void SelfTest(); // Mezzanine self-test, info, version, memory test
+	void CloseSession(); // close connect Mezzanine MKO and carrier Mezzanine
+	bool isInit() const; // check for initialisation
 	/* Getters and Setters */
-	void setBus(unmmko1_bus) override;
-	unmmko1_bus getBus() const override;
+	int32_t getStatus() const;
+	uint32_t getSession() const;
+	unmmko1_bus getLine() const;
+private:
+	unmmko1_bus lineBus; //condition bus-line mmko1	(main/reserve)
+    std::unique_ptr<Common> common; // class pointer Actions
+	bool initStatus;
 };
 
 

@@ -1,26 +1,56 @@
 #include "ControllerMode.h"
 
-ControllerMode::ControllerMode(unmmko1_bus bus) : mRxTx(0), TestMmko(bus) {}
-
-int32_t ControllerMode::baseTransmitCmd(uint16_t address, uint16_t subAddress, uint16_t wordCount, uint16_t* dataWords)
-{
-	auto cwd = TestMmko::PackCw(address, mRxTx, subAddress, wordCount);
-	if (!isInit()) {
-		MKOTEXT("ERROR::INIT::PLEASE FIRST INIT AND SEARCH MKO");
-		throw std::runtime_error("TEST::ERROR::INIT");
-	}
-
-//	*commands = unmmko1_bc_rt(static_cast<unmmko1_bus>(commands->activity), cwd, nullptr);
-	checkProcess(unmmko1_bc_configure(common->session, UNMMKO1_BC_DEFAULT));
-	checkProcess(unmmko1_bc_start(common->session));
-	checkProcess(unmmko1_bc_transmit_command(common->session, *commands.back()));
-
-	return common->status;
+namespace {
+	const int sizeBcOptions = 3;
 }
-int32_t ControllerMode::transmitCmdF1(unmmko1_bus bus, uint16_t address, uint16_t subAddress, uint16_t wordCount,
+
+ControllerMode::ControllerMode(const TestMmko& objectMmko1) :
+		 testMmko(objectMmko1),
+		 mRxTx(0),
+		 commands(std::make_unique<unmmko1_command>()),
+		 bcOptions(0)
+{
+	MKOTEXT("ControllerMode()");
+}
+
+uint16_t ControllerMode::PackCw(uint16_t address, uint16_t RxTx, uint16_t subAddress, uint16_t wordCount)
+{
+	return unmmko1_pack_cw(address, RxTx, subAddress, wordCount);
+}
+
+int32_t ControllerMode::BusToTerminalReceive(uint16_t address, uint16_t subAddress, uint16_t wordCount, uint16_t* dataWords) const
+{
+	auto line = testMmko.getLine();
+	auto session = testMmko.getSession();
+
+	if (bcOptions < 0 || bcOptions > sizeBcOptions)
+		throw MkoErrors("BAD::ARGUMENTS::BC_OPTIONS");
+
+	auto commandWord = PackCw(address, mRxTx, subAddress, wordCount);
+	*commands = unmmko1_bc_rt(line, commandWord, dataWords);
+	unmmko1_bc_configure(session, bcOptions);
+	unmmko1_bc_start(session);
+	unmmko1_bc_transmit_command(session, *commands);
+	unmmko1_bc_stop(session);
+
+	return testMmko.getStatus();
+}
+int32_t ControllerMode::transmitCmdF1( uint16_t address, uint16_t subAddress, uint16_t wordCount,
 		uint16_t* dataWords)
 {
-	return 0;
+	auto line = testMmko.getLine();
+	auto session = testMmko.getSession();
+
+	if (bcOptions < 0 || bcOptions > 3)
+		throw MkoErrors("BAD::ARGUMENTS::BC_OPTIONS");
+
+	*commands = unmmko1_f1(line, address, subAddress, wordCount, dataWords);
+	unmmko1_bc_configure(session, bcOptions);
+	unmmko1_bc_start(session);
+	unmmko1_bc_transmit_command(session, *commands);
+	unmmko1_bc_stop(session);
+
+	return testMmko.getStatus();
 }
 void ControllerMode::setRxTx(uint16_t RxTx)
 {
@@ -30,4 +60,13 @@ uint16_t ControllerMode::getRxTx() const
 {
 	return mRxTx;
 }
+void ControllerMode::setBcOptions(int bcOptions_)
+{
+	bcOptions = bcOptions_;
+}
+int ControllerMode::getBcOptions() const
+{
+	return bcOptions;
+}
+
 

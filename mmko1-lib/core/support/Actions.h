@@ -15,6 +15,7 @@
 
 #include "SFileLogger.h"
 #include "defines.h"
+#include "MkoErrors.h"
 
 #ifdef _WIN32
 #include <conio.h>
@@ -26,7 +27,7 @@ int key_pressed()
 #else
 #include <unistd.h>
 int key_pressed();
-void Sleep(int msec);
+//void Sleep(int msec);
 #endif
 
 class Common {
@@ -34,10 +35,8 @@ public:
 	Common();
 	~Common() { MKOTEXT("~Common()"); }
 
-public:
 	char resourceName[256]{}; // address mezzanine carrier which found MKO
 	ViUInt16 position; // position mezzanine MKO on mezzanine carrier
-
 	ViStatus status;
 	ViSession session;
 	ViSession resourceManagerSession;
@@ -51,9 +50,17 @@ public:
 	ViChar address[256]{};
 
 	int32_t search(); // method for search mezzanine MKO
-	bool processUnmmkoError() const;
-	bool processUnmbaseError() const;
+	void processUnmmkoError() const;
+	void processUnmbaseError() const;
 	static void printMessages(uint32_t messagesCount, unmmko1_message* message);
-
-	ViStatus getStatus();
 };
+
+
+
+
+
+
+
+
+
+

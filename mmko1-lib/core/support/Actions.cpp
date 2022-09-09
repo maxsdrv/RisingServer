@@ -3,7 +3,7 @@
 int key_pressed() {
 	return 0;
 }
-void Sleep(int msec) {
+/*void Sleep(int msec) {
 	int sec;
 	int usec;
 
@@ -13,8 +13,7 @@ void Sleep(int msec) {
 		sleep(sec);
 	if (usec > 0)
 		usleep(usec);
-}
-
+}*/
 Common::Common()
 		:
 		status(VI_SUCCESS),
@@ -134,48 +133,22 @@ int32_t Common::search()
 	return this->found;
 }
 //! Проверка ошибок, используется при вызове функций драйвера мезонина MKO
-bool Common::processUnmmkoError() const
+void Common::processUnmmkoError() const
 {
 	ViChar str[256];
 	unmmko1_error_message(session, status, str);
-
 	if (status < 0)	{
-		printf("Returns status code %d with message: %s\n", status, str);
-		SFileLogger::getInstance().writeToLog(status, str);
-		return false;
+		throw MkoErrors("ERROR::UNMMKO::INIT", status, str);
 	}
-
-	return true;
 }
 //! Проверка ошибок, используется при вызове функций драйвера Носителя Мезонинов
-bool Common::processUnmbaseError() const
+void Common::processUnmbaseError() const
 {
 	ViChar str[256];
 	unmbase_error_message(session, status, str);
-
 	if (status < 0)	{
-		printf("Returns status code %d with message: %s\n", status, str);
-		SFileLogger::getInstance().writeToLog(status, str);
-		return false;
+		throw MkoErrors("ERROR::UNMBASE::INIT", status, str);
 	}
-
-	return true;
-}
-ViStatus Common::getStatus()
-{
-	status = search();
-
-	if (!processUnmbaseError()) {
-		throw std::runtime_error("ERROR::UNMBASE::INIT");
-	}
-	unmbase_init(resourceName, VI_TRUE, VI_TRUE,
-			&carrierSession);
-
-	if (!processUnmmkoError()) {
-		throw std::runtime_error("ERROR::UNMMKO::INIT");
-	}
-
-	return status;
 }
 void Common::printMessages(uint32_t messagesCount, unmmko1_message* messages)
 {
@@ -240,3 +213,5 @@ void Common::printMessages(uint32_t messagesCount, unmmko1_message* messages)
 
 	fflush(stdout);
 }
+
+

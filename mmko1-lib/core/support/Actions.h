@@ -19,7 +19,7 @@
 class Common {
 private:
 	Common();
-	~Common() { MKOTEXT("~Common()"); }
+	~Common();
 public:
 	static Common& getInstance() {
 		static Common instance;

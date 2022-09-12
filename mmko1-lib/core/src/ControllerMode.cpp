@@ -4,7 +4,15 @@ namespace {
 	const int sizeBcOptions = 3;
 }
 
-ControllerMode::ControllerMode(const TestMmko& objectMmko1) :
+/*ControllerMode::ControllerMode(const TestMmko& objectMmko1) :
+		 testMmko(objectMmko1),
+		 mRxTx(0),
+		 commands(std::make_unique<unmmko1_command>()),
+		 bcOptions(0)
+{
+	MKOTEXT("ControllerMode()");
+}*/
+ControllerMode::ControllerMode(TestMmko* objectMmko1) :
 		 testMmko(objectMmko1),
 		 mRxTx(0),
 		 commands(std::make_unique<unmmko1_command>()),
@@ -12,6 +20,10 @@ ControllerMode::ControllerMode(const TestMmko& objectMmko1) :
 {
 	MKOTEXT("ControllerMode()");
 }
+/*ControllerMode::~ControllerMode()
+{
+	MKOTEXT("~ControllerMode()");
+}*/
 
 uint16_t ControllerMode::PackCw(uint16_t address, uint16_t RxTx, uint16_t subAddress, uint16_t wordCount)
 {
@@ -20,8 +32,8 @@ uint16_t ControllerMode::PackCw(uint16_t address, uint16_t RxTx, uint16_t subAdd
 
 int32_t ControllerMode::BusToTerminalReceive(uint16_t address, uint16_t subAddress, uint16_t wordCount, uint16_t* dataWords) const
 {
-	auto line = testMmko.getLine();
-
+//	auto line = testMmko.getLine();
+	auto line = testMmko->getLine();
 	if (bcOptions < 0 || bcOptions > sizeBcOptions)
 		throw MkoErrors("BAD::ARGUMENTS::BC_OPTIONS");
 
@@ -37,7 +49,7 @@ int32_t ControllerMode::BusToTerminalReceive(uint16_t address, uint16_t subAddre
 int32_t ControllerMode::transmitCmdF1( uint16_t address, uint16_t subAddress, uint16_t wordCount,
 		uint16_t* dataWords)
 {
-	auto line = testMmko.getLine();
+	auto line = testMmko->getLine();
 
 	if (bcOptions < 0 || bcOptions > sizeBcOptions)
 		throw MkoErrors("BAD::ARGUMENTS::BC_OPTIONS");

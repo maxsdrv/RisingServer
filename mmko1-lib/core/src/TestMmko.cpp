@@ -1,8 +1,9 @@
 #include "TestMmko.h"
+#include "ControllerMode.h"
 
-TestMmko::TestMmko(unmmko1_bus bus_)
+TestMmko::TestMmko()
 		:
-		lineBus(bus_),
+		lineBus(UNMMKO1_BUS_A),
 		initStatus(false)
 {
 
@@ -77,6 +78,13 @@ bool TestMmko::isInit() const
 {
 	return !initStatus;
 }
+ControllerMode* TestMmko::addController(unmmko1_bus bus)
+{
+	return nullptr;
+}
+
+
+
 
 
 

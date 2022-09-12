@@ -11,7 +11,10 @@ Common::Common()
 {
     MKOTEXT("Common()");
 }
-
+Common::~Common()
+{
+	MKOTEXT("~Common()");
+}
 
 int32_t Common::search()
 {

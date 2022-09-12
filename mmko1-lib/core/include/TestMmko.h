@@ -17,13 +17,13 @@ public:
 	void CloseSession(); // close connect Mezzanine MKO and carrier Mezzanine
 	bool isInit() const; // check for initialisation
 	/* Getters and Setters */
-	int32_t getStatus() const;
-	uint32_t getSession() const;
-	unmmko1_bus getLine() const;
+	[[nodiscard]] static int32_t getStatus() ;
+	[[nodiscard]] static uint32_t getSession() ;
+	[[nodiscard]] unmmko1_bus getLine() const;
 private:
 	unmmko1_bus lineBus; //condition bus-line mmko1	(main/reserve)
-    std::unique_ptr<Common> common; // class pointer Actions
-	bool initStatus;
+//    std::unique_ptr<Common> common; // class pointer Actions
+	bool initStatus; // activation status MKO
 };
 
 

@@ -1,19 +1,5 @@
 #include "Actions.h"
 
-int key_pressed() {
-	return 0;
-}
-/*void Sleep(int msec) {
-	int sec;
-	int usec;
-
-	sec = msec / 1000;
-	usec = (msec % 1000) * 1000;
-	if (sec > 0)
-		sleep(sec);
-	if (usec > 0)
-		usleep(usec);
-}*/
 Common::Common()
 		:
 		status(VI_SUCCESS),

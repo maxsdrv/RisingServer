@@ -7,11 +7,12 @@
 
 void test() {
 	/* Example how to work Transmitting Message by MKO1 */
-	uint16_t dataWords[2]{1,2};
+	uint16_t dataWords[5]{1, 2, 3, 4, 5};
 	TestMmko test(UNMMKO1_BUS_A);
 	test.Init();
 	ControllerMode controller(test);
-	auto res = controller.BusToTerminalReceive(0, 0, 0, nullptr);
+	controller.transmitCmdF1(RT_3, SA_2, 5, dataWords);
+	test.CloseSession();
 }
 
 

@@ -1,8 +1,7 @@
 #pragma once
 
-/* This class wrapper for function search_unmmko1 in common.h
- * it necessary because there was goto defines and is not convenient methods used to
- * old C code */
+/* This Singleton Class-Wrapper for C-header common.h
+*/
 
 #include <cstring>
 #include <visa.h>
@@ -17,23 +16,20 @@
 #include "defines.h"
 #include "MkoErrors.h"
 
-#ifdef _WIN32
-#include <conio.h>
-#include <windows.h>
-int key_pressed()
-{
-	return _kbhit();
-}
-#else
-#include <unistd.h>
-int key_pressed();
-//void Sleep(int msec);
-#endif
-
 class Common {
-public:
+private:
 	Common();
 	~Common() { MKOTEXT("~Common()"); }
+public:
+	static Common& getInstance() {
+		static Common instance;
+		return instance;
+	}
+
+	Common(const Common&) = delete;
+	Common(Common&&) = delete;
+	Common& operator=(const Common&) = delete;
+	Common& operator=(Common&&) = delete;
 
 	char resourceName[256]{}; // address mezzanine carrier which found MKO
 	ViUInt16 position; // position mezzanine MKO on mezzanine carrier
@@ -53,6 +49,8 @@ public:
 	void processUnmmkoError() const;
 	void processUnmbaseError() const;
 	static void printMessages(uint32_t messagesCount, unmmko1_message* message);
+
+	/* ******************************************** */
 };
 
 

@@ -4,35 +4,26 @@ namespace {
 	const int sizeBcOptions = 3;
 }
 
-/*ControllerMode::ControllerMode(const TestMmko& objectMmko1) :
+ControllerMode::ControllerMode(TestMmko* objectMmko1, const uint16& rxtx, int bcoptions) :
 		 testMmko(objectMmko1),
-		 mRxTx(0),
+		 mRxTx(rxtx),
 		 commands(std::make_unique<unmmko1_command>()),
-		 bcOptions(0)
-{
-	MKOTEXT("ControllerMode()");
-}*/
-ControllerMode::ControllerMode(TestMmko* objectMmko1) :
-		 testMmko(objectMmko1),
-		 mRxTx(0),
-		 commands(std::make_unique<unmmko1_command>()),
-		 bcOptions(0)
+		 bcOptions(bcoptions)
 {
 	MKOTEXT("ControllerMode()");
 }
-/*ControllerMode::~ControllerMode()
+ControllerMode::~ControllerMode()
 {
 	MKOTEXT("~ControllerMode()");
-}*/
+}
 
-uint16_t ControllerMode::PackCw(uint16_t address, uint16_t RxTx, uint16_t subAddress, uint16_t wordCount)
+uint16 ControllerMode::PackCw(uint16 address, uint16 RxTx, uint16 subAddress, uint16 wordCount)
 {
 	return unmmko1_pack_cw(address, RxTx, subAddress, wordCount);
 }
 
-int32_t ControllerMode::BusToTerminalReceive(uint16_t address, uint16_t subAddress, uint16_t wordCount, uint16_t* dataWords) const
+int32 ControllerMode::BusToTerminalReceive(uint16 address, uint16 subAddress, uint16 wordCount, uint16* dataWords) const
 {
-//	auto line = testMmko.getLine();
 	auto line = testMmko->getLine();
 	if (bcOptions < 0 || bcOptions > sizeBcOptions)
 		throw MkoErrors("BAD::ARGUMENTS::BC_OPTIONS");
@@ -46,11 +37,10 @@ int32_t ControllerMode::BusToTerminalReceive(uint16_t address, uint16_t subAddre
 
 	return TestMmko::getStatus();
 }
-int32_t ControllerMode::transmitCmdF1( uint16_t address, uint16_t subAddress, uint16_t wordCount,
-		uint16_t* dataWords)
+int32 ControllerMode::transmitCmdF1( uint16 address, uint16 subAddress, uint16 wordCount,
+		uint16* dataWords)
 {
 	auto line = testMmko->getLine();
-
 	if (bcOptions < 0 || bcOptions > sizeBcOptions)
 		throw MkoErrors("BAD::ARGUMENTS::BC_OPTIONS");
 
@@ -62,11 +52,11 @@ int32_t ControllerMode::transmitCmdF1( uint16_t address, uint16_t subAddress, ui
 
 	return TestMmko::getStatus();
 }
-void ControllerMode::setRxTx(uint16_t RxTx)
+void ControllerMode::setRxTx(uint16 RxTx)
 {
 	mRxTx = RxTx;
 }
-uint16_t ControllerMode::getRxTx() const
+uint16 ControllerMode::getRxTx() const
 {
 	return mRxTx;
 }

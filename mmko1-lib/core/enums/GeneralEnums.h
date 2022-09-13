@@ -1,44 +1,7 @@
-#ifndef GENERALENUMS_H
-#define GENERALENUMS_H
+#pragma once
 
-enum class CARD_NUM
-{
-    CARD_1,
-    CARD_2
+/* Bus line for transmitting data */
+enum class unmmko1Bus {
+	UNMMKO1_BUS_A				= 0x0001,
+	UNMMKO1_BUS_B				= 0x0002
 };
-enum class CORE_NUM
-{
-    CORE_1,
-    CORE_2,
-    CORE_MAX
-};
-enum class CHANNELS
-{
-    CHANNEL_1,
-    CHANNEL_2,
-    CH_COL
-};
-enum class F4_COMMAND
-{
-    BEGIN = -1,
-    TAKE_COMMAND,
-    SYNC,
-    TRANSMIT_BW,
-    START_SELFTEST,
-    BLOCK_TRANSMITTER,
-    DEBLOCK_TRANSMITTER,
-    BLOCK_ERROR_FLAG,
-    DEBLOCK_ERROR_FLAG,
-    REINIT,
-    RESERVE,/*********************/
-    SEND_VECTOR_WORD = 16,
-    SYNC_WITH_DW,
-    SEND_LAST_CMD,
-    SEND_VSK_WORD,
-    BLOCK_Nth_TRANSMITTER,
-    DEBLOCK_Nth_TRANSMITTER,
-    END
-};
-
-
-#endif //GENERALENUMS_H

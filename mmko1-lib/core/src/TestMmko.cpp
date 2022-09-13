@@ -1,13 +1,13 @@
 #include "TestMmko.h"
 #include "ControllerMode.h"
 
-TestMmko::TestMmko()
+TestMmko::TestMmko(BUSLINE line)
 		:
-		lineBus(UNMMKO1_BUS_A),
+		lineBus(line),
 		initStatus(false)
 {
-
 	MKOTEXT("TestMmko()");
+	assert(line < BUSLINE_MAX);
 }
 
 TestMmko::~TestMmko() {
@@ -37,7 +37,7 @@ void TestMmko::Init()
 void TestMmko::SelfTest()
 {
 	char message[256];
-	int16_t resultCode{};
+	int16 resultCode{};
 	char softwareVersion[256];
 	char hardwareVersion[256];
 
@@ -58,11 +58,15 @@ void TestMmko::SelfTest()
 
 void TestMmko::CloseSession()
 {
+	if (!initStatus)
+		throw MkoErrors("MKO or Mezzanine Carrier is not initialise");
+
 	unmmko1_close(Common::getInstance().session);
 	unmbase_close(Common::getInstance().carrierSession);
+
 	initStatus = false;
 }
-int32_t TestMmko::getStatus()
+int32 TestMmko::getStatus()
 {
 	return Common::getInstance().status;
 }
@@ -70,7 +74,7 @@ unmmko1_bus TestMmko::getLine() const
 {
 	return lineBus;
 }
-uint32_t TestMmko::getSession()
+uint32 TestMmko::getSession()
 {
 	return Common::getInstance().session;
 }
@@ -78,10 +82,19 @@ bool TestMmko::isInit() const
 {
 	return !initStatus;
 }
-ControllerMode* TestMmko::addController(unmmko1_bus bus)
+ControllerMode* TestMmko::addController(const uint16& rxtx, int options)
 {
-	return nullptr;
+	return add<ControllerMode, uint16, int>(rxtx, options);
 }
+template<class T, class TBit, class TOptions>
+std::shared_ptr<T>& TestMmko::insertObject(const TBit& rt, TOptions options)
+{
+	return controllers =
+			std::shared_ptr<ControllerMode>(new ControllerMode(this, rt, options));
+}
+
+
+
 
 
 

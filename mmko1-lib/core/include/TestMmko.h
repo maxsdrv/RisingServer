@@ -13,32 +13,41 @@ class ControllerMode;
 
 class TestMmko {
 public:
-	TestMmko();
+	explicit TestMmko(BUSLINE line);
 	~TestMmko();
 	void Init(); // Initialise MMKO1 and carrier Mezzanine
 	static void SelfTest(); // Mezzanine self-test, info, version, memory test
 	void CloseSession(); // close connect Mezzanine MKO and carrier Mezzanine
 	bool isInit() const; // check for initialisation
 	/* Getters and Setters */
-	[[nodiscard]] static int32_t getStatus() ;
-	[[nodiscard]] static uint32_t getSession() ;
+	[[nodiscard]] static int32 getStatus() ;
+	[[nodiscard]] static uint32 getSession() ;
 	[[nodiscard]] unmmko1_bus getLine() const;
 private:
 	unmmko1_bus lineBus; //condition bus-line mmko1	(main/reserve)
-//    std::unique_ptr<Common> common; // class pointer Actions
 	bool initStatus; // activation status MKO
-
 	/* Controller record type */
-	std::unique_ptr<ControllerMode> controllers;
+	std::shared_ptr<ControllerMode> controllers;
+
 public:
-	ControllerMode* addController(unmmko1_bus bus);
+	ControllerMode* addController(const uint16& rxtx, int options);
 
 private:
-
+	/* */
+	template<class T, class TBit, class TOptions >
+	std::shared_ptr<T>& insertObject(const TBit& rt, TOptions options);
+	/* */
+	template<class T, class B, class O>
+	constexpr T* add(const B& bit, O options);
 };
 
+template<class T, class B, class O>
+constexpr T* TestMmko::add(const B& bit, O options)
+{
+	std::shared_ptr<T>& pObj = insertObject<T>(bit, options);
 
-
+	return pObj.get();
+}
 
 
 

@@ -33,7 +33,7 @@ list(APPEND SOURCE
 include_directories(include/ enums/ $ENV{HOME}../../usr/local/vxipnp/linux/unmmko1/
 $ENV{HOME}../../usr/local/vxipnp/linux/include/)
 
-include_directories(include src defines enums support logs)
+include_directories(include src defines support logs)
 
 
 add_executable(${PROJECT_NAME} ${HEADERS} ${SOURCE} ${SUPPORT} main.cpp)

@@ -24,9 +24,9 @@ uint16 ControllerMode::PackCw(uint16 address, uint16 RxTx, uint16 subAddress, ui
 
 int32 ControllerMode::BusToTerminalReceive(uint16 address, uint16 subAddress, uint16 wordCount, uint16* dataWords) const
 {
-	auto line = testMmko->getLine();
+	auto line = static_cast<unmmko1_bus>(testMmko->getLine());
 	if (bcOptions < 0 || bcOptions > sizeBcOptions)
-		throw MkoErrors("BAD::ARGUMENTS::BC_OPTIONS");
+		assert(bcOptions > 0 && bcOptions < sizeBcOptions);
 
 	auto commandWord = PackCw(address, mRxTx, subAddress, wordCount);
 	*commands = unmmko1_bc_rt(line, commandWord, dataWords);
@@ -40,9 +40,9 @@ int32 ControllerMode::BusToTerminalReceive(uint16 address, uint16 subAddress, ui
 int32 ControllerMode::transmitCmdF1( uint16 address, uint16 subAddress, uint16 wordCount,
 		uint16* dataWords)
 {
-	auto line = testMmko->getLine();
+	auto line = static_cast<unmmko1_bus>(testMmko->getLine());
 	if (bcOptions < 0 || bcOptions > sizeBcOptions)
-		throw MkoErrors("BAD::ARGUMENTS::BC_OPTIONS");
+		assert(bcOptions > 0 && bcOptions < sizeBcOptions);
 
 	*commands = unmmko1_f1(line, address, subAddress, wordCount, dataWords);
 	unmmko1_bc_configure(TestMmko::getSession(), bcOptions);

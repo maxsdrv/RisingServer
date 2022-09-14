@@ -1,15 +1,15 @@
 #include "MkoErrors.h"
 
-#include <utility>
+#include <boost/format.hpp>
 
-MkoErrors::MkoErrors(std::string msg, int32_t status, std::string error_) :
-					textMsg(std::move(msg)),
-					mStatus(status),
-					error(std::move(error_))
-{
+MkoErrors::MkoErrors(std::string msg, int error, std::string title) :
+						errorMessage(std::move(msg)),
+						errorCode(error),
+						sTitle(std::move(title)) { }
 
-}
 std::string MkoErrors::what()
 {
-	return textMsg + " " + std::to_string(mStatus) + " " + error;
+	auto tmpStr = boost::format("%s %i %s \n") % errorMessage % errorCode % sTitle;
+	return tmpStr.str();
 }
+

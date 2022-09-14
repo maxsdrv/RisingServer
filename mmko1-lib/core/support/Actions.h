@@ -14,6 +14,7 @@
 
 #include "SFileLogger.h"
 #include "defines.h"
+#include "BaseMkoEnums.h"
 #include "MkoErrors.h"
 
 class Common {
@@ -48,7 +49,6 @@ public:
 	int32_t search(); // method for search mezzanine MKO
 	void processUnmmkoError() const;
 	void processUnmbaseError() const;
-	static void printMessages(uint32_t messagesCount, unmmko1_message* message);
 
 	/* ******************************************** */
 };

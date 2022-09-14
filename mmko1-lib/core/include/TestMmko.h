@@ -6,7 +6,6 @@
 #include <unmmko1.h>
 #include <memory>
 
-#include "defines.h"
 #include "Actions.h"
 
 class ControllerMode;
@@ -22,9 +21,9 @@ public:
 	/* Getters and Setters */
 	[[nodiscard]] static int32 getStatus() ;
 	[[nodiscard]] static uint32 getSession() ;
-	[[nodiscard]] unmmko1_bus getLine() const;
+	[[nodiscard]] BUSLINE getLine() const;
 private:
-	unmmko1_bus lineBus; //condition bus-line mmko1	(main/reserve)
+	BUSLINE lineBus; //condition bus-line mmko1	(main/reserve)
 	bool initStatus; // activation status MKO
 	/* Controller record type */
 	std::shared_ptr<ControllerMode> controllers;
@@ -33,10 +32,11 @@ public:
 	ControllerMode* addController(const uint16& rxtx, int options);
 
 private:
-	/* */
+	/* Adds arguments into class constructor and return instance */
 	template<class T, class TBit, class TOptions >
 	std::shared_ptr<T>& insertObject(const TBit& rt, TOptions options);
-	/* */
+	/* This method necessary to use class with private constructor
+	 * Method accepts arguments and class type then return created class object */
 	template<class T, class B, class O>
 	constexpr T* add(const B& bit, O options);
 };

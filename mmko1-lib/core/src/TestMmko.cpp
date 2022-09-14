@@ -7,7 +7,6 @@ TestMmko::TestMmko(BUSLINE line)
 		initStatus(false)
 {
 	MKOTEXT("TestMmko()");
-	assert(line < BUSLINE_MAX);
 }
 
 TestMmko::~TestMmko() {
@@ -17,21 +16,19 @@ TestMmko::~TestMmko() {
 void TestMmko::Init()
 {
 	Common::getInstance().status = Common::getInstance().search();
-	try {
+	if (Common::getInstance().status < 0) {
 		Common::getInstance().processUnmbaseError();
+		initStatus = false;
+		return;
+	}
+	else if (unmmko1_init(Common::getInstance().resourceName,
+			VI_TRUE, VI_TRUE, &Common::getInstance().session) < 0) {
 		Common::getInstance().processUnmmkoError();
+		initStatus = false;
 	}
-    catch (MkoErrors& ex) {
-
-		std::cerr << ex.what() << '\n';
-	}
-	unmmko1_init(Common::getInstance().resourceName,
-			VI_TRUE, VI_TRUE, &Common::getInstance().session);
-
 	unmmko1_connect(Common::getInstance().session,
 			Common::getInstance().carrierSession, Common::getInstance().position,
 			VI_TRUE, VI_TRUE);
-
 	initStatus = true;
 }
 void TestMmko::SelfTest()
@@ -58,9 +55,10 @@ void TestMmko::SelfTest()
 
 void TestMmko::CloseSession()
 {
-	if (!initStatus)
-		throw MkoErrors("MKO or Mezzanine Carrier is not initialise");
-
+	if (!initStatus) {
+		MKOTEXT("MKO is not activate ", getStatus(), getSession());
+		return;
+	}
 	unmmko1_close(Common::getInstance().session);
 	unmbase_close(Common::getInstance().carrierSession);
 
@@ -70,7 +68,7 @@ int32 TestMmko::getStatus()
 {
 	return Common::getInstance().status;
 }
-unmmko1_bus TestMmko::getLine() const
+BUSLINE TestMmko::getLine() const
 {
 	return lineBus;
 }

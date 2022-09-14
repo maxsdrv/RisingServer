@@ -18,8 +18,7 @@ Common::~Common()
 
 int32_t Common::search()
 {
-	std::cout << "Debug information about calling method search" << '\n';
-
+	MKOTEXT("Debug information about search MKO");
 	/* Lambdas instead goto definitions in C implementation common.h */
 	auto Error = [this]() {
 	  if (resourceManagerSession)
@@ -27,12 +26,12 @@ int32_t Common::search()
 	};
 	auto CloseDevice = [this]() {
 	  viClose(deviceSession);
-	  if (VI_SUCCESS==found)
+	  if (VI_SUCCESS == found)
 		  return;
 	};
 
 	//  Open Session with VISA
-	if (viOpenDefaultRM(&resourceManagerSession)<0)
+	if (viOpenDefaultRM(&resourceManagerSession) < 0)
 		Error();
 
 	// Find devices
@@ -80,15 +79,14 @@ int32_t Common::search()
 		else if (VI_INTF_TCPIP==interfaceType || VI_INTF_USB==interfaceType || VI_INTF_GPIB==interfaceType
 				|| VI_INTF_ASRL==interfaceType) {
 			ViChar idn[256];
-			ViStatus status = VI_SUCCESS;
 
-			if (viLock(deviceSession, VI_EXCLUSIVE_LOCK, 2000, 0, 0)<0)
+			if (viLock(deviceSession, VI_EXCLUSIVE_LOCK, 2000, nullptr, nullptr)<0)
 				CloseDevice();
 
 			status = viQueryf(deviceSession, "*IDN?\n", "%t", idn);
 			viUnlock(deviceSession);
 
-			if (status<0)
+			if (status < 0)
 				CloseDevice();
 
 			if (0!=strncmp(idn, UNMBASE_MEZABOX_IDN, strlen(UNMBASE_MEZABOX_IDN)))
@@ -96,7 +94,7 @@ int32_t Common::search()
 		}
 
 		// Initialise Carrier Mezzanine and read code of mezzanines
-		if (unmbase_init(address, VI_ON, VI_ON, &carrierSession)<0)
+		if (unmbase_init(address, VI_ON, VI_ON, &carrierSession) < 0)
 			CloseDevice();
 
 		for (mezzanineNumber = 1; mezzanineNumber<=8; ++mezzanineNumber) {
@@ -116,7 +114,7 @@ int32_t Common::search()
 
 	}
 
-	if (VI_SUCCESS==found)
+	if (VI_SUCCESS == found)
 		  printf("Mezzanine MKO found at %s on %d position\n", resourceName, position);
 
 	return this->found;
@@ -127,7 +125,7 @@ void Common::processUnmmkoError() const
 	ViChar str[256];
 	unmmko1_error_message(session, status, str);
 	if (status < 0)	{
-		throw MkoErrors("ERROR::UNMMKO::INIT", status, str);
+		MKOTEXT("Error MKO activation", session, status, str);
 	}
 }
 //! Проверка ошибок, используется при вызове функций драйвера Носителя Мезонинов
@@ -136,71 +134,8 @@ void Common::processUnmbaseError() const
 	ViChar str[256];
 	unmbase_error_message(session, status, str);
 	if (status < 0)	{
-		throw MkoErrors("ERROR::UNMBASE::INIT", status, str);
+		MKOTEXT("Error mezzanine carrier activation", session, status, str);
 	}
-}
-void Common::printMessages(uint32_t messagesCount, unmmko1_message* messages)
-{
-	ViUInt32 message_index = 0;
-	if (messagesCount <= 0) std::cerr << "MESSAGES::NOT::FOUND\n";
-
-	for (message_index = 0; message_index < messagesCount; ++message_index) {
-		ViUInt16 data_word_index = 0;
-		unmmko1_message message = messages[message_index];
-		uint64_t timestamp = (((uint64_t)message.timestamp_high) << 32)+message.timestamp_low;
-		printf("%llu %s\n", timestamp, (message.activity & UNMMKO1_MSG_ACT_BUS_A) ? "(A)" : "(B)");
-
-		if (message.activity & UNMMKO1_MSG_ACT_CWD_1)
-			printf("CW1 %x\n", message.command.command_word_1);
-		if (message.activity & UNMMKO1_MSG_ACT_CWD_2)
-			printf("CW2 %x\n", message.command.command_word_2);
-
-		if (0!=message.command.data_words_count) {
-			printf("DWS_C (%u):", message.command.data_words_count);
-			for (data_word_index = 0; data_word_index<message.command.data_words_count; ++data_word_index)
-				printf(" %x", message.command.data_words[data_word_index]);
-			printf("\n");
-		}
-
-		if (message.activity & UNMMKO1_MSG_ACT_SWD_1) {
-			printf("SW1 %x\n", message.response_1.status_word);
-			if (0!=message.response_1.data_words_count) {
-				printf("DWS_R1 (%u):", message.response_1.data_words_count);
-				for (data_word_index = 0; data_word_index<message.response_1.data_words_count; ++data_word_index)
-					printf(" %x", message.response_1.data_words[data_word_index]);
-				printf("\n");
-			}
-		}
-		if (message.activity & UNMMKO1_MSG_ACT_SWD_2) {
-			printf("SW2 %x\n", message.response_2.status_word);
-			if (0!=message.response_2.data_words_count) {
-				printf("DWS_R2 (%u):", message.response_2.data_words_count);
-				for (data_word_index = 0; data_word_index<message.response_2.data_words_count; ++data_word_index)
-					printf(" %x", message.response_2.data_words[data_word_index]);
-				printf("\n");
-			}
-		}
-
-		printf("State:\n");
-		if (UNMMKO1_MSG_ERR_OK==message.error)
-			printf("   OK\n");
-		if (message.error & UNMMKO1_MSG_ERR_NO_RESPONSE)
-			printf("   No response\n");
-		if (message.error & UNMMKO1_MSG_ERR_ANY_ERROR_BIT)
-			printf("   Any error bit\n");
-		if (message.error & UNMMKO1_MSG_ERR_PROTOCOL)
-			printf("   Protocol error\n");
-		if (message.error & UNMMKO1_MSG_ERR_DATA_COUNT)
-			printf("   Data count error\n");
-		if (message.error & UNMMKO1_MSG_ERR_MANCHECTER)
-			printf("   Manchester error\n");
-		if (message.error & UNMMKO1_MSG_ERR_SYSTEM)
-			printf("   System error\n");
-
-		printf("\n");
-	}
-
-	fflush(stdout);
 }
 
 

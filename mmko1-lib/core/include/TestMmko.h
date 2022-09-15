@@ -18,7 +18,8 @@ public:
 	static void CloseSession(); // close connect Mezzanine MKO and carrier Mezzanine
 	/* Getters and Setters */
 	[[nodiscard]] static int32 getStatus() ;
-	[[nodiscard]] static uint32 getSession() ;
+	[[nodiscard]] static uint32 getMkoSession() ;
+	[[nodiscard]] static uint32 getCarrierSession();
 	[[nodiscard]] BUSLINE getLine() const;
 private:
 	BUSLINE lineBus; //condition bus-line mmko1	(main/reserve)

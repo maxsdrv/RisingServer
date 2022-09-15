@@ -7,7 +7,6 @@
 class MkoErrors : public std::exception {
 public:
 	MkoErrors(const std::string& eM, int eC);
-
 	std::string what();
 private:
 	std::string errorMsg;

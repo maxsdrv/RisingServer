@@ -6,19 +6,24 @@ TestMmko::TestMmko(BUSLINE line) : lineBus(line)
 	MkoText("TestMmko()");
 	auto errStatus = Common::getInstance().search();
 	try {
-		if (errStatus<0) {
-			throw MkoErrors("Error config MKO, mezzanine-carrier is not found", errStatus);
+		if (errStatus < 0) {
+			throw MkoErrors("Error MKO configuration, mezzanine-carrier is not found", errStatus);
+		}
+		if (unmbase_init(Common::getInstance().resourceName, VI_ON, VI_ON,
+				&Common::getInstance().carrierSession) < 0){
+			throw MkoErrors("Error initialisation of carrier mezzanine ",
+					static_cast<int>(Common::getInstance().carrierSession));
 		}
 		if (unmmko1_init
-				(Common::getInstance().resourceName, VI_TRUE, VI_TRUE,
+				(Common::getInstance().resourceName, VI_ON, VI_ON,
 						&Common::getInstance().session) < 0) {
-			throw MkoErrors("Errors initialise MKO ", static_cast<int>(Common::getInstance().session));
+			throw MkoErrors("Error MKO initialisation ", static_cast<int>(Common::getInstance().session));
 		}
 		if (unmmko1_connect
 				(Common::getInstance().session, Common::getInstance().carrierSession,
 						Common::getInstance().position,
 						VI_TRUE, VI_TRUE) < 0) {
-			throw MkoErrors("Error connect MKO ", static_cast<int>(Common::getInstance().session));
+			throw MkoErrors("Error connection to MKO ", static_cast<int>(Common::getInstance().session));
 		}
 	}
 	catch(MkoErrors& ex) {
@@ -58,8 +63,8 @@ void TestMmko::SelfTest()
 
 void TestMmko::CloseSession()
 {
-	unmmko1_close(Common::getInstance().session);
-	unmbase_close(Common::getInstance().carrierSession);
+	unmbase_close(getCarrierSession());
+	unmmko1_close(getMkoSession());
 }
 int32 TestMmko::getStatus()
 {
@@ -69,7 +74,11 @@ BUSLINE TestMmko::getLine() const
 {
 	return lineBus;
 }
-uint32 TestMmko::getSession()
+uint32 TestMmko::getCarrierSession()
+{
+	return Common::getInstance().carrierSession;
+}
+uint32 TestMmko::getMkoSession()
 {
 	return Common::getInstance().session;
 }

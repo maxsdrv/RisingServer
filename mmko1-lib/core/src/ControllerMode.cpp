@@ -30,25 +30,25 @@ int32 ControllerMode::BusToTerminalReceive(uint16 address, uint16 subAddress, ui
 
 	auto commandWord = PackCw(address, mRxTx, subAddress, wordCount);
 	*commands = unmmko1_bc_rt(line, commandWord, dataWords);
-	unmmko1_bc_configure(TestMmko::getSession(), bcOptions);
-	unmmko1_bc_start(TestMmko::getSession());
-	unmmko1_bc_transmit_command(TestMmko::getSession(), *commands);
-	unmmko1_bc_stop(TestMmko::getSession());
+	unmmko1_bc_configure(TestMmko::getMkoSession(), bcOptions);
+	unmmko1_bc_start(TestMmko::getMkoSession());
+	unmmko1_bc_transmit_command(TestMmko::getMkoSession(), *commands);
+	unmmko1_bc_stop(TestMmko::getMkoSession());
 
 	return TestMmko::getStatus();
 }
 int32 ControllerMode::transmitCmdF1( uint16 address, uint16 subAddress, uint16 wordCount,
 		uint16* dataWords)
 {
-	auto line = static_cast<unmmko1_bus>(testMmko->getLine());
+	auto line = testMmko->getLine();
 	if (bcOptions < 0 || bcOptions > sizeBcOptions)
 		assert(bcOptions > 0 && bcOptions < sizeBcOptions);
 
 	*commands = unmmko1_f1(line, address, subAddress, wordCount, dataWords);
-	unmmko1_bc_configure(TestMmko::getSession(), bcOptions);
-	unmmko1_bc_start(TestMmko::getSession());
-	unmmko1_bc_transmit_command(TestMmko::getSession(), *commands);
-	unmmko1_bc_stop(TestMmko::getSession());
+	unmmko1_bc_configure(TestMmko::getMkoSession(), bcOptions);
+	unmmko1_bc_start(TestMmko::getMkoSession());
+	unmmko1_bc_transmit_command(TestMmko::getMkoSession(), *commands);
+	unmmko1_bc_stop(TestMmko::getMkoSession());
 
 	return TestMmko::getStatus();
 }

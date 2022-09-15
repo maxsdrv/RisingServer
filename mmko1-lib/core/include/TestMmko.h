@@ -14,17 +14,14 @@ class TestMmko {
 public:
 	explicit TestMmko(BUSLINE line);
 	~TestMmko();
-	void Init(); // Initialise MMKO1 and carrier Mezzanine
 	static void SelfTest(); // Mezzanine self-test, info, version, memory test
-	void CloseSession(); // close connect Mezzanine MKO and carrier Mezzanine
-	bool isInit() const; // check for initialisation
+	static void CloseSession(); // close connect Mezzanine MKO and carrier Mezzanine
 	/* Getters and Setters */
 	[[nodiscard]] static int32 getStatus() ;
 	[[nodiscard]] static uint32 getSession() ;
 	[[nodiscard]] BUSLINE getLine() const;
 private:
 	BUSLINE lineBus; //condition bus-line mmko1	(main/reserve)
-	bool initStatus; // activation status MKO
 	/* Controller record type */
 	std::shared_ptr<ControllerMode> controllers;
 

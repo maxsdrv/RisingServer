@@ -2,9 +2,14 @@
 
 /* Class for work in Monitor-mode */
 
-class MonitorMode {
-public:
+class TestMmko;
 
+class MonitorMode {
+private:
+	friend class TestMmko;
+	MonitorMode() = default;
+public:
+	~MonitorMode() = default;
 	/* non-copyable class */
 	MonitorMode(const MonitorMode&) = delete;
 	MonitorMode(MonitorMode&&) = delete;

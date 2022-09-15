@@ -1,5 +1,11 @@
 #include "Actions.h"
 
+namespace {
+	const std::string search_pattern{"?*[0-9]?*::?*::INSTR"};
+	const std::string idStr{"*IDN?\n"};
+	const std::string tab{"%t"};
+}
+
 Common::Common()
 		:
 		status(VI_SUCCESS),
@@ -9,16 +15,16 @@ Common::Common()
 		count(0), deviceSession(0),
 		carrierSession(0), interfaceType(0), mezzanineNumber(1)
 {
-    MKOTEXT("Common()");
+//    MKOTEXT("Common()");
 }
 Common::~Common()
 {
-	MKOTEXT("~Common()");
+	MkoText("~Common()");
 }
 
-int32_t Common::search()
+int32 Common::search()
 {
-	MKOTEXT("Debug information about search MKO");
+	MkoText("Debug information about search MKO");
 	/* Lambdas instead goto definitions in C implementation common.h */
 	auto Error = [this]() {
 	  if (resourceManagerSession)
@@ -83,7 +89,8 @@ int32_t Common::search()
 			if (viLock(deviceSession, VI_EXCLUSIVE_LOCK, 2000, nullptr, nullptr)<0)
 				CloseDevice();
 
-			status = viQueryf(deviceSession, "*IDN?\n", "%t", idn);
+			status = viQueryf(deviceSession, const_cast<char*>(idStr.c_str()),
+					const_cast<char*>(tab.c_str()), idn);
 			viUnlock(deviceSession);
 
 			if (status < 0)
@@ -125,7 +132,7 @@ void Common::processUnmmkoError() const
 	ViChar str[256];
 	unmmko1_error_message(session, status, str);
 	if (status < 0)	{
-		MKOTEXT("Error MKO activation", session, status, str);
+		MkoText("Error MKO activation", session, status, str);
 	}
 }
 //! Проверка ошибок, используется при вызове функций драйвера Носителя Мезонинов
@@ -134,7 +141,7 @@ void Common::processUnmbaseError() const
 	ViChar str[256];
 	unmbase_error_message(session, status, str);
 	if (status < 0)	{
-		MKOTEXT("Error mezzanine carrier activation", session, status, str);
+		MkoText("Error mezzanine carrier activation", session, status, str);
 	}
 }
 

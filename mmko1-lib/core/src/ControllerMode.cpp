@@ -10,11 +10,11 @@ ControllerMode::ControllerMode(TestMmko* objectMmko1, const uint16& rxtx, int bc
 		 commands(std::make_unique<unmmko1_command>()),
 		 bcOptions(bcoptions)
 {
-	MKOTEXT("ControllerMode()");
+	MkoText("ControllerMode()");
 }
 ControllerMode::~ControllerMode()
 {
-	MKOTEXT("~ControllerMode()");
+	MkoText("~ControllerMode()");
 }
 
 uint16 ControllerMode::PackCw(uint16 address, uint16 RxTx, uint16 subAddress, uint16 wordCount)

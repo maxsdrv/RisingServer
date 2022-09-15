@@ -37,7 +37,7 @@ public:
 	ViStatus status;
 	ViSession session;
 	ViSession resourceManagerSession;
-	std::string search_pattern = "?*[0-9]?*::?*::INSTR";
+//	std::string search_pattern = "?*[0-9]?*::?*::INSTR";
 	ViFindList findList{}; // uint32_t
 	ViStatus found = VI_ERROR_RSRC_NFOUND;
 	ViUInt32 index, count;
@@ -46,7 +46,7 @@ public:
 	ViInt16 mezzanineNumber;
 	ViChar address[256]{};
 
-	int32_t search(); // method for search mezzanine MKO
+	int32 search(); // method for search mezzanine MKO
 	void processUnmmkoError() const;
 	void processUnmbaseError() const;
 

@@ -1,14 +1,17 @@
 #pragma once
 
 #include <iostream>
+#include <functional>
+#include <boost/format.hpp>
 
 class MkoErrors : public std::exception {
 public:
-	explicit MkoErrors(std::string msg, int  error, std::string title = "");
+	MkoErrors(const std::string& eM, int eC);
+
 	std::string what();
 private:
-	std::string errorMessage;
+	std::string errorMsg;
 	int errorCode;
-	std::string sTitle;
+	boost::format fmt;
 };
 

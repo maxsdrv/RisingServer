@@ -1,38 +1,41 @@
 #include "TestMmko.h"
 #include "ControllerMode.h"
 
-TestMmko::TestMmko(BUSLINE line)
-		:
-		lineBus(line),
-		initStatus(false)
+TestMmko::TestMmko(BUSLINE line) : lineBus(line)
 {
-	MKOTEXT("TestMmko()");
+	MkoText("TestMmko()");
+	auto errStatus = Common::getInstance().search();
+	try {
+		if (errStatus<0) {
+			throw MkoErrors("Error config MKO, mezzanine-carrier is not found", errStatus);
+		}
+		if (unmmko1_init
+				(Common::getInstance().resourceName, VI_TRUE, VI_TRUE,
+						&Common::getInstance().session) < 0) {
+			throw MkoErrors("Errors initialise MKO ", static_cast<int>(Common::getInstance().session));
+		}
+		if (unmmko1_connect
+				(Common::getInstance().session, Common::getInstance().carrierSession,
+						Common::getInstance().position,
+						VI_TRUE, VI_TRUE) < 0) {
+			throw MkoErrors("Error connect MKO ", static_cast<int>(Common::getInstance().session));
+		}
+	}
+	catch(MkoErrors& ex) {
+		Common::getInstance().status = errStatus;
+		CloseSession();
+		ex.what();
+		throw;
+	}
+
 }
 
 TestMmko::~TestMmko() {
-	initStatus = false;
-	MKOTEXT("~TestMmko()");
-}
-void TestMmko::Init()
-{
-	Common::getInstance().status = Common::getInstance().search();
-	if (Common::getInstance().status < 0) {
-		Common::getInstance().processUnmbaseError();
-		initStatus = false;
-		return;
-	}
-	else if (unmmko1_init(Common::getInstance().resourceName,
-			VI_TRUE, VI_TRUE, &Common::getInstance().session) < 0) {
-		Common::getInstance().processUnmmkoError();
-		initStatus = false;
-	}
-	unmmko1_connect(Common::getInstance().session,
-			Common::getInstance().carrierSession, Common::getInstance().position,
-			VI_TRUE, VI_TRUE);
-	initStatus = true;
+	MkoText("~TestMmko()");
 }
 void TestMmko::SelfTest()
 {
+	// TODO It was copied from common.h, should rewrite for C++
 	char message[256];
 	int16 resultCode{};
 	char softwareVersion[256];
@@ -55,14 +58,8 @@ void TestMmko::SelfTest()
 
 void TestMmko::CloseSession()
 {
-	if (!initStatus) {
-		MKOTEXT("MKO is not activate ", getStatus(), getSession());
-		return;
-	}
 	unmmko1_close(Common::getInstance().session);
 	unmbase_close(Common::getInstance().carrierSession);
-
-	initStatus = false;
 }
 int32 TestMmko::getStatus()
 {
@@ -76,10 +73,6 @@ uint32 TestMmko::getSession()
 {
 	return Common::getInstance().session;
 }
-bool TestMmko::isInit() const
-{
-	return !initStatus;
-}
 ControllerMode* TestMmko::addController(const uint16& rxtx, int options)
 {
 	return add<ControllerMode, uint16, int>(rxtx, options);
@@ -90,6 +83,7 @@ std::shared_ptr<T>& TestMmko::insertObject(const TBit& rt, TOptions options)
 	return controllers =
 			std::shared_ptr<ControllerMode>(new ControllerMode(this, rt, options));
 }
+
 
 
 

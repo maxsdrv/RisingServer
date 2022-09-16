@@ -5,9 +5,15 @@ TestMmko::TestMmko(BUSLINE line) : lineBus(line)
 {
 	MkoText("TestMmko()");
 	auto errStatus = Common::getInstance().search();
+    auto session = getMkoSession();
 	try {
 		if (errStatus < 0) {
-			throw MkoErrors("Error MKO configuration, mezzanine-carrier is not found", errStatus);
+//			throw MkoErrors("Error MKO configuration, mezzanine-carrier is not found", errStatus);
+            char buf[256];
+            MkoErrors::ErrorMessage(&unmmko1_error_message);
+
+//            throw MkoErrors("Error config MKO duplicate", res);
+
 		}
 		if (unmbase_init(Common::getInstance().resourceName, VI_ON, VI_ON,
 				&Common::getInstance().carrierSession) < 0){

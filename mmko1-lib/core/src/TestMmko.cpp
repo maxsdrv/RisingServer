@@ -1,24 +1,23 @@
 #include "TestMmko.h"
 #include "ControllerMode.h"
 
+
 TestMmko::TestMmko(BUSLINE line) : lineBus(line)
 {
 	MkoText("TestMmko()");
 	auto errStatus = Common::getInstance().search();
-    auto session = getMkoSession();
+	BaseInit(MkoEnums::DeviceNames::CarrierMezzanine);
+
 	try {
 		if (errStatus < 0) {
-//			throw MkoErrors("Error MKO configuration, mezzanine-carrier is not found", errStatus);
-            char buf[256];
-            MkoErrors::ErrorMessage(&unmmko1_error_message);
-
-//            throw MkoErrors("Error config MKO duplicate", res);
-
+            auto errMsg = MkoErrors::ErrorMessage(getMkoSession(), &unmmko1_error_message);
+            throw MkoErrors("Error config MKO is not found, " + std::get<0>(errMsg), std::get<1>(errMsg));
 		}
 		if (unmbase_init(Common::getInstance().resourceName, VI_ON, VI_ON,
 				&Common::getInstance().carrierSession) < 0){
-			throw MkoErrors("Error initialisation of carrier mezzanine ",
-					static_cast<int>(Common::getInstance().carrierSession));
+			auto errMsg = MkoErrors::ErrorMessage(getCarrierSession(), &unmmko1_error_message);
+			throw MkoErrors("Error initialisation of carrier mezzanine " +
+			std::get<0>(errMsg), std::get<1>(errMsg));
 		}
 		if (unmmko1_init
 				(Common::getInstance().resourceName, VI_ON, VI_ON,
@@ -97,6 +96,13 @@ std::shared_ptr<T>& TestMmko::insertObject(const TBit& rt, TOptions options)
 {
 	return controllers =
 			std::shared_ptr<ControllerMode>(new ControllerMode(this, rt, options));
+}
+bool TestMmko::BaseInit(MkoEnums::DeviceNames md)
+{
+
+
+
+	return false;
 }
 
 

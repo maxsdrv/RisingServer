@@ -123,6 +123,7 @@ int32 Common::search()
 
 	if (VI_SUCCESS == found)
 		  printf("Mezzanine MKO found at %s on %d position\n", resourceName, position);
+	status = found;
 
 	return this->found;
 }

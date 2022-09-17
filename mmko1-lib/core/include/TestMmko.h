@@ -5,11 +5,21 @@
 
 #include <unmmko1.h>
 #include <memory>
+#include <map>
 
 #include "Actions.h"
 
-class ControllerMode;
+namespace MkoEnums {
 
+	enum class DeviceNames {
+		MezzanineMko,
+		CarrierMezzanine
+	};
+}
+class ControllerMode;
+/* */
+using TestMap = std::map<MkoEnums::DeviceNames, std::function<int32(char*, bool, bool, uint32*)>>;
+/* */
 class TestMmko {
 public:
 	explicit TestMmko(BUSLINE line);
@@ -37,6 +47,12 @@ private:
 	 * Method accepts arguments and class type then return created class object */
 	template<class T, class B, class O>
 	constexpr T* add(const B& bit, O options);
+	/*init carrier mezzanine and MKO */
+	/*bool InitCarrierMz(const std::function<int(char*, bool, bool, uint32)>& f);
+	bool InitMkoMz(const std::function<int(char*, bool, bool, uint32)>& f);*/
+	TestMap testMap; // test of using std::map for store device names and function
+	// which specify on initialisation unmbase or unmmko
+	bool BaseInit(MkoEnums::DeviceNames md);
 };
 
 template<class T, class B, class O>

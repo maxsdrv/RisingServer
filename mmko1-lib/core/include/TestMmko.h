@@ -9,17 +9,10 @@
 
 #include "Actions.h"
 
-namespace MkoEnums {
 
-	enum class DeviceNames {
-		MezzanineMko,
-		CarrierMezzanine
-	};
-}
 class ControllerMode;
-/* */
-using TestMap = std::map<MkoEnums::DeviceNames, std::function<int32(char*, bool, bool, uint32*)>>;
-/* */
+class MonitorMode;
+
 class TestMmko {
 public:
 	explicit TestMmko(BUSLINE line);
@@ -27,17 +20,20 @@ public:
 	static void SelfTest(); // Mezzanine self-test, info, version, memory test
 	static void CloseSession(); // close connect Mezzanine MKO and carrier Mezzanine
 	/* Getters and Setters */
-	[[nodiscard]] static int32 getStatus() ;
-	[[nodiscard]] static uint32 getMkoSession() ;
-	[[nodiscard]] static uint32 getCarrierSession();
+	[[nodiscard]] static int32_t getStatus() ;
+	[[nodiscard]] static uint32_t getMkoSession() ;
+	[[nodiscard]] static uint32_t getCarrierSession();
 	[[nodiscard]] BUSLINE getLine() const;
+	int32_t mkoStatus{};
 private:
 	BUSLINE lineBus; //condition bus-line mmko1	(main/reserve)
 	/* Controller record type */
 	std::shared_ptr<ControllerMode> controllers;
+	std::unique_ptr<MonitorMode> monitor;
 
 public:
-	ControllerMode* addController(const uint16& rxtx, int options);
+	ControllerMode* addController(const uint16_t& rxtx, int options);
+	MonitorMode* addMonitor();
 
 private:
 	/* Adds arguments into class constructor and return instance */
@@ -47,19 +43,16 @@ private:
 	 * Method accepts arguments and class type then return created class object */
 	template<class T, class B, class O>
 	constexpr T* add(const B& bit, O options);
+	/* Getting MonitorMode class instance */
+	[[nodiscard]] MonitorMode* getMonitor() const;
 	/*init carrier mezzanine and MKO */
-	/*bool InitCarrierMz(const std::function<int(char*, bool, bool, uint32)>& f);
-	bool InitMkoMz(const std::function<int(char*, bool, bool, uint32)>& f);*/
-	TestMap testMap; // test of using std::map for store device names and function
-	// which specify on initialisation unmbase or unmmko
-	bool BaseInit(MkoEnums::DeviceNames md);
+	void DeviceInit();
 };
 
 template<class T, class B, class O>
 constexpr T* TestMmko::add(const B& bit, O options)
 {
 	std::shared_ptr<T>& pObj = insertObject<T>(bit, options);
-
 	return pObj.get();
 }
 

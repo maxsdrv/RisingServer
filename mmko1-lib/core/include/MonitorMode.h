@@ -1,6 +1,8 @@
 #pragma once
 
 /* Class for work in Monitor-mode */
+#include <vector>
+
 #include "defines.h"
 #include <unmmko1.h>
 
@@ -10,8 +12,7 @@ class MonitorMode {
 private:
 	friend class TestMmko;
 	explicit MonitorMode(TestMmko* objMko);
-
-	int32 StartMonitor();
+	using Msg = std::vector<std::unique_ptr<unmmko1_message>>;
 public:
 	~MonitorMode() = default;
 	/* non-copyable class */
@@ -19,8 +20,15 @@ public:
 	MonitorMode(MonitorMode&&) = delete;
 	MonitorMode& operator=(const MonitorMode&) = delete;
 	MonitorMode& operator=(MonitorMode&&) = delete;
+	/* Methods for processing messages */
+	void StartMonitor();
+	void StopMonitor() const;
+	void MessagesRead();
+	void ViewMessage();
 private:
 	TestMmko* mMko;
-	uint16 monSession;
+	Msg messages; // Monitor messages list
+	uint32 monitorSession;
+	int32 monitorStatus;
 };
 

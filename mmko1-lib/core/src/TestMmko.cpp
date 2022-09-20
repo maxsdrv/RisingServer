@@ -1,46 +1,26 @@
 #include "TestMmko.h"
 #include "ControllerMode.h"
+#include "MonitorMode.h"
 
-
-TestMmko::TestMmko(BUSLINE line) : lineBus(line)
+TestMmko::TestMmko(BUSLINE line)
+		:lineBus(line)
 {
 	MkoText("TestMmko()");
-	auto errStatus = Common::getInstance().search();
-	BaseInit(MkoEnums::DeviceNames::CarrierMezzanine);
-
-	try {
-		if (errStatus < 0) {
-            auto errMsg = MkoErrors::ErrorMessage(getMkoSession(), &unmmko1_error_message);
-            throw MkoErrors("Error config MKO is not found, " + std::get<0>(errMsg), std::get<1>(errMsg));
-		}
-		if (unmbase_init(Common::getInstance().resourceName, VI_ON, VI_ON,
-				&Common::getInstance().carrierSession) < 0){
-			auto errMsg = MkoErrors::ErrorMessage(getCarrierSession(), &unmmko1_error_message);
-			throw MkoErrors("Error initialisation of carrier mezzanine " +
-			std::get<0>(errMsg), std::get<1>(errMsg));
-		}
-		if (unmmko1_init
-				(Common::getInstance().resourceName, VI_ON, VI_ON,
-						&Common::getInstance().session) < 0) {
-			throw MkoErrors("Error MKO initialisation ", static_cast<int>(Common::getInstance().session));
-		}
-		if (unmmko1_connect
-				(Common::getInstance().session, Common::getInstance().carrierSession,
-						Common::getInstance().position,
-						VI_TRUE, VI_TRUE) < 0) {
-			throw MkoErrors("Error connection to MKO ", static_cast<int>(Common::getInstance().session));
-		}
+	/*try
+	{
+		DeviceInit();
 	}
-	catch(MkoErrors& ex) {
-		Common::getInstance().status = errStatus;
+	catch (MkoErrors& ex)
+	{
+		std::cerr << ex.what();
 		CloseSession();
-		ex.what();
 		throw;
-	}
-
+	}*/
+	Common::getInstance().status = mkoStatus;
 }
 
-TestMmko::~TestMmko() {
+TestMmko::~TestMmko()
+{
 	MkoText("~TestMmko()");
 }
 void TestMmko::SelfTest()
@@ -95,14 +75,49 @@ template<class T, class TBit, class TOptions>
 std::shared_ptr<T>& TestMmko::insertObject(const TBit& rt, TOptions options)
 {
 	return controllers =
-			std::shared_ptr<ControllerMode>(new ControllerMode(this, rt, options));
+				   std::shared_ptr<ControllerMode>(new ControllerMode(this, rt, options));
 }
-bool TestMmko::BaseInit(MkoEnums::DeviceNames md)
+void TestMmko::DeviceInit()
 {
-
-
-
-	return false;
+	mkoStatus = Common::getInstance().search();
+	if (mkoStatus < 0)
+	{
+		auto errMsg = MkoErrors::ErrorMessage(getMkoSession(), &unmmko1_error_message);
+		throw MkoErrors("Error config MKO is not found, " + std::get<0>(errMsg), std::get<1>(errMsg));
+	}
+	if (unmbase_init(Common::getInstance().resourceName, true, true,
+			&Common::getInstance().carrierSession) < 0)
+	{
+		auto errMsg = MkoErrors::ErrorMessage(Common::getInstance().carrierSession,
+				&unmmko1_error_message);
+		throw MkoErrors("Unmbase activate error" + std::get<0>(errMsg),
+				std::get<1>(errMsg));
+	}
+	if (unmmko1_init(Common::getInstance().resourceName, true, true,
+			&Common::getInstance().session) < 0)
+	{
+		auto errMsg = MkoErrors::ErrorMessage(Common::getInstance().session,
+				&unmmko1_error_message);
+		throw MkoErrors("Unmmko1 activate error" + std::get<0>(errMsg),
+				std::get<1>(errMsg));
+	}
+	if (unmmko1_connect
+			(Common::getInstance().session, Common::getInstance().carrierSession,
+					Common::getInstance().position,
+					VI_TRUE, VI_TRUE) < 0)
+	{
+		auto errMsg = MkoErrors::ErrorMessage(Common::getInstance().session, &unmmko1_error_message);
+		throw MkoErrors("Unmmko1 connect error " + std::get<0>(errMsg), std::get<1>(errMsg));
+	}
+}
+MonitorMode* TestMmko::addMonitor()
+{
+	monitor = std::unique_ptr<MonitorMode>(new MonitorMode(this));
+	return getMonitor();
+}
+MonitorMode* TestMmko::getMonitor() const
+{
+	return monitor.get();
 }
 
 

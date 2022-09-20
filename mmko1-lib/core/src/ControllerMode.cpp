@@ -1,14 +1,17 @@
 #include "ControllerMode.h"
+#include "defines.h"
 
-namespace {
+namespace
+{
 	const int sizeBcOptions = 3;
 }
 
-ControllerMode::ControllerMode(TestMmko* objectMmko1, const uint16& rxtx, int bcoptions) :
-		 testMmko(objectMmko1),
-		 mRxTx(rxtx),
-		 commands(std::make_unique<unmmko1_command>()),
-		 bcOptions(bcoptions)
+ControllerMode::ControllerMode(TestMmko* objectMmko1, const uint16& rxtx, int bcoptions)
+		:
+		testMmko(objectMmko1),
+		mRxTx(rxtx),
+		commands(std::make_unique<unmmko1_command>()),
+		bcOptions(bcoptions)
 {
 	MkoText("ControllerMode()");
 }
@@ -37,7 +40,7 @@ int32 ControllerMode::BusToTerminalReceive(uint16 address, uint16 subAddress, ui
 
 	return TestMmko::getStatus();
 }
-int32 ControllerMode::transmitCmdF1( uint16 address, uint16 subAddress, uint16 wordCount,
+int32 ControllerMode::transmitCmdF1(uint16 address, uint16 subAddress, uint16 wordCount,
 		uint16* dataWords)
 {
 	auto line = testMmko->getLine();

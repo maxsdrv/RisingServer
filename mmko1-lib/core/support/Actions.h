@@ -13,16 +13,17 @@
 #include <cstdlib>
 
 #include "SFileLogger.h"
-#include "defines.h"
 #include "BaseMkoEnums.h"
 #include "MkoErrors.h"
 
-class Common {
+class Common
+{
 private:
 	Common();
 	~Common();
 public:
-	static Common& getInstance() {
+	static Common& getInstance()
+	{
 		static Common instance;
 		return instance;
 	}
@@ -46,7 +47,7 @@ public:
 	ViInt16 mezzanineNumber;
 	ViChar address[256]{};
 
-	int32 search(); // method for search mezzanine MKO
+	int32_t search(); // method for search mezzanine MKO
 	void processUnmmkoError() const;
 	void processUnmbaseError() const;
 

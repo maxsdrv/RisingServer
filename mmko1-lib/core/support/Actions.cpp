@@ -1,4 +1,5 @@
 #include "Actions.h"
+#include "defines.h"
 
 namespace {
 	const std::string search_pattern{"?*[0-9]?*::?*::INSTR"};

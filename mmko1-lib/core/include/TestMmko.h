@@ -32,27 +32,27 @@ private:
 	std::unique_ptr<MonitorMode> monitor;
 
 public:
-	ControllerMode* addController(const uint16_t& rxtx, int options);
+	ControllerMode* addController(const uint16_t& rxtx);
 	MonitorMode* addMonitor();
 
 private:
 	/* Adds arguments into class constructor and return instance */
-	template<class T, class TBit, class TOptions >
-	std::shared_ptr<T>& insertObject(const TBit& rt, TOptions options);
+	template<class T, class TBit>
+	std::shared_ptr<T>& insertObject(const TBit& rt);
 	/* This method necessary to use class with private constructor
 	 * Method accepts arguments and class type then return created class object */
-	template<class T, class B, class O>
-	constexpr T* add(const B& bit, O options);
+	template<class T, class B>
+	constexpr T* add(const B& bit);
 	/* Getting MonitorMode class instance */
 	[[nodiscard]] MonitorMode* getMonitor() const;
 	/*init carrier mezzanine and MKO */
 	void DeviceInit();
 };
 
-template<class T, class B, class O>
-constexpr T* TestMmko::add(const B& bit, O options)
+template<class T, class B>
+constexpr T* TestMmko::add(const B& bit)
 {
-	std::shared_ptr<T>& pObj = insertObject<T>(bit, options);
+	std::shared_ptr<T>& pObj = insertObject<T>(bit);
 	return pObj.get();
 }
 

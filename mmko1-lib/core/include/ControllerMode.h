@@ -10,7 +10,7 @@ class ControllerMode
 {
 private:
 	friend class TestMmko;
-	explicit ControllerMode(TestMmko* objectMmko1, const uint16_t& rxtx, int bcoptions);
+	explicit ControllerMode(TestMmko* objectMmko1, const uint16_t& rxtx);
 
 public:
 	~ControllerMode();
@@ -34,16 +34,14 @@ public:
 	ControllerMode& operator=(ControllerMode&&) = delete;
 
 	/* Getters and Setters */
-	void setRxTx(uint16_t RxTx);
-	[[nodiscard]] uint16_t getRxTx() const;
-	void setBcOptions(int bcOptions_);
-	[[nodiscard]] int getBcOptions() const;
+	void setRxTx(uint16_t RxTx); //set data receive/transmit bit
+	[[nodiscard]] uint16_t getRxTx() const; // get data receive/transmit bit
 
 private:
 	TestMmko* testMmko;
 	std::unique_ptr<unmmko1_command> commands;
-	uint16_t mRxTx; // TODO data transmit/receive bit, necessary will know how this use form 41 department
-	int bcOptions; // for function bc_configure, 0 by default, TODO what is it from 41 department
+	uint16_t mRxTx; /* data receive/transmit bit. It must point to action which perform terminal-device
+	if 0 that means what Terminal-Device should accept Data-Word(Cmd), if 1 then transmit*/
 };
 
 

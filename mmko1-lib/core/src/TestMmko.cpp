@@ -67,15 +67,15 @@ uint32 TestMmko::getMkoSession()
 {
 	return Common::getInstance().session;
 }
-ControllerMode* TestMmko::addController(const uint16& rxtx, int options)
+ControllerMode* TestMmko::addController(const uint16& rxtx)
 {
-	return add<ControllerMode, uint16, int>(rxtx, options);
+	return add<ControllerMode, uint16>(rxtx);
 }
-template<class T, class TBit, class TOptions>
-std::shared_ptr<T>& TestMmko::insertObject(const TBit& rt, TOptions options)
+template<class T, class TBit>
+std::shared_ptr<T>& TestMmko::insertObject(const TBit& rt)
 {
 	return controllers =
-				   std::shared_ptr<ControllerMode>(new ControllerMode(this, rt, options));
+				   std::shared_ptr<ControllerMode>(new ControllerMode(this, rt));
 }
 void TestMmko::DeviceInit()
 {

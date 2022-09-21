@@ -18,7 +18,7 @@ MonitorMode::MonitorMode(TestMmko* objMko)
 		StopMonitor();
 	}
 }
-void MonitorMode::StartMonitor()
+void MonitorMode::StartMonitor() const
 {
 	int errMonitor = unmmko1_mon_configure(Common::getInstance().session, UNMMKO1_MON_TRANSFORM
 			| UNMMKO1_MON_BUS_A_AND_B);
@@ -42,17 +42,20 @@ void MonitorMode::MessagesRead()
 	unmmko1_mon_messages_read(monitorSession, messagesCount, lMsg.get(), &messagesCount)
 	< 0 ? MkoText("Error message read") : messages.push_back(std::move(lMsg));
 }
-void MonitorMode::ViewMessage()
+MonitorMode::MonitorMessage& MonitorMode::PullMessage()
+{
+
+}
+/*MonitorMode::PullMessage()
 {
 	if (messages.empty()) MkoText("Error view message");
-
 	for (const auto& msg : messages)
 	{
 		uint64_t timestamp = (static_cast<uint64_t>(msg->timestamp_high) << 32) +
 				msg->timestamp_low;
 
 	}
-}
+}*/
 void MonitorMode::StopMonitor() const
 {
 	MkoValidation(__FUNCTION__, monitorSession, unmmko1_mon_stop(monitorSession));

@@ -10,6 +10,14 @@ class TestMmko;
 
 class MonitorMode {
 private:
+	/* class which store message values */
+	class MonitorMessage
+	{
+	public:
+		int testValue{};
+		std::string testName{};
+	};
+
 	friend class TestMmko;
 	explicit MonitorMode(TestMmko* objMko);
 	using Msg = std::vector<std::unique_ptr<unmmko1_message>>;
@@ -21,10 +29,10 @@ public:
 	MonitorMode& operator=(const MonitorMode&) = delete;
 	MonitorMode& operator=(MonitorMode&&) = delete;
 	/* Methods for processing messages */
-	void StartMonitor();
+	void StartMonitor() const;
 	void StopMonitor() const;
 	void MessagesRead();
-	void ViewMessage();
+	MonitorMessage& PullMessage();
 private:
 	TestMmko* mMko;
 	Msg messages; // Monitor messages list

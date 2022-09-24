@@ -1,6 +1,8 @@
 #include "MonitorMode.h"
 
 #include <memory>
+#include <algorithm>
+
 #include "TestMmko.h"
 
 MonitorMode::MonitorMode(TestMmko* objMko)
@@ -33,29 +35,43 @@ void MonitorMode::StartMonitor() const
 				 unmmko1_mon_start(monitorSession));
 	}
 }
-void MonitorMode::MessagesRead()
+bool MonitorMode::MessagesRead()
 {
 	uint32 messagesCount{};
 	auto lMsg = std::make_unique<unmmko1_message>();
-	assert (unmmko1_mon_messages_count(monitorSession, &messagesCount) > 0);
+	if (unmmko1_mon_messages_count(monitorSession, &messagesCount) < 0)
+		return false;
 	/* read messages and store into vector */
-	unmmko1_mon_messages_read(monitorSession, messagesCount, lMsg.get(), &messagesCount)
-	< 0 ? MkoText("Error message read") : messages.push_back(std::move(lMsg));
+	auto status = unmmko1_mon_messages_read(monitorSession, messagesCount, lMsg.get(), &messagesCount);
+	if (status < 0)
+		return false;
+	else
+		messages.push_back(std::move(lMsg));
+	return true;
 }
 MonitorMode::MonitorMessage& MonitorMode::PullMessage()
 {
+	if (MessagesRead())
+	{
+		for (const auto& msg : messages)
+		{
+			monMessage.timestamp = (static_cast<uint64_t>(msg->timestamp_high) << 32) +
+					msg->timestamp_low;
+			if (msg->activity & UNMMKO1_MSG_ACT_CWD_1)
+				monMessage.commandWord1 = msg->command.command_word_1;
+			if (msg->activity & UNMMKO1_MSG_ACT_CWD_2)
+				monMessage.commandWord2 = msg->command.command_word_2;
+
+			if (0 != msg->command.data_words_count)
+				monMessage.dataWordsCount = msg->command.data_words_count;
+
+			std::copy(std::begin(msg->command.data_words), std::end(msg->command.data_words),
+												   std::back_inserter(monMessage.dataWords));
+
+		}
+	}
 
 }
-/*MonitorMode::PullMessage()
-{
-	if (messages.empty()) MkoText("Error view message");
-	for (const auto& msg : messages)
-	{
-		uint64_t timestamp = (static_cast<uint64_t>(msg->timestamp_high) << 32) +
-				msg->timestamp_low;
-
-	}
-}*/
 void MonitorMode::StopMonitor() const
 {
 	MkoValidation(__FUNCTION__, monitorSession, unmmko1_mon_stop(monitorSession));

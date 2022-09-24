@@ -10,8 +10,7 @@ void test()
 	/* Example how to work Transmitting Message by MKO1 */
 	uint16_t dataWords[5]{ 1, 2, 3, 4, 5 };
 	auto test = std::make_unique<TestMmko>(UNMMKO1_BUS_A);
-	auto monitor = test->addMonitor();
-	monitor->MessagesRead();
+
 }
 
 int main(int argc, char* argv[])

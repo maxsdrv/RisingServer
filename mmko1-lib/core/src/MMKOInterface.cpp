@@ -1,16 +1,16 @@
-#include "TestMmko.h"
+#include "MMKOInterface.h"
 #include "ControllerMode.h"
 #include "MonitorMode.h"
 
-TestMmko::TestMmko(BUSLINE line)
+MMKOInterface::MMKOInterface(BUSLINE line)
 		:lineBus(line)
 {
-	MkoText("TestMmko()");
+	MkoText("MMKOInterface()");
 	/*try
 	{
 		DeviceInit();
 	}
-	catch (MkoErrors& ex)
+	catch (MMKOErrors& ex)
 	{
 		std::cerr << ex.what();
 		CloseSession();
@@ -19,11 +19,11 @@ TestMmko::TestMmko(BUSLINE line)
 	Common::getInstance().status = mkoStatus;
 }
 
-TestMmko::~TestMmko()
+MMKOInterface::~MMKOInterface()
 {
-	MkoText("~TestMmko()");
+	MkoText("MMKOInterfacerface()");
 }
-void TestMmko::SelfTest()
+void MMKOInterface::SelfTest()
 {
 	// TODO It was copied from common.h, should rewrite for C++
 	char message[256];
@@ -46,59 +46,59 @@ void TestMmko::SelfTest()
 	printf("Memory test result: %s (%d)\n", message, resultCode);
 }
 
-void TestMmko::CloseSession()
+void MMKOInterface::CloseSession()
 {
 	unmbase_close(getCarrierSession());
 	unmmko1_close(getMkoSession());
 }
-int32 TestMmko::getStatus()
+int32 MMKOInterface::getStatus()
 {
 	return Common::getInstance().status;
 }
-BUSLINE TestMmko::getLine() const
+BUSLINE MMKOInterface::getLine() const
 {
 	return lineBus;
 }
-uint32 TestMmko::getCarrierSession()
+uint32 MMKOInterface::getCarrierSession()
 {
 	return Common::getInstance().carrierSession;
 }
-uint32 TestMmko::getMkoSession()
+uint32 MMKOInterface::getMkoSession()
 {
 	return Common::getInstance().session;
 }
-ControllerMode* TestMmko::addController(const uint16& rxtx)
+ControllerMode* MMKOInterface::addController(const uint16& rxtx)
 {
 	return add<ControllerMode, uint16>(rxtx);
 }
 template<class T, class TBit>
-std::shared_ptr<T>& TestMmko::insertObject(const TBit& rt)
+std::shared_ptr<T>& MMKOInterface::insertObject(const TBit& rt)
 {
 	return controllers =
 				   std::shared_ptr<ControllerMode>(new ControllerMode(this, rt));
 }
-void TestMmko::DeviceInit()
+void MMKOInterface::DeviceInit()
 {
 	mkoStatus = Common::getInstance().search();
 	if (mkoStatus < 0)
 	{
-		auto errMsg = MkoErrors::ErrorMessage(getMkoSession(), &unmmko1_error_message);
-		throw MkoErrors("Error config MKO is not found, " + std::get<0>(errMsg), std::get<1>(errMsg));
+		auto errMsg = MMKOErrors::ErrorMessage(getMkoSession(), &unmmko1_error_message);
+		throw MMKOErrors("Error config MKO is not found, " + std::get<0>(errMsg), std::get<1>(errMsg));
 	}
 	if (unmbase_init(Common::getInstance().resourceName, true, true,
 			&Common::getInstance().carrierSession) < 0)
 	{
-		auto errMsg = MkoErrors::ErrorMessage(Common::getInstance().carrierSession,
+		auto errMsg = MMKOErrors::ErrorMessage(Common::getInstance().carrierSession,
 				&unmmko1_error_message);
-		throw MkoErrors("Unmbase activate error" + std::get<0>(errMsg),
+		throw MMKOErrors("Unmbase activate error" + std::get<0>(errMsg),
 				std::get<1>(errMsg));
 	}
 	if (unmmko1_init(Common::getInstance().resourceName, true, true,
 			&Common::getInstance().session) < 0)
 	{
-		auto errMsg = MkoErrors::ErrorMessage(Common::getInstance().session,
+		auto errMsg = MMKOErrors::ErrorMessage(Common::getInstance().session,
 				&unmmko1_error_message);
-		throw MkoErrors("Unmmko1 activate error" + std::get<0>(errMsg),
+		throw MMKOErrors("Unmmko1 activate error" + std::get<0>(errMsg),
 				std::get<1>(errMsg));
 	}
 	if (unmmko1_connect
@@ -106,16 +106,16 @@ void TestMmko::DeviceInit()
 					Common::getInstance().position,
 					VI_TRUE, VI_TRUE) < 0)
 	{
-		auto errMsg = MkoErrors::ErrorMessage(Common::getInstance().session, &unmmko1_error_message);
-		throw MkoErrors("Unmmko1 connect error " + std::get<0>(errMsg), std::get<1>(errMsg));
+		auto errMsg = MMKOErrors::ErrorMessage(Common::getInstance().session, &unmmko1_error_message);
+		throw MMKOErrors("Unmmko1 connect error " + std::get<0>(errMsg), std::get<1>(errMsg));
 	}
 }
-MonitorMode* TestMmko::addMonitor()
+MonitorMode* MMKOInterface::addMonitor()
 {
 	monitor = std::unique_ptr<MonitorMode>(new MonitorMode(this));
 	return getMonitor();
 }
-MonitorMode* TestMmko::getMonitor() const
+MonitorMode* MMKOInterface::getMonitor() const
 {
 	return monitor.get();
 }

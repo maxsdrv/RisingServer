@@ -8,10 +8,10 @@
 
 
 
-class MkoErrors : public std::exception
+class MMKOErrors : public std::exception
 {
 public:
-	MkoErrors(const std::string& eM, int eC);
+	MMKOErrors(const std::string& eM, int eC);
 	static std::tuple<std::string, int32_t>
 	ErrorMessage(uint32_t session, const std::function<int(uint32_t, int32_t, char*)>& f);
 	std::string what();

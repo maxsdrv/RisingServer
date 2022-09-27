@@ -6,23 +6,15 @@
 #include "defines.h"
 #include <unmmko1.h>
 
-class TestMmko;
+class MMKOInterface;
+using Msg = std::vector<std::unique_ptr<unmmko1_message>>;
 
 class MonitorMode {
 private:
-	friend class TestMmko;
+	friend class MMKOInterface;
 
-	explicit MonitorMode(TestMmko* objMko);
- /* class which store message values */
-	struct MonitorMessage
-	{
-		uint64_t timestamp;
-		uint16_t commandWord1;
-		uint16_t commandWord2;
-		uint16_t dataWordsCount;
-		std::vector<uint16_t> dataWords;
-	};
-using Msg = std::vector<std::unique_ptr<unmmko1_message>>;
+	explicit MonitorMode(MMKOInterface* objMko);
+
 public:
 	~MonitorMode() = default;
 	/* non-copyable class */
@@ -34,10 +26,9 @@ public:
 	void StartMonitor() const;
 	void StopMonitor() const;
 	/* Methods for processing messages */
-	MonitorMessage& PullMessage();
+	const Msg& PullMessage();
 private:
-	TestMmko* mMko;
-	MonitorMessage monMessage{};
+	MMKOInterface* mMko;
 	Msg messages; // Monitor messages list
 	uint32 monitorSession;
 	int32 monitorStatus;

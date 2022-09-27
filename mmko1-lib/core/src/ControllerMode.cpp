@@ -1,7 +1,7 @@
 #include "ControllerMode.h"
 #include "defines.h"
 
-ControllerMode::ControllerMode(TestMmko* objectMmko1, const uint16& rxtx)
+ControllerMode::ControllerMode(MMKOInterface* objectMmko1, const uint16& rxtx)
 		:
 		testMmko(objectMmko1),
 		mRxTx(rxtx),
@@ -25,12 +25,12 @@ int32 ControllerMode::BusToTerminalReceive(uint16 address, uint16 subAddress, ui
 
 	auto commandWord = PackCw(address, mRxTx, subAddress, wordCount);
 	*commands = unmmko1_bc_rt(line, commandWord, dataWords);
-	unmmko1_bc_configure(TestMmko::getMkoSession(), UNMMKO1_BC_DEFAULT);
-	unmmko1_bc_start(TestMmko::getMkoSession());
-	unmmko1_bc_transmit_command(TestMmko::getMkoSession(), *commands);
-	unmmko1_bc_stop(TestMmko::getMkoSession());
+	unmmko1_bc_configure(MMKOInterface::getMkoSession(), UNMMKO1_BC_DEFAULT);
+	unmmko1_bc_start(MMKOInterface::getMkoSession());
+	unmmko1_bc_transmit_command(MMKOInterface::getMkoSession(), *commands);
+	unmmko1_bc_stop(MMKOInterface::getMkoSession());
 
-	return TestMmko::getStatus();
+	return MMKOInterface::getStatus();
 }
 int32 ControllerMode::transmitCmdF1(uint16 address, uint16 subAddress, uint16 wordCount,
 		uint16* dataWords)
@@ -38,12 +38,12 @@ int32 ControllerMode::transmitCmdF1(uint16 address, uint16 subAddress, uint16 wo
 	auto line = testMmko->getLine();
 
 	*commands = unmmko1_f1(line, address, subAddress, wordCount, dataWords);
-	unmmko1_bc_configure(TestMmko::getMkoSession(), UNMMKO1_BC_DEFAULT);
-	unmmko1_bc_start(TestMmko::getMkoSession());
-	unmmko1_bc_transmit_command(TestMmko::getMkoSession(), *commands);
-	unmmko1_bc_stop(TestMmko::getMkoSession());
+	unmmko1_bc_configure(MMKOInterface::getMkoSession(), UNMMKO1_BC_DEFAULT);
+	unmmko1_bc_start(MMKOInterface::getMkoSession());
+	unmmko1_bc_transmit_command(MMKOInterface::getMkoSession(), *commands);
+	unmmko1_bc_stop(MMKOInterface::getMkoSession());
 
-	return TestMmko::getStatus();
+	return MMKOInterface::getStatus();
 }
 void ControllerMode::setRxTx(uint16 RxTx)
 {

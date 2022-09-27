@@ -18,16 +18,18 @@ list(APPEND SUPPORT
         support/SFileLogger.cpp
         support/SFileLogger.h)
 list(APPEND HEADERS
-        include/TestMmko.h
+        include/MMKOInterface.h
         include/MonitorMode.h
         include/ControllerMode.h
-        include/MkoErrors.h
+        include/MMKOErrors.h
+        include/AbonentMode.h
         )
 list(APPEND SOURCE
-        src/TestMmko.cpp
+        src/MMKOInterface.cpp
         src/MonitorMode.cpp
         src/ControllerMode.cpp
-        src/MkoErrors.cpp
+        src/MMKOErrors.cpp
+        src/AbonentMode.cpp
         )
 
 include_directories(include/ enums/ $ENV{HOME}../../usr/local/vxipnp/linux/unmmko1/

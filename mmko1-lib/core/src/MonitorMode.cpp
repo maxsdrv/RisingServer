@@ -3,9 +3,9 @@
 #include <memory>
 #include <algorithm>
 
-#include "TestMmko.h"
+#include "MMKOInterface.h"
 
-MonitorMode::MonitorMode(TestMmko* objMko)
+MonitorMode::MonitorMode(MMKOInterface* objMko)
 		: mMko(objMko),
 		  monitorSession(Common::getInstance().session)
 {
@@ -14,7 +14,7 @@ MonitorMode::MonitorMode(TestMmko* objMko)
 	{
 		StartMonitor();
 	}
-	catch(MkoErrors& ex)
+	catch(MMKOErrors& ex)
 	{
 		std::cerr << ex.what();
 		StopMonitor();
@@ -26,8 +26,8 @@ void MonitorMode::StartMonitor() const
 			| UNMMKO1_MON_BUS_A_AND_B);
 	if (errMonitor < 0)
 	{
-		auto errMsg = MkoErrors::ErrorMessage(Common::getInstance().session, &unmmko1_error_message);
-		throw MkoErrors(__FUNCTION__ + std::get<0>(errMsg), std::get<1>(errMsg));
+		auto errMsg = MMKOErrors::ErrorMessage(Common::getInstance().session, &unmmko1_error_message);
+		throw MMKOErrors(__FUNCTION__ + std::get<0>(errMsg), std::get<1>(errMsg));
 	}
 	else
 	{
@@ -49,28 +49,30 @@ bool MonitorMode::MessagesRead()
 		messages.push_back(std::move(lMsg));
 	return true;
 }
-MonitorMode::MonitorMessage& MonitorMode::PullMessage()
+const Msg& MonitorMode::PullMessage()
 {
 	if (MessagesRead())
 	{
 		for (const auto& msg : messages)
 		{
-			monMessage.timestamp = (static_cast<uint64_t>(msg->timestamp_high) << 32) +
-					msg->timestamp_low;
-			if (msg->activity & UNMMKO1_MSG_ACT_CWD_1)
-				monMessage.commandWord1 = msg->command.command_word_1;
-			if (msg->activity & UNMMKO1_MSG_ACT_CWD_2)
-				monMessage.commandWord2 = msg->command.command_word_2;
-
-			if (0 != msg->command.data_words_count)
-				monMessage.dataWordsCount = msg->command.data_words_count;
-
-			std::copy(std::begin(msg->command.data_words), std::end(msg->command.data_words),
-												   std::back_inserter(monMessage.dataWords));
-
+			std::cerr << "State:\n";
+			if (UNMMKO1_MSG_ERR_OK == msg->error)
+				std::cerr << "\tOK\n";
+			if (msg->error & UNMMKO1_MSG_ERR_NO_RESPONSE)
+				std::cerr << "\tNo response\n";
+			if(msg->error & UNMMKO1_MSG_ERR_ANY_ERROR_BIT)
+				std::cerr << "\tAny error\n";
+			if (msg->error & UNMMKO1_MSG_ERR_PROTOCOL)
+				std::cerr << "\tProtocol error\n";
+			if (msg->error & UNMMKO1_MSG_ERR_DATA_COUNT)
+				std::cerr << "\tData count error\n";
+			if (msg->error & UNMMKO1_MSG_ERR_MANCHECTER)
+				std::cerr << "\tManchester error\n";
+			if (msg->error & UNMMKO1_MSG_ERR_SYSTEM)
+				std::cerr << "\tSystem error\n";
 		}
 	}
-
+	return messages;
 }
 void MonitorMode::StopMonitor() const
 {

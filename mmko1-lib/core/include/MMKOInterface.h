@@ -13,10 +13,10 @@
 class ControllerMode;
 class MonitorMode;
 
-class TestMmko {
+class MMKOInterface {
 public:
-	explicit TestMmko(BUSLINE line);
-	~TestMmko();
+	explicit MMKOInterface(BUSLINE line);
+	~MMKOInterface();
 	static void SelfTest(); // Mezzanine self-test, info, version, memory test
 	static void CloseSession(); // close connect Mezzanine MKO and carrier Mezzanine
 	/* Getters and Setters */
@@ -50,7 +50,7 @@ private:
 };
 
 template<class T, class B>
-constexpr T* TestMmko::add(const B& bit)
+constexpr T* MMKOInterface::add(const B& bit)
 {
 	std::shared_ptr<T>& pObj = insertObject<T>(bit);
 	return pObj.get();

@@ -3,7 +3,7 @@
 #include <iostream>
 #include <boost/format.hpp>
 
-#include "MkoErrors.h"
+#include "MMKOErrors.h"
 #include "Actions.h"
 
 using boost::format;
@@ -38,7 +38,7 @@ int32_t MkoValidation(const TObjectName& objectName, TSession session, const TFu
 {
 	if (func < 0)
 	{
-		auto err = MkoErrors::ErrorMessage(session, &unmmko1_error_message);
+		auto err = MMKOErrors::ErrorMessage(session, &unmmko1_error_message);
 		std::cerr << objectName  << " " << format("%s %i") % std::get<0>(err) % std::get<1>(err);
 	}
 	return func;

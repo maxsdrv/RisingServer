@@ -27,7 +27,7 @@ void MMKOInterface::SelfTest()
 {
 	// TODO It was copied from common.h, should rewrite for C++
 	char message[256];
-	int16 resultCode{};
+	int16_t resultCode{};
 	char softwareVersion[256];
 	char hardwareVersion[256];
 
@@ -51,7 +51,7 @@ void MMKOInterface::CloseSession()
 	unmbase_close(getCarrierSession());
 	unmmko1_close(getMkoSession());
 }
-int32 MMKOInterface::getStatus()
+int32_t MMKOInterface::getStatus()
 {
 	return Common::getInstance().status;
 }
@@ -59,17 +59,17 @@ BUSLINE MMKOInterface::getLine() const
 {
 	return lineBus;
 }
-uint32 MMKOInterface::getCarrierSession()
+uint32_t MMKOInterface::getCarrierSession()
 {
 	return Common::getInstance().carrierSession;
 }
-uint32 MMKOInterface::getMkoSession()
+uint32_t MMKOInterface::getMkoSession()
 {
 	return Common::getInstance().session;
 }
-ControllerMode* MMKOInterface::addController(const uint16& rxtx)
+ControllerMode* MMKOInterface::addController(const uint16_t& rxtx)
 {
-	return add<ControllerMode, uint16>(rxtx);
+	return add<ControllerMode, uint16_t>(rxtx);
 }
 template<class T, class TBit>
 std::shared_ptr<T>& MMKOInterface::insertObject(const TBit& rt)

@@ -23,7 +23,7 @@ Common::~Common()
 	MkoText("~Common()");
 }
 
-int32 Common::search()
+int32_t Common::search()
 {
 	MkoText("Debug information about search MKO");
 	/* Lambdas instead goto definitions in C implementation common.h */

@@ -37,7 +37,7 @@ void MonitorMode::StartMonitor() const
 }
 bool MonitorMode::MessagesRead()
 {
-	uint32 messagesCount{};
+	uint32_t messagesCount{};
 	auto lMsg = std::make_unique<unmmko1_message>();
 	if (unmmko1_mon_messages_count(monitorSession, &messagesCount) < 0)
 		return false;
@@ -77,6 +77,10 @@ const Msg& MonitorMode::PullMessage()
 void MonitorMode::StopMonitor() const
 {
 	MkoValidation(__FUNCTION__, monitorSession, unmmko1_mon_stop(monitorSession));
+}
+MonitorMode::~MonitorMode()
+{
+	StopMonitor();
 }
 
 

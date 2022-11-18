@@ -16,7 +16,7 @@ private:
 	explicit MonitorMode(MMKOInterface* objMko);
 
 public:
-	~MonitorMode() = default;
+	~MonitorMode();
 	/* non-copyable class */
 	MonitorMode(const MonitorMode&) = delete;
 	MonitorMode(MonitorMode&&) = delete;
@@ -30,8 +30,8 @@ public:
 private:
 	MMKOInterface* mMko;
 	Msg messages; // Monitor messages list
-	uint32 monitorSession;
-	int32 monitorStatus;
+	uint32_t monitorSession;
+	int32_t monitorStatus;
 
 	bool MessagesRead(); //read all messages
 };

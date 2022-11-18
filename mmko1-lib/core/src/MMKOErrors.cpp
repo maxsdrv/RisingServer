@@ -13,8 +13,8 @@ std::string MMKOErrors::what()
 	return fmt.str();
 }
 
-std::tuple<std::string, int32> MMKOErrors::ErrorMessage(uint32 session,
-		const std::function<int(uint32, int32, char*)>& f)
+std::tuple<std::string, int32_t> MMKOErrors::ErrorMessage(uint32_t session,
+		const std::function<int(uint32_t, int32_t, char*)>& f)
 {
 	char buf[256];
 	f(session, Common::getInstance().status, buf);

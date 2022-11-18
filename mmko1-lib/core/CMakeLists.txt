@@ -38,6 +38,7 @@ $ENV{HOME}../../usr/local/vxipnp/linux/include/)
 include_directories(include src defines support logs)
 
 
-add_executable(${PROJECT_NAME} ${HEADERS} ${SOURCE} ${SUPPORT} main.cpp)
+#[[add_executable(${PROJECT_NAME} ${HEADERS} ${SOURCE} ${SUPPORT} main.cpp)]]
+add_library(${PROJECT_NAME} ${HEADERS} ${SOURCE} ${SUPPORT})
 
 target_link_libraries(mmko1 libunmmko1.so libunmbase.so libvisa.so)

@@ -8,11 +8,6 @@
 
 using boost::format;
 
-using uint16 = uint16_t;
-using uint32 = uint32_t;
-using int32 = int32_t;
-using int16 = int16_t;
-
 /* Template functions for print message */
 template<class TString>
 void MkoText(const TString& str)

@@ -18,19 +18,20 @@ list(APPEND SUPPORT
         support/SFileLogger.cpp
         support/SFileLogger.h)
 list(APPEND HEADERS
-        include/MMKOInterface.h
+        include/Mmko.h
         include/MonitorMode.h
         include/ControllerMode.h
         include/MMKOErrors.h
         include/AbonentMode.h
         )
 list(APPEND SOURCE
-        src/MMKOInterface.cpp
+        src/Mmko.cpp
         src/MonitorMode.cpp
         src/ControllerMode.cpp
         src/MMKOErrors.cpp
         src/AbonentMode.cpp
         )
+
 
 include_directories(include/ enums/ $ENV{HOME}../../usr/local/vxipnp/linux/unmmko1/
 $ENV{HOME}../../usr/local/vxipnp/linux/include/)
@@ -38,7 +39,7 @@ $ENV{HOME}../../usr/local/vxipnp/linux/include/)
 include_directories(include src defines support logs)
 
 
-#[[add_executable(${PROJECT_NAME} ${HEADERS} ${SOURCE} ${SUPPORT} main.cpp)]]
-add_library(${PROJECT_NAME} ${HEADERS} ${SOURCE} ${SUPPORT})
+add_executable(${PROJECT_NAME} ${HEADERS} ${SOURCE} ${SUPPORT} main.cpp)
+#[[add_library(${PROJECT_NAME} ${HEADERS} ${SOURCE} ${SUPPORT})]]
 
 target_link_libraries(mmko1 libunmmko1.so libunmbase.so libvisa.so)

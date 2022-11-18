@@ -6,14 +6,14 @@
 #include "defines.h"
 #include <unmmko1.h>
 
-class MMKOInterface;
+class Mmko;
 using Msg = std::vector<std::unique_ptr<unmmko1_message>>;
 
 class MonitorMode {
 private:
-	friend class MMKOInterface;
+	friend class Mmko;
 
-	explicit MonitorMode(MMKOInterface* objMko);
+	explicit MonitorMode(Mmko* objMko);
 
 public:
 	~MonitorMode();
@@ -28,7 +28,7 @@ public:
 	/* Methods for processing messages */
 	const Msg& PullMessage();
 private:
-	MMKOInterface* mMko;
+	Mmko* mMko;
 	Msg messages; // Monitor messages list
 	uint32_t monitorSession;
 	int32_t monitorStatus;

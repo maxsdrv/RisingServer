@@ -1,9 +1,11 @@
+/* Class for working of bus in terminal device mode */
+
 #pragma once
 
 #include <cstdint>
 #include <vector>
 
-class MMKOInterface;
+class Mmko;
 
 enum class State : unsigned
 {
@@ -14,9 +16,9 @@ enum class State : unsigned
 class AbonentMode
 {
 private:
-	friend class MMKOInterface;
+	friend class Mmko;
 
-	explicit AbonentMode(MMKOInterface* testMmko, int address);
+	explicit AbonentMode(Mmko* testMmko, uint32_t address);
 public:
 	~AbonentMode();
 	/* non-copyable class */
@@ -30,7 +32,7 @@ public:
 	void setDataF5(uint16_t commandCode, uint16_t dataWord) const;
 private:
 	State state;
-	MMKOInterface* objMmko;
+	Mmko* objMmko;
 	uint32_t abonentSession{};
 	uint32_t abonentAddr{};
 };

@@ -9,14 +9,14 @@
 
 #include "Actions.h"
 
-
 class ControllerMode;
 class MonitorMode;
+class AbonentMode;
 
-class MMKOInterface {
+class Mmko {
 public:
-	explicit MMKOInterface(BUSLINE line);
-	~MMKOInterface();
+	explicit Mmko(BUSLINE line);
+	~Mmko();
 	static void SelfTest(); // Mezzanine self-test, info, version, memory test
 	static void CloseSession(); // close connect Mezzanine MKO and carrier Mezzanine
 	/* Getters and Setters */
@@ -30,10 +30,13 @@ private:
 	/* Controller record type */
 	std::shared_ptr<ControllerMode> controllers;
 	std::unique_ptr<MonitorMode> monitor;
+	std::unique_ptr<AbonentMode> abonent;
 
 public:
 	ControllerMode* addController(const uint16_t& rxtx);
 	MonitorMode* addMonitor();
+	/* Add abonent to abonent list on address */
+	AbonentMode* addAbonent(uint32_t address);
 
 private:
 	/* Adds arguments into class constructor and return instance */
@@ -50,7 +53,7 @@ private:
 };
 
 template<class T, class B>
-constexpr T* MMKOInterface::add(const B& bit)
+constexpr T* Mmko::add(const B& bit)
 {
 	std::shared_ptr<T>& pObj = insertObject<T>(bit);
 	return pObj.get();

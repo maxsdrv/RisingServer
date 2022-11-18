@@ -4,13 +4,13 @@
 
 #include <functional>
 
-#include "MMKOInterface.h"
+#include "Mmko.h"
 
 class ControllerMode
 {
 private:
-	friend class MMKOInterface;
-	explicit ControllerMode(MMKOInterface* objectMmko1, const uint16_t& rxtx);
+	friend class Mmko;
+	explicit ControllerMode(Mmko* objectMmko1, const uint16_t& rxtx);
 
 public:
 	~ControllerMode();
@@ -38,7 +38,7 @@ public:
 	[[nodiscard]] uint16_t getRxTx() const; // get data receive/transmit bit
 
 private:
-	MMKOInterface* testMmko;
+	Mmko* testMmko;
 	std::unique_ptr<unmmko1_command> commands;
 	uint16_t mRxTx; /* data receive/transmit bit. It must point to action which perform terminal-device
 	if 0 that means what Terminal-Device should accept Data-Word(Cmd), if 1 then transmit*/

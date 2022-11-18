@@ -3,9 +3,9 @@
 #include <memory>
 #include <algorithm>
 
-#include "MMKOInterface.h"
+#include "Mmko.h"
 
-MonitorMode::MonitorMode(MMKOInterface* objMko)
+MonitorMode::MonitorMode(Mmko* objMko)
 		: mMko(objMko),
 		  monitorSession(Common::getInstance().session)
 {

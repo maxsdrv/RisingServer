@@ -1,12 +1,13 @@
-#include "MMKOInterface.h"
+#include "Mmko.h"
 #include "ControllerMode.h"
 #include "MonitorMode.h"
+#include "AbonentMode.h"
 
-MMKOInterface::MMKOInterface(BUSLINE line)
+Mmko::Mmko(BUSLINE line)
 		:lineBus(line)
 {
-	MkoText("MMKOInterface()");
-	/*try
+	MkoText("Mmko()");
+	try
 	{
 		DeviceInit();
 	}
@@ -15,15 +16,15 @@ MMKOInterface::MMKOInterface(BUSLINE line)
 		std::cerr << ex.what();
 		CloseSession();
 		throw;
-	}*/
+	}
 	Common::getInstance().status = mkoStatus;
 }
 
-MMKOInterface::~MMKOInterface()
+Mmko::~Mmko()
 {
 	MkoText("MMKOInterfacerface()");
 }
-void MMKOInterface::SelfTest()
+void Mmko::SelfTest()
 {
 	// TODO It was copied from common.h, should rewrite for C++
 	char message[256];
@@ -46,38 +47,38 @@ void MMKOInterface::SelfTest()
 	printf("Memory test result: %s (%d)\n", message, resultCode);
 }
 
-void MMKOInterface::CloseSession()
+void Mmko::CloseSession()
 {
 	unmbase_close(getCarrierSession());
 	unmmko1_close(getMkoSession());
 }
-int32_t MMKOInterface::getStatus()
+int32_t Mmko::getStatus()
 {
 	return Common::getInstance().status;
 }
-BUSLINE MMKOInterface::getLine() const
+BUSLINE Mmko::getLine() const
 {
 	return lineBus;
 }
-uint32_t MMKOInterface::getCarrierSession()
+uint32_t Mmko::getCarrierSession()
 {
 	return Common::getInstance().carrierSession;
 }
-uint32_t MMKOInterface::getMkoSession()
+uint32_t Mmko::getMkoSession()
 {
 	return Common::getInstance().session;
 }
-ControllerMode* MMKOInterface::addController(const uint16_t& rxtx)
+ControllerMode* Mmko::addController(const uint16_t& rxtx)
 {
 	return add<ControllerMode, uint16_t>(rxtx);
 }
 template<class T, class TBit>
-std::shared_ptr<T>& MMKOInterface::insertObject(const TBit& rt)
+std::shared_ptr<T>& Mmko::insertObject(const TBit& rt)
 {
 	return controllers =
-				   std::shared_ptr<ControllerMode>(new ControllerMode(this, rt));
+			std::shared_ptr<ControllerMode>(new ControllerMode(this, rt));
 }
-void MMKOInterface::DeviceInit()
+void Mmko::DeviceInit()
 {
 	mkoStatus = Common::getInstance().search();
 	if (mkoStatus < 0)
@@ -110,17 +111,20 @@ void MMKOInterface::DeviceInit()
 		throw MMKOErrors("Unmmko1 connect error " + std::get<0>(errMsg), std::get<1>(errMsg));
 	}
 }
-MonitorMode* MMKOInterface::addMonitor()
+MonitorMode* Mmko::addMonitor()
 {
 	monitor = std::unique_ptr<MonitorMode>(new MonitorMode(this));
 	return getMonitor();
 }
-MonitorMode* MMKOInterface::getMonitor() const
+MonitorMode* Mmko::getMonitor() const
 {
 	return monitor.get();
 }
 
-
+AbonentMode* Mmko::addAbonent(uint32_t address) {
+	abonent = std::unique_ptr<AbonentMode>
+	        (new AbonentMode(this, address));
+}
 
 
 

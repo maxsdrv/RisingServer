@@ -2,8 +2,8 @@
 
 /* Class for work in Monitor-mode */
 #include <vector>
+#include <memory>
 
-#include "defines.h"
 #include <unmmko1.h>
 
 class Mmko;

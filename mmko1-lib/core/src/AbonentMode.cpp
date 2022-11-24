@@ -1,6 +1,5 @@
 #include "AbonentMode.h"
 #include "Mmko.h"
-#include "defines.h"
 
 namespace
 {

@@ -1,12 +1,16 @@
 #include "ControllerMode.h"
-#include "defines.h"
 
-ControllerMode::ControllerMode(Mmko* objectMmko1, const uint16_t& rxtx)
+ControllerMode::ControllerMode(Mmko* objectMmko1, int bcOptions)
 		:
-		testMmko(objectMmko1),
-		mRxTx(rxtx),
+		mMmko(objectMmko1),
 		commands(std::make_unique<unmmko1_command>())
 {
+	busLine = mMmko->getLine();
+	currentSession = Mmko::getMkoSession();
+	auto erMsg = unmmko1_bc_configure(currentSession, bcOptions);
+	if (erMsg < 0) {
+
+	}
 	MkoText("ControllerMode()");
 }
 ControllerMode::~ControllerMode()
@@ -19,40 +23,29 @@ uint16_t ControllerMode::PackCw(uint16_t address, uint16_t RxTx, uint16_t subAdd
 	return unmmko1_pack_cw(address, RxTx, subAddress, wordCount);
 }
 
-int32_t ControllerMode::BusToTerminalReceive(uint16_t address, uint16_t subAddress, uint16_t wordCount, uint16_t* dataWords) const
+int32_t ControllerMode::BusToTerminalTransmit(uint16_t address, uint16_t subAddress, uint16_t wordCount, uint16_t* dataWords) const
 {
-	auto line = static_cast<unmmko1_bus>(testMmko->getLine());
-
 	auto commandWord = PackCw(address, mRxTx, subAddress, wordCount);
-	*commands = unmmko1_bc_rt(line, commandWord, dataWords);
-	unmmko1_bc_configure(Mmko::getMkoSession(), UNMMKO1_BC_DEFAULT);
-	unmmko1_bc_start(Mmko::getMkoSession());
-	unmmko1_bc_transmit_command(Mmko::getMkoSession(), *commands);
-	unmmko1_bc_stop(Mmko::getMkoSession());
+	*commands = unmmko1_bc_rt(busLine, commandWord, dataWords);
+	unmmko1_bc_configure(currentSession, UNMMKO1_BC_DEFAULT);
+	unmmko1_bc_start(currentSession);
+	unmmko1_bc_transmit_command(currentSession, *commands);
+	unmmko1_bc_stop(currentSession);
 
 	return Mmko::getStatus();
 }
 int32_t ControllerMode::transmitCmdF1(uint16_t address, uint16_t subAddress, uint16_t wordCount,
 		uint16_t* dataWords)
 {
-	auto line = testMmko->getLine();
-
-	*commands = unmmko1_f1(line, address, subAddress, wordCount, dataWords);
-	unmmko1_bc_configure(Mmko::getMkoSession(), UNMMKO1_BC_DEFAULT);
-	unmmko1_bc_start(Mmko::getMkoSession());
-	unmmko1_bc_transmit_command(Mmko::getMkoSession(), *commands);
-	unmmko1_bc_stop(Mmko::getMkoSession());
+	*commands = unmmko1_f1(busLine, address, subAddress, wordCount, dataWords);
+	unmmko1_bc_configure(currentSession, UNMMKO1_BC_DEFAULT);
+	unmmko1_bc_start(currentSession);
+	unmmko1_bc_transmit_command(currentSession, *commands);
+	unmmko1_bc_stop(currentSession);
 
 	return Mmko::getStatus();
 }
-void ControllerMode::setRxTx(uint16_t RxTx)
-{
-	mRxTx = RxTx;
-}
-uint16_t ControllerMode::getRxTx() const
-{
-	return mRxTx;
-}
+
 
 
 

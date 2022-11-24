@@ -1,5 +1,4 @@
 #include "Actions.h"
-#include "defines.h"
 
 namespace {
 	const std::string search_pattern{"?*[0-9]?*::?*::INSTR"};
@@ -16,7 +15,6 @@ Common::Common()
 		count(0), deviceSession(0),
 		carrierSession(0), interfaceType(0), mezzanineNumber(1)
 {
-//    MKOTEXT("Common()");
 }
 Common::~Common()
 {
@@ -128,23 +126,6 @@ int32_t Common::search()
 
 	return this->found;
 }
-//! Проверка ошибок, используется при вызове функций драйвера мезонина MKO
-void Common::processUnmmkoError() const
-{
-	ViChar str[256];
-	unmmko1_error_message(session, status, str);
-	if (status < 0)	{
-		MkoText("Error MKO activation", session, status, str);
-	}
-}
-//! Проверка ошибок, используется при вызове функций драйвера Носителя Мезонинов
-void Common::processUnmbaseError() const
-{
-	ViChar str[256];
-	unmbase_error_message(session, status, str);
-	if (status < 0)	{
-		MkoText("Error mezzanine carrier activation", session, status, str);
-	}
-}
+
 
 

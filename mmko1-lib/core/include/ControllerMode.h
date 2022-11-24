@@ -10,7 +10,7 @@ class ControllerMode
 {
 private:
 	friend class Mmko;
-	explicit ControllerMode(Mmko* objectMmko1, const uint16_t& rxtx);
+	explicit ControllerMode(Mmko* objectMmko1, int bcOptions = UNMMKO1_BC_DEFAULT);
 
 public:
 	~ControllerMode();
@@ -23,7 +23,7 @@ public:
 	 * */
 	static uint16_t PackCw(uint16_t address, uint16_t RxTx, uint16_t subAddress, uint16_t wordCount);
 	/* Method for transmit message from bus-controller to terminal-device with one cmd word*/
-	int32_t BusToTerminalReceive(uint16_t address, uint16_t subAddress, uint16_t wordCount, uint16_t* dataWords) const;
+	int32_t BusToTerminalTransmit(uint16_t address, uint16_t subAddress, uint16_t wordCount, uint16_t* dataWords) const;
 	/* Method for transmit message from controller to terminal-device in format F1 */
 	int32_t transmitCmdF1(uint16_t address, uint16_t subAddress, uint16_t wordCount, uint16_t* dataWords);
 
@@ -33,15 +33,13 @@ public:
 	ControllerMode& operator=(const ControllerMode&) = delete;
 	ControllerMode& operator=(ControllerMode&&) = delete;
 
-	/* Getters and Setters */
-	void setRxTx(uint16_t RxTx); //set data receive/transmit bit
-	[[nodiscard]] uint16_t getRxTx() const; // get data receive/transmit bit
-
 private:
-	Mmko* testMmko;
+	Mmko* mMmko;
 	std::unique_ptr<unmmko1_command> commands;
 	uint16_t mRxTx; /* data receive/transmit bit. It must point to action which perform terminal-device
 	if 0 that means what Terminal-Device should accept Data-Word(Cmd), if 1 then transmit*/
+	BUSLINE busLine;
+	uint32_t currentSession;
 };
 
 

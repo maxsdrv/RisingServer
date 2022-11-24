@@ -9,7 +9,7 @@ MonitorMode::MonitorMode(Mmko* objMko)
 		: mMko(objMko),
 		  monitorSession(Common::getInstance().session)
 {
-	monitorStatus = mMko->mkoStatus;
+	monitorStatus = Common::getInstance().status;
 	try
 	{
 		StartMonitor();

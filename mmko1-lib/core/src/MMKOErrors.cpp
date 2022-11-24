@@ -1,31 +1,29 @@
 #include "MMKOErrors.h"
-#include "defines.h"
 #include "Actions.h"
 
-MMKOErrors::MMKOErrors(const std::string& eM, int eC)
-		:errorMsg(eM), errorCode(eC)
+void ThrowErrorIf(bool expression, uint32_t session, int32_t status, ErDevices d)
 {
-	fmt = boost::format("%s %i \n") % eM % eC;
+	if (expression)
+	{
+		char str[256];
+		if (d == ErDevices::UNMBASE) {
+			unmbase_error_message(session, status, str);
+			throw(MkoExceptions(status, str));
+		}
+		else if (d == ErDevices::UNMMKO) {
+			unmmko1_error_message(session, status, str);
+			throw(MkoExceptions(status, str));
+		}
+	}
+	
 }
 
-std::string MMKOErrors::what()
+std::string FormatErrorMessage(int32_t status, const std::string &msg)
 {
-	return fmt.str();
+	return str(format("Returnes status code %i with message: %s/n") % status % msg);
 }
 
-std::tuple<std::string, int32_t> MMKOErrors::ErrorMessage(uint32_t session,
-		const std::function<int(uint32_t, int32_t, char*)>& f)
-{
-	char buf[256];
-	f(session, Common::getInstance().status, buf);
-	return std::make_tuple(buf, Common::getInstance().status);
-}
-
-
-
-
-
-
+MkoExceptions::MkoExceptions(int32_t status, const std::string &msg) : std::runtime_error(FormatErrorMessage(status, msg)), mError(status) {}
 
 
 

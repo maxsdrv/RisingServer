@@ -7,7 +7,7 @@
 
 class Mmko;
 
-enum class State : unsigned
+enum class State 
 {
 	START,
 	STOP

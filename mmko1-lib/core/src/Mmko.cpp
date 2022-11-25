@@ -21,6 +21,7 @@ Mmko::Mmko(BUSLINE line)
 		std::cerr << "Error code: 0x" << std::hex << std::uppercase << std::setw(8) << std::setfill('0')
 			<< ex.GetError() << std::endl;
 		std::cerr.copyfmt(state);
+		//throw; TODO Check it !
 	}
 }
 
@@ -37,42 +38,41 @@ void Mmko::SelfTest()
 	char softwareVersion[256];
 	char hardwareVersion[256];
 
-	unmmko1_self_test(Common::getInstance().session, &resultCode, message);
+	unmmko1_self_test(session, &resultCode, message);
 	printf("Self-test result: %s (%d)\n", message, resultCode);
-	SFileLogger::getInstance().writeToLog(resultCode, message);
 
-	unmmko1_revision_query(Common::getInstance().session, softwareVersion, hardwareVersion);
+	unmmko1_revision_query(session, softwareVersion, hardwareVersion);
 	std::cout << "Software version: " << softwareVersion << '\n' <<
 			  "Hardware version: " << hardwareVersion << '\n';
 
-	unmmko1_test_exchange(Common::getInstance().session, &resultCode, message);
+	unmmko1_test_exchange(session, &resultCode, message);
 	printf("Exchange test result: %s (%d)\n", message, resultCode);
 
-	unmmko1_test_memory(Common::getInstance().session, &resultCode, message);
+	unmmko1_test_memory(session, &resultCode, message);
 	printf("Memory test result: %s (%d)\n", message, resultCode);
 }
 
-void Mmko::CloseSession()
+void Mmko::CloseSession() const
 {
 	std::cout << "Called close session in Mmko class " << std::endl;
-	unmbase_close(getCarrierSession());
-	unmmko1_close(getMkoSession());
+	unmbase_close(carrierSession);
+	unmmko1_close(session);
 }
-int32_t Mmko::getStatus()
+int32_t Mmko::getMkoStatus() const
 {
-	return Common::getInstance().status;
+	return status;
 }
-BUSLINE Mmko::getLine() const
+BUSLINE Mmko::getLineBus() const
 {
 	return lineBus;
 }
-uint32_t Mmko::getCarrierSession()
+uint32_t Mmko::getCarrierSession() const
 {
-	return Common::getInstance().carrierSession;
+	return carrierSession;
 }
-uint32_t Mmko::getMkoSession()
+uint32_t Mmko::getMkoSession() const
 {
-	return Common::getInstance().session;
+	return session;
 }
 
 /*template<class T, class TBit>
@@ -81,7 +81,7 @@ std::shared_ptr<T>& Mmko::insertObject(const TBit& rt)
 	return controllers =
 			std::shared_ptr<ControllerMode>(new ControllerMode(this, rt));
 }*/
-int32_t search(StateMko* state)
+int32_t Mmko::search()
 {
 	MkoText("Debug information about search MKO");
 
@@ -161,11 +161,11 @@ int32_t search(StateMko* state)
 			if (viLock(deviceSession, VI_EXCLUSIVE_LOCK, 2000, nullptr, nullptr)<0)
 				CloseDevice();
 
-			state->status = viQueryf(deviceSession, const_cast<char*>(idStr.c_str()),
+			status = viQueryf(deviceSession, const_cast<char*>(idStr.c_str()),
 					const_cast<char*>(tab.c_str()), idn);
 			viUnlock(deviceSession);
 
-			if (state->status < 0)
+			if (status < 0)
 				CloseDevice();
 
 			if (0!=strncmp(idn, UNMBASE_MEZABOX_IDN, strlen(UNMBASE_MEZABOX_IDN)))
@@ -173,43 +173,42 @@ int32_t search(StateMko* state)
 		}
 
 		// Initialise Carrier Mezzanine and read code of mezzanines
-		if (unmbase_init(address, VI_ON, VI_ON, &state->carrierSession) < 0)
+		if (unmbase_init(address, VI_ON, VI_ON, &carrierSession) < 0)
 			CloseDevice();
 
 		for (mezzanineNumber = 1; mezzanineNumber<=8; ++mezzanineNumber) {
 			ViInt16 present, model_code;
-			if (unmbase_m_type_q(state->carrierSession, mezzanineNumber, &present, &model_code)<0 || 0==present)
+			if (unmbase_m_type_q(carrierSession, mezzanineNumber, &present, &model_code)<0 || 0==present)
 				continue;
 
 			if (UNMMKO1_MODEL_CODE==(model_code & 0x0fff)) {
-				strcpy(state->resourceName, address);
-				state->position = (ViUInt16)mezzanineNumber;
+				strcpy(resourceName, address);
+				position = (ViUInt16)mezzanineNumber;
 				found = VI_SUCCESS;
 				break;
 			}
 		}
 
-		unmbase_close(state->carrierSession);
+		unmbase_close(carrierSession);
 
 	}
 
 	if (VI_SUCCESS == found)
 		  std::cout << "Mezzanine MKO found at "
-					   << state->resourceName << "on " << state->position << '\n';
-	state->status = found;
+					   << resourceName << "on " << position << '\n';
+	status = found;
 
 	return found;
 }
 void Mmko::DeviceInit()
 {
-	m_State = std::make_unique<StateMko>();
-	ThrowErrorIf(search(m_State.get()) < 0, m_State->session, m_State->status, ErDevices::UNMMKO); // Search Mko device
-	ThrowErrorIf(unmbase_init(m_State->resourceName, true, true, &m_State->carrierSession) < 0,
-			m_State->session, m_State->status, ErDevices::UNMBASE); // Initialization Mezzanine Carrier
-	ThrowErrorIf(unmmko1_init(m_State->resourceName, true, true, &m_State->session) < 0,
-			m_State->session, m_State->status, ErDevices::UNMMKO);	// Initialization Mezzanine Mko
-	ThrowErrorIf(unmmko1_connect(m_State->session, m_State->carrierSession, m_State->position,
-			true, true) < 0, m_State->session, m_State->status, ErDevices::UNMMKO);	// Connect to Mko
+	ThrowErrorIf(search() < 0, session, status, ErDevices::UNMMKO); // Search Mko device
+	ThrowErrorIf(unmbase_init(resourceName, true, true, &carrierSession) < 0,
+			session, status, ErDevices::UNMBASE); // Initialization Mezzanine Carrier
+	ThrowErrorIf(unmmko1_init(resourceName, true, true, &session) < 0,
+			session, status, ErDevices::UNMMKO);	// Initialization Mezzanine Mko
+	ThrowErrorIf(unmmko1_connect(session, carrierSession, position,
+			true, true) < 0, session, status, ErDevices::UNMMKO);	// Connect to Mko
 }
 MonitorMode* Mmko::addMonitor()
 {

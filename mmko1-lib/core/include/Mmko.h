@@ -8,48 +8,40 @@
 
 #include "Actions.h"
 
-/* Bus line for transmitting data */
-using BUSLINE = unmmko1_bus;
-
 class ControllerMode;
 class MonitorMode;
 class AbonentMode;
 
-
-struct StateMko {
-	~StateMko() { std::cout << "~StateMko()" << '\n'; }
-	char resourceName[256]{}; // address mezzanine carrier which found MKO
-	uint16_t position {}; // position mezzanine MKO on mezzanine carrier
-	int32_t status = VI_SUCCESS;
-	uint32_t session = 0;
-	uint32_t carrierSession = 0;
-};
-int32_t search(StateMko* state); // Function for Search Mmko
+/* Bus line for transmitting data */
+using BUSLINE = unmmko1_bus;
 
 class Mmko {
 public:
 	explicit Mmko(BUSLINE line);
 	~Mmko();
-	static void SelfTest(); // Mezzanine self-test, info, version, memory test
-	static void CloseSession(); // close connect Mezzanine MKO and carrier Mezzanine
+	void SelfTest(); // Mezzanine self-test, info, version, memory test
+	void CloseSession() const; // close connect Mezzanine MKO and carrier Mezzanine
+	int32_t search(); // Function for Search Mmko
 
 	ControllerMode* addController(int bcOptions);
 	MonitorMode* addMonitor();
 	/* Add abonent to abonent list on address */
 	AbonentMode* addAbonent(uint32_t address);
-
 	/* Getters and Setters */
-	[[nodiscard]] static int32_t getStatus() ;
-	[[nodiscard]] static uint32_t getMkoSession() ;
-	[[nodiscard]] static uint32_t getCarrierSession();
-	[[nodiscard]] BUSLINE getLine() const;
+	[[nodiscard]] int32_t getMkoStatus() const;
+	[[nodiscard]] uint32_t getMkoSession() const;
+	[[nodiscard]] uint32_t getCarrierSession() const;
+	[[nodiscard]] BUSLINE getLineBus() const;
 private:
-	BUSLINE lineBus; //condition bus-line mmko1	(main/reserve)
-
+	BUSLINE lineBus;
+	char resourceName[256]{}; // address mezzanine carrier which found MKO
+	uint16_t position {}; // position mezzanine MKO on mezzanine carrier
+	int32_t status = VI_SUCCESS;
+	uint32_t session = 0;
+	uint32_t carrierSession = 0;
 	std::unique_ptr<ControllerMode> controllers;
 	std::unique_ptr<MonitorMode> monitor;
 	std::unique_ptr<AbonentMode> abonent;
-	std::unique_ptr<StateMko> m_State;
 
 	/* Adds arguments into class constructor and return instance */
 	/*template<class T, class TBit>
@@ -71,6 +63,6 @@ constexpr T* Mmko::add(const B& bit)
 	return pObj.get();
 }*/
 
-
+int32_t search(Mmko* state); // Function for Search Mmko
 
 

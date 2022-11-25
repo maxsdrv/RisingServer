@@ -20,7 +20,7 @@ void ThrowErrorIf(bool expression, uint32_t session, int32_t status, ErDevices d
 
 std::string FormatErrorMessage(int32_t status, const std::string &msg)
 {
-	return str(format("Returnes status code %i with message: %s/n") % status % msg);
+	return str(format("Returns status code %i with message: %s/n") % status % msg);
 }
 
 MkoExceptions::MkoExceptions(int32_t status, const std::string &msg) : std::runtime_error(FormatErrorMessage(status, msg)), mError(status) {}

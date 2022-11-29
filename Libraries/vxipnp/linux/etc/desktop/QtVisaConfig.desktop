@@ -1,0 +1,14 @@
+[Desktop Entry]
+Name = QtVisaConfig
+Name[ru] = Informtest VISA
+Type = Application
+NoDisplay = false
+Exec = /usr/local/vxipnp/linux/bin/QtVisaConfig
+Icon = /usr/share/icons/fly-astra/64x64/apps/informtest-visa-config.png
+Icon[ru] = /usr/share/icons/fly-astra/64x64/apps/informtest-visa-config.png
+X-FLY-IconContext = Devices
+X-FLY-IconContext[ru] = Applications
+Hidden = false
+Terminal = false
+StartupNotify = true
+OnlyShowIn = FLY;

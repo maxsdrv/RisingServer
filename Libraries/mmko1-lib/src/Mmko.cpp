@@ -37,6 +37,8 @@ bool Mmko::SelfTest() const
 
 	ThrowErrorIf(unmmko1_self_test(session, &resultCode, message) < 0, session, status, ErDevices::UNMMKO);
 	std::cout << boost::format("Self-test result %s %d \n") %message %resultCode;
+
+	return true;
 }
 
 void Mmko::CloseSession() const

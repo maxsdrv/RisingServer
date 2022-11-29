@@ -1,6 +1,6 @@
-/* Class for working of bus in terminal device mode */
-
 #pragma once
+
+/* Class for working of bus in terminal device mode */
 
 #include <cstdint>
 #include <vector>

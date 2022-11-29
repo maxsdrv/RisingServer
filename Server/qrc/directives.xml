@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+    <module name="Операторы управления 14Н736 и 14Н737">
+    <command name="ПОДКЛ_14Н736" short_description="Оператор подключения устройства 14Н736" description="" header="PODKL_14N736(int, int, QString)">
+        <param name="КР" description="Выбор комплекта резервирования" type="целое ">
+            <value description="соответствует комплекту резервирования №1">1</value>
+            <value description="соответствует комплекту резервирования №2">2</value>
+            <default>
+                ""
+            </default>
+        </param>
+        <param name="МАГИСТРАЛЬ" description="Выбор магистрали МКО" type="целое">
+            <value description="MKO-O">0</value>
+            <value description="MKO-1">1</value>
+            <default>
+                ""
+            </default>
+        </param>
+        <param name="ЛИНИЯ" description="Выбор линии МКО" type="строка">
+            <value description="O, пусто-основная">O</value>
+            <value description="P - резервная">P</value>
+            <default/>
+        </param>
+    </command>
+    <command name="ОТКЛ_14Н736" short_description="Оператор отключения устройства 14Н736"
+             description="отключение устройства 14Н736.&#13;Производит отключение устройства
+             14Н736 путём последовательного снятия команд управления с устройства. Выполнение
+             контролируется телеметрическими сигналами СЧ АИК.&#13;Алгоритм работы оператора
+             приведён в А.2.2 приложения А.&#13;" header="OTKL_14N736()"/>
+    </module>
+</document>

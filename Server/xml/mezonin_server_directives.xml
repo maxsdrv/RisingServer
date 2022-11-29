@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+    <module name="Тестовые операторы">
+        <command name="СЛОЖЕНИЕ_ЦЕЛОЕ" short_description="Тестовый оператор сложение_целое" description="Тестовый оператор, позволяющий определиь сумму двух целых чисел" header="SLOZHENIE_CELOE(int, int)">
+            <param name="А" description="Первое слагаемое" type="целое">
+                <default/>
+            </param>
+            <param name="Б" description="Второе слагаемое" type="целое">
+                <default/>
+            </param>
+        </command>
+        <command name="СЛОЖЕНИЕ_ВЕЩЕСТВЕННОЕ" short_description="Тестовый оператор сложения вещественных чисел" description="Складывает параметр А и параметр Б, помещает результат в С" header="SLOZHENIE_VESSHESTVENNOE(double, double, double&amp;)">
+            <param name="А" description="первое слагаемое" type="вещественное">
+                <limit step="0.5" right="13.5" left="2"/>
+                <default>10.5</default>
+            </param>
+            <param name="Б" description="Слагаемое Б" type="вещественное">
+                <default/>
+            </param>
+            <param name="С" description="Результат сложения" type="запись_вещественное">
+                <default/>
+            </param>
+        </command>
+        <command name="МАССИВ_ЦЕЛЫХ" short_description="Оператор для подсчета суммы элементов массива" description="Оператор должен произвести сложение элементов массива и записать результат в соответствующий параметр" header="MASSIV_CELYX(QVariantList, double&amp;)">
+            <param name="СЛАГАЕМЫЕ" description="Массив слагаемых" type="массив">
+                <matrix_param name="слагаемое" description="" type="целое">
+                    <default/>
+                </matrix_param>
+                <default/>
+            </param>
+            <param name="результат" description="" type="запись_вещественное">
+                <default/>
+            </param>
+        </command>
+        <command name="ОЖИДАНИЕ" short_description="Пауза для тестов" description="Ожидает указанное число миллисекунд" header="OZHIDANIE(int)">
+            <param name="МС" description="Число миллисекунд" type="целое">
+                <default/>
+            </param>
+        </command>
+        <command name="ЗАПИСАТЬ_ТМ" short_description="Тестовый оператор добавления ТМ в БД. Подходит для тестирования базы и визуализации." description="Оператор производит инсерт тм кода и его значения в базу." header="ZAPISAT_TM(int, int)">
+            <param name="ТМ_КОД" description="Код сигнала ТМ." type="целое">
+                <default/>
+            </param>
+            <param name="ЗНАЧЕНИЕ" description="Значение сигнала ТМ." type="целое">
+                <default/>
+            </param>
+        </command>
+    </module>
+    <module name="Операторы выдачи команд по МКО">
+    <command name="УСТАНОВИТЬ_ОБМЕН_МКО" short_description="" description="" header="ustanov_obmen_mko(int)">
+        <param name="НОМЕР" description="номер МКО для обмена " type="целое">
+           <value>0</value>
+            <value>1</value>
+            <value>2</value>
+            <default/>
+        </param>
+    </command>
+        <command name="ЧТЕНИЕ_АБ_НЕП" short_description="" description="" header="CHTENIE_AB_NEP(int, int, int)">
+            <param name="A" description="адрес абонента;  " type="целое">
+               <limit step="1" right="31" left="1"/>
+                <default/>
+            </param>
+            <param name="П_А" description="подадрес абонента  " type="целое">
+                <limit step="1" rigth="30" left="1"/>
+                <default/>
+            </param>
+            <param name="ЧСД" description="число слов данных абонента.  " type="целое">
+                <default/>
+            </param>
+        </command>
+   </module>
+</document>
+
+
+
+
+
+
+
+
+
+
+
+

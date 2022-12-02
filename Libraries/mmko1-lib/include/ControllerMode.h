@@ -4,7 +4,7 @@
 
 #include <functional>
 
-#include "Mmko.h"
+#include "MainBus.h"
 
 enum class RXTX {
 	RECEIVE,
@@ -14,8 +14,8 @@ enum class RXTX {
 class ControllerMode
 {
 private:
-	friend class Mmko;
-	explicit ControllerMode(Mmko* objectMmko, int bcOptions = UNMMKO1_BC_DEFAULT);
+	friend class MainBus;
+	explicit ControllerMode(MainBus* objectMmko, int bcOptions = UNMMKO1_BC_DEFAULT);
 
 public:
 	~ControllerMode();
@@ -46,7 +46,7 @@ public:
 	ControllerMode& operator=(ControllerMode&&) = delete;
 
 private:
-	Mmko* m_objectMmko;
+	MainBus* m_objectMmko;
 	std::unique_ptr<unmmko1_command> commands;
 	/* uint16_t mRxTx;  data receive/transmit bit. It must point to action which perform terminal-device
 	if 0 that means what Terminal-Device should accept Data-Word(Cmd), if 1 then transmit*/

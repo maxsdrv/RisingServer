@@ -1,18 +1,17 @@
 #pragma once
 
 /* Class for work in Monitor-mode */
-#include <vector>
 #include <memory>
+#include <vector>
+#include "unmmko1.h"
 
-#include <unmmko1.h>
-
-class Mmko;
+class MainBus;
 using Msg = std::vector<std::unique_ptr<unmmko1_message>>;
 
 class MonitorMode {
 private:
-	friend class Mmko;
-	explicit MonitorMode(Mmko* objectMmko);
+	friend class MainBus;
+	explicit MonitorMode(MainBus* objectMmko, int monOptions = UNMMKO1_MON_DEFAULT);
 public:
 	~MonitorMode();
 	/* non-copyable class */
@@ -26,11 +25,11 @@ public:
 	/* Methods for processing messages */
 	const Msg& PullMessage();
 private:
-	Mmko* m_objectMko;
+	MainBus* m_objectMko;
 	Msg messages; // Monitor messages list
 	uint32_t monitorSession;
 	int32_t monitorStatus;
+	int m_monOptions {};
 
 	bool MessagesRead(); //read all messages
 };
-

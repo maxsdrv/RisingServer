@@ -1,7 +1,7 @@
 #pragma once
 
 #include <iostream>
-#include <errno.h>
+#include <cerrno>
 #include <functional>
 #include <tuple>
 #include <boost/format.hpp>

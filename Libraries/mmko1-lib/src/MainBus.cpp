@@ -1,15 +1,20 @@
 #include <iomanip>
 #include <boost/format.hpp>
+#include <cstring>
 
-#include "Mmko.h"
+#include "MainBus.h"
 #include "ControllerMode.h"
 #include "MonitorMode.h"
 #include "AbonentMode.h"
+#include "MMKOErrors.h"
+#include "unmbase.h"
 
-Mmko::Mmko(BUSLINE line)
+
+MainBus::MainBus(BUSLINE line)
 		:lineBus(line)
 {
-	MkoText("Mmko()");
+	MkoText("MainBus()");
+
 	try
 	{
 		DeviceInit();
@@ -25,12 +30,12 @@ Mmko::Mmko(BUSLINE line)
 	}
 }
 
-Mmko::~Mmko()
+MainBus::~MainBus()
 {
 	CloseSession();
 	MkoText("~MMKOInterface()");
 }
-bool Mmko::SelfTest() const
+bool MainBus::SelfTest() const
 {
 	char message[256];
 	int16_t resultCode{};
@@ -41,22 +46,22 @@ bool Mmko::SelfTest() const
 	return true;
 }
 
-void Mmko::CloseSession() const
+void MainBus::CloseSession() const
 {
-	std::cout << "Called close session in Mmko class " << std::endl;
+	std::cout << "Called close session in MainBus class " << std::endl;
 	unmbase_close(carrierSession);
 	unmmko1_close(session);
 }
-int32_t Mmko::getMkoStatus() const {
+int32_t MainBus::getMkoStatus() const {
 	return status;
 }
-BUSLINE Mmko::getLineBus() const {
+BUSLINE MainBus::getLineBus() const {
 	return lineBus;
 }
-uint32_t Mmko::getMkoSession() const {
+uint32_t MainBus::getMkoSession() const {
 	return session;
 }
-int32_t Mmko::search()
+int32_t MainBus::search()
 {
 	MkoText("Debug information about search MKO");
 
@@ -175,7 +180,7 @@ int32_t Mmko::search()
 
 	return found;
 }
-void Mmko::DeviceInit()
+void MainBus::DeviceInit()
 {
 	ThrowErrorIf(search() < 0, session, status, ErDevices::UNMMKO); // Search Mko device
 	ThrowErrorIf(unmbase_init(resourceName, true, true, &carrierSession) < 0,
@@ -185,20 +190,15 @@ void Mmko::DeviceInit()
 	ThrowErrorIf(unmmko1_connect(session, carrierSession, position,
 			true, true) < 0, session, status, ErDevices::UNMMKO);	// Connect to Mko
 }
-MonitorMode* Mmko::addMonitor()
-{
-	monitor = std::unique_ptr<MonitorMode>(new MonitorMode(this));
-	return monitor.get();
+MonitorMode* MainBus::addMonitor() {
+	return monitor = std::unique_ptr<MonitorMode>(new MonitorMode(this)).get();
 }
 
-AbonentMode* Mmko::addAbonent(uint32_t address) {
-	abonent = std::unique_ptr<AbonentMode>(new AbonentMode(this, address));
-	return abonent.get();
+AbonentMode* MainBus::addAbonent(uint32_t address) {
+	return abonent = std::unique_ptr<AbonentMode>(new AbonentMode(this, address)).get();
 }
-ControllerMode* Mmko::addController(int bcOptions)
-{
-	controllers = std::unique_ptr<ControllerMode>(new ControllerMode(this, bcOptions));
-	return controllers.get();
+ControllerMode* MainBus::addController(int bcOptions) {
+	return controllers = std::unique_ptr<ControllerMode>(new ControllerMode(this, bcOptions)).get();
 }
 
 

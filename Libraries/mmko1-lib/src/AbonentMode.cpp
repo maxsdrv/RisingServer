@@ -1,12 +1,12 @@
 #include "AbonentMode.h"
-#include "Mmko.h"
+#include "MainBus.h"
+#include "MMKOErrors.h"
 
 namespace
 {
 	const int maxSendWords = 32;
 }
-
-AbonentMode::AbonentMode(Mmko* objectMmko, uint32_t address) :
+AbonentMode::AbonentMode(MainBus* objectMmko, uint32_t address) :
 										m_objectMmko(objectMmko),
 										abonentSession(objectMmko->getMkoSession()),
 										abonentStatus(objectMmko->getMkoStatus()),

@@ -1,6 +1,7 @@
 #include "ControllerMode.h"
+#include "MMKOErrors.h"
 
-ControllerMode::ControllerMode(Mmko* objectMmko, int bcOptions)
+ControllerMode::ControllerMode(MainBus* objectMmko, int bcOptions)
 		:
 		m_objectMmko(objectMmko),
 		commands(std::make_unique<unmmko1_command>()),

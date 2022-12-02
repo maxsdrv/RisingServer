@@ -6,22 +6,22 @@
 #include <memory>
 #include <map>
 
-#include "Actions.h"
-
 class ControllerMode;
 class MonitorMode;
 class AbonentMode;
+class MmkoModule;
+class IDevices;
 
 /* Bus line for transmitting data */
 using BUSLINE = unmmko1_bus;
-
-class Mmko {
+class MainBus
+{
 public:
-	explicit Mmko(BUSLINE line);
-	~Mmko();
+	explicit MainBus(BUSLINE line);
+	~MainBus();
 	[[nodiscard]] bool SelfTest() const; // Mezzanine self-test, info, version, memory test
 	void CloseSession() const; // close connect Mezzanine MKO and carrier Mezzanine
-	int32_t search(); // Function for Search Mmko
+	int32_t search(); // Function for Search MainBus
 	ControllerMode* addController(int bcOptions); /* Add controller and return instance for it */
 	MonitorMode* addMonitor(); /* Add monitor and return instance for it */
 	AbonentMode* addAbonent(uint32_t address);/* Add abonent to abonent and return instance for it */
@@ -32,16 +32,14 @@ public:
 private:
 	BUSLINE lineBus;
 	char resourceName[256]{}; // address mezzanine carrier which found MKO
-	uint16_t position {}; // position mezzanine MKO on mezzanine carrier
+	uint16_t position{}; // position mezzanine MKO on mezzanine carrier
 	int32_t status = VI_SUCCESS;
-	uint32_t session {};
-	uint32_t carrierSession {};
-	std::unique_ptr<ControllerMode> controllers;
-	std::unique_ptr<MonitorMode> monitor;
-	std::unique_ptr<AbonentMode> abonent;
+	uint32_t session{};
+	uint32_t carrierSession{};
+	ControllerMode* controllers{};
+	MonitorMode* monitor{};
+	AbonentMode* abonent{};
 	/*init carrier mezzanine and MKO */
 	void DeviceInit();
 };
-
-
 

@@ -1,14 +1,14 @@
-#include "MonitorMode.h"
-
-#include <memory>
 #include <algorithm>
 
-#include "Mmko.h"
+#include "MainBus.h"
+#include "MMKOErrors.h"
+#include "MonitorMode.h"
 
-MonitorMode::MonitorMode(Mmko* objectMmko)
+MonitorMode::MonitorMode(MainBus* objectMmko, int monOptions)
 		:m_objectMko(objectMmko),
 		 monitorSession(objectMmko->getMkoSession()),
-		 monitorStatus(objectMmko->getMkoStatus())
+		 monitorStatus(objectMmko->getMkoStatus()),
+		 m_monOptions(monOptions)
 {
 	ThrowErrorIf(unmmko1_mon_configure(monitorSession, UNMMKO1_MON_DEFAULT) < 0,
 			monitorSession, monitorStatus, ErDevices::UNMMKO);

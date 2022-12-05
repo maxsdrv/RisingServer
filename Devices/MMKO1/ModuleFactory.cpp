@@ -2,7 +2,7 @@
 #include <memory>
 #include "ModuleFactory.h"
 
-MainBus* ModuleFactory::CreateMKOBus()
+MainBus* ModuleFactory::CreateMKOBus(BUSLINE line)
 {
-	return new MainBus(UNMMKO1_BUS_A);
+	return new MainBus(line);
 }

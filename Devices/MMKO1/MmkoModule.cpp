@@ -1,10 +1,16 @@
 #include <iostream>
 
 #include "MmkoModule.h"
-#include "ModuleFactory.h"
 
-MKOModule::MKOModule()
+MKOModule::MKOModule(BUSLINE line)
 {
 	device = new ModuleFactory;
-	bus = device->CreateMKOBus();
+	bus = device->CreateMKOBus(line);
+	std::cout << "MKOModule()" << '\n';
+}
+MKOModule::~MKOModule()
+{
+	delete device;
+	delete bus;
+	std::cout << "~MKOModule()" << '\n';
 }

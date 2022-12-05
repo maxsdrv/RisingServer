@@ -6,6 +6,7 @@
 
 class IDevice {
 public:
-	virtual ~IDevice() = default;
-	virtual MainBus* CreateMKOBus() = 0;
+	IDevice() { std::cout << "IDevice()" << '\n'; }
+	virtual ~IDevice() { std::cout << "~IDevice()" << '\n'; }
+	virtual MainBus* CreateMKOBus(BUSLINE line) = 0;
 };

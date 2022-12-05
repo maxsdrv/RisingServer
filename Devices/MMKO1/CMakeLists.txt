@@ -1,4 +1,4 @@
-project(mmko1_device)
+project(mmko1device)
 cmake_minimum_required(VERSION 3.0)
 
 set(CMAKE_CXX_STANDARD 17)
@@ -11,9 +11,9 @@ endif()
 link_directories(../../cmake-build-debug/Libraries/mmko1-lib/
         ../../Libraries/vxipnp/linux/bin/)
 
-include_directories(../ ../../Libraries/mmko1-lib/include
+include_directories(../
+        ../../Libraries/mmko1-lib/include
         ../../Libraries/vxipnp/linux/include
-        ../../Libraries/mmko1-lib/src
         ../../Libraries/vxipnp/linux/include
         ../../Libraries/vxipnp/linux/unmmko1)
 
@@ -23,6 +23,7 @@ list(APPEND SOURCES
         MmkoModule.cpp
         ModuleFactory.cpp
         ../IDevice.cpp
+        ../../Libraries/mmko1-lib/src/MainBus.cpp
         )
 
 list(APPEND HEADERS

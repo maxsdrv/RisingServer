@@ -4,5 +4,7 @@
 
 class ModuleFactory : public IDevice {
 public:
-	MainBus* CreateMKOBus() override;
+	ModuleFactory() { std::cout << "ModuleFactory()" << '\n'; }
+	~ModuleFactory() override { std::cout << "~ModuleFactory()" << '\n'; }
+	MainBus* CreateMKOBus(BUSLINE line) override;
 };

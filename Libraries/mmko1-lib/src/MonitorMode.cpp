@@ -10,8 +10,8 @@ MonitorMode::MonitorMode(MainBus* objectMmko, int monOptions)
 		 monitorStatus(objectMmko->getMkoStatus()),
 		 m_monOptions(monOptions)
 {
-	ThrowErrorIf(unmmko1_mon_configure(monitorSession, UNMMKO1_MON_DEFAULT) < 0,
-			monitorSession, monitorStatus, ErDevices::UNMMKO);
+	ThrowErrorIf(unmmko1_mon_configure(monitorSession, m_monOptions) < 0,
+			monitorSession, monitorStatus, FLAG::UNMMKO);
 	StartMonitor();
 }
 void MonitorMode::StartMonitor() const {

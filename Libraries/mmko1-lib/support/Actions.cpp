@@ -16,14 +16,10 @@ Common::Common()
 		carrierSession(0), interfaceType(0), mezzanineNumber(1)
 {
 }
-Common::~Common()
-{
-	MkoText("~Common()");
-}
+Common::~Common() {}
 
 int32_t Common::search()
 {
-	MkoText("Debug information about search MKO");
 	/* Lambdas instead goto definitions in C implementation common.h */
 	auto Error = [this]() {
 	  if (resourceManagerSession)

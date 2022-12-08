@@ -15,7 +15,7 @@ class ControllerMode
 {
 private:
 	friend class MainBus;
-	explicit ControllerMode(MainBus* objectMmko, int bcOptions = UNMMKO1_BC_DEFAULT);
+	explicit ControllerMode(MainBus* objectMmko, BUSLINE line, int bcOptions);
 
 public:
 	~ControllerMode();
@@ -38,7 +38,6 @@ public:
 	int32_t transmitCmdF1(uint16_t address, uint16_t subAddress, uint16_t wordCount, uint16_t* dataWords);
 	void StartController() const;
 	void StopController() const;
-
 	/* noncopyable class */
 	ControllerMode(const ControllerMode&) = delete;
 	ControllerMode(ControllerMode&&) = delete;
@@ -46,7 +45,6 @@ public:
 	ControllerMode& operator=(ControllerMode&&) = delete;
 
 private:
-	MainBus* m_objectMmko;
 	std::unique_ptr<unmmko1_command> commands;
 	/* uint16_t mRxTx;  data receive/transmit bit. It must point to action which perform terminal-device
 	if 0 that means what Terminal-Device should accept Data-Word(Cmd), if 1 then transmit*/

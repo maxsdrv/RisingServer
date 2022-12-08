@@ -11,7 +11,7 @@ using Msg = std::vector<std::unique_ptr<unmmko1_message>>;
 class MonitorMode {
 private:
 	friend class MainBus;
-	explicit MonitorMode(MainBus* objectMmko, int monOptions = UNMMKO1_MON_DEFAULT);
+	explicit MonitorMode(MainBus* objectMmko, int monOptions);
 public:
 	~MonitorMode();
 	/* non-copyable class */

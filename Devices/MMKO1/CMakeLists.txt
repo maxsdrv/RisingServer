@@ -14,25 +14,18 @@ link_directories(../../cmake-build-debug/Libraries/mmko1-lib/
 include_directories(../
         ../../Libraries/mmko1-lib/include
         ../../Libraries/vxipnp/linux/include
-        ../../Libraries/vxipnp/linux/include
         ../../Libraries/vxipnp/linux/unmmko1)
 
-set(SOURCES)
-set(HEADERS)
-list(APPEND SOURCES
-        MmkoModule.cpp
-        ModuleFactory.cpp
-        ../IDevice.cpp
-        ../../Libraries/mmko1-lib/src/MainBus.cpp
-        )
+set(MKO_DEVICE_INCLUDE "${CMAKE_CURRENT_SOURCE_DIR}/../../Libraries/mmko1-lib/include")
+set(${PROJECT_NAME}_SRC test.cpp MmkoModule.cpp ModuleFactory.cpp ../IDevice.cpp)
+set(${PROJECT_NAME}_LIB_SRC ../../Libraries/mmko1-lib/src/MainBus.cpp
+        ../../Libraries/mmko1-lib/src/AbonentMode.cpp
+        ../../Libraries/mmko1-lib/src/ControllerMode.cpp
+        ../../Libraries/mmko1-lib/src/MonitorMode.cpp
+        ../../Libraries/mmko1-lib/src/MMKOErrors.cpp)
 
-list(APPEND HEADERS
-        ModuleFactory.h
-        MmkoModule.h
-        ../IDevice.h
-        )
+source_group(source FILES "${${PROJECT_NAME}_SRC}" "${${PROJECT_NAME}_LIB_SRC}")
 
-
-add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS} test.cpp)
+add_executable(${PROJECT_NAME} "${${PROJECT_NAME}_SRC}" "${${PROJECT_NAME}_LIB_SRC}")
 
 target_link_libraries(${PROJECT_NAME} libmmko1lib.a libunmmko1.so libunmbase.so libvisa.so)

@@ -2,7 +2,7 @@
 #include <memory>
 #include "ModuleFactory.h"
 
-MainBus* ModuleFactory::CreateMKOBus(BUSLINE line)
+std::unique_ptr<MainBus> ModuleFactory::CreateMKOBus(BUSLINE line)
 {
-	return new MainBus(line);
+	return std::make_unique<MainBus>(line);
 }

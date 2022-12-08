@@ -9,46 +9,38 @@
 #include "MMKOErrors.h"
 #include "unmbase.h"
 
+MainBus::MainBus(const BUSLINE line)
+		:lineBus(line) {
 
-MainBus::MainBus(BUSLINE line)
-		:lineBus(line)
-{
-	MkoText("MainBus()");
-
-	try
-	{
+	try {
 		DeviceInit();
 	}
-	catch (const MkoExceptions& ex)
-	{
+	catch (const MkoExceptions& ex) {
 		std::ios state(nullptr);
 		state.copyfmt(std::cerr);
-		std::cerr << ex.what() << std::endl;
-		std::cerr << "Error code: " << std::dec << std::uppercase << std::setw(8) << std::setfill('0')
-			<< ex.GetError() << std::endl;
+		std::cerr << ex.what();
+		std::cerr << __FUNCTION__ << " Error code: " << " " << std::dec << std::uppercase << std::setw(8) << std::setfill('0')
+				  << ex.GetError() << '\n';
 		std::cerr.copyfmt(state);
 	}
+	std::cout << "MainBus()" << '\n';
 }
 
-MainBus::~MainBus()
-{
+MainBus::~MainBus() {
 	CloseSession();
-	MkoText("~MMKOInterface()");
+	std::cout << "~MainBus()" << '\n';
 }
-bool MainBus::SelfTest() const
-{
+bool MainBus::SelfTest() {
 	char message[256];
 	int16_t resultCode{};
-
-	ThrowErrorIf(unmmko1_self_test(session, &resultCode, message) < 0, session, status, ErDevices::UNMMKO);
-	std::cout << boost::format("Self-test result %s %d \n") %message %resultCode;
-
+	status = unmmko1_self_test(session, &resultCode, message);
+	ThrowMKOErrorIf(status<0, status, format("MKO::SELF::TEST::FAILED"));
+	std::cout << boost::format("Self-test result %s %d \n")%message%resultCode;
 	return true;
 }
 
-void MainBus::CloseSession() const
-{
-	std::cout << "Called close session in MainBus class " << std::endl;
+void MainBus::CloseSession() const {
+	std::cout << "MAINBUS::CLOSED" << '\n';
 	unmbase_close(carrierSession);
 	unmmko1_close(session);
 }
@@ -61,21 +53,19 @@ BUSLINE MainBus::getLineBus() const {
 uint32_t MainBus::getMkoSession() const {
 	return session;
 }
-int32_t MainBus::search()
-{
-	MkoText("Debug information about search MKO");
+int32_t MainBus::search() {
 
-	uint32_t resourceManagerSession {};
-	const std::string searchPattern{"?*[0-9]?*::?*::INSTR"};
-	uint32_t findList {};
+	uint32_t resourceManagerSession{};
+	const std::string searchPattern{ "?*[0-9]?*::?*::INSTR" };
+	uint32_t findList{};
 	int32_t found = VI_ERROR_RSRC_NFOUND;
-	uint32_t index {}, count {};
-	uint32_t deviceSession {};
-	uint16_t interfaceType {};
+	uint32_t index{}, count{};
+	uint32_t deviceSession{};
+	uint16_t interfaceType{};
 	int16_t mezzanineNumber = 1;
 	char address[256];
-	const std::string idStr{"*IDN?\n"};
-	const std::string tab{"%t"};
+	const std::string idStr{ "*IDN?\n" };
+	const std::string tab{ "%t" };
 
 	/* Lambdas instead goto definitions in C implementation common.h */
 	auto Error = [=]() {
@@ -84,12 +74,12 @@ int32_t MainBus::search()
 	};
 	auto CloseDevice = [=]() {
 	  viClose(deviceSession);
-	  if (VI_SUCCESS == found)
+	  if (VI_SUCCESS==found)
 		  return;
 	};
 
 	//  Open Session with VISA
-	if (viOpenDefaultRM(&resourceManagerSession) < 0)
+	if (viOpenDefaultRM(&resourceManagerSession)<0)
 		Error();
 
 	// Find devices
@@ -145,7 +135,7 @@ int32_t MainBus::search()
 					const_cast<char*>(tab.c_str()), idn);
 			viUnlock(deviceSession);
 
-			if (status < 0)
+			if (status<0)
 				CloseDevice();
 
 			if (0!=strncmp(idn, UNMBASE_MEZABOX_IDN, strlen(UNMBASE_MEZABOX_IDN)))
@@ -153,7 +143,7 @@ int32_t MainBus::search()
 		}
 
 		// Initialise Carrier Mezzanine and read code of mezzanines
-		if (unmbase_init(address, VI_ON, VI_ON, &carrierSession) < 0)
+		if (unmbase_init(address, VI_ON, VI_ON, &carrierSession)<0)
 			CloseDevice();
 
 		for (mezzanineNumber = 1; mezzanineNumber<=8; ++mezzanineNumber) {
@@ -173,46 +163,32 @@ int32_t MainBus::search()
 
 	}
 
-	if (VI_SUCCESS == found)
-		  std::cout << "Mezzanine MKO found at "
-					   << resourceName << "on " << position << '\n';
+	if (VI_SUCCESS==found)
+		std::cout << "Mezzanine MKO found at "
+				  << resourceName << "on " << position << '\n';
 	status = found;
 
-	return found;
+	return status;
 }
-void MainBus::DeviceInit()
-{
-	ThrowErrorIf(search() < 0, session, status, ErDevices::UNMMKO); // Search Mko device
-	ThrowErrorIf(unmbase_init(resourceName, true, true, &carrierSession) < 0,
-			session, status, ErDevices::UNMBASE); // Initialization Mezzanine Carrier
-	ThrowErrorIf(unmmko1_init(resourceName, true, true, &session) < 0,
-			session, status, ErDevices::UNMMKO);	// Initialization Mezzanine Mko
+void MainBus::DeviceInit() {
+
+	ThrowMKOErrorIf(search()<0, status, format("MKO::SEARCH::NOT::FOUND")); // Search Mko device
+	ThrowErrorIf(unmbase_init(resourceName, true, true, &carrierSession)<0,
+			session, status, FLAG::UNMBASE); // Initialization Mezzanine Carrier
+	ThrowErrorIf(unmmko1_init(resourceName, true, true, &session)<0,
+			session, status, FLAG::UNMMKO);    // Initialization Mezzanine Mko
 	ThrowErrorIf(unmmko1_connect(session, carrierSession, position,
-			true, true) < 0, session, status, ErDevices::UNMMKO);	// Connect to Mko
+			true, true)<0, session, status, FLAG::UNMMKO);    // Connect to Mko
 }
-MonitorMode* MainBus::addMonitor() {
-	return monitor = std::unique_ptr<MonitorMode>(new MonitorMode(this)).get();
+std::unique_ptr<MonitorMode> MainBus::addMonitor(const int& monOptions) {
+	return std::unique_ptr<MonitorMode>(new MonitorMode(this, monOptions));
 }
-
-AbonentMode* MainBus::addAbonent(uint32_t address) {
-	return abonent = std::unique_ptr<AbonentMode>(new AbonentMode(this, address)).get();
+std::unique_ptr<AbonentMode> MainBus::addAbonent(uint32_t address, const int& rtOptions) {
+	return std::unique_ptr<AbonentMode>(new AbonentMode(this, address, rtOptions));
 }
-ControllerMode* MainBus::addController(int bcOptions) {
-	return controllers = std::unique_ptr<ControllerMode>(new ControllerMode(this, bcOptions)).get();
+std::shared_ptr<ControllerMode>& MainBus::addController(MainBus* mb, const int& bcOptions) {
+	return controllers[lineBus] =
+				   std::shared_ptr<ControllerMode>(new ControllerMode(this, lineBus, bcOptions));
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 

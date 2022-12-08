@@ -1,23 +1,21 @@
+#include <iomanip>
+
 #include "ControllerMode.h"
 #include "MMKOErrors.h"
 
-ControllerMode::ControllerMode(MainBus* objectMmko, int bcOptions)
+ControllerMode::ControllerMode(MainBus* objectMmko, BUSLINE line, int bcOptions)
 		:
-		m_objectMmko(objectMmko),
 		commands(std::make_unique<unmmko1_command>()),
-		busLine(objectMmko->getLineBus()),
+		busLine(line),
 		controllerSession(objectMmko->getMkoSession()),
 		controllerStatus(objectMmko->getMkoStatus())
 {
-	ThrowErrorIf(unmmko1_bc_configure(controllerSession, bcOptions) < 0,
-			controllerSession, controllerStatus, ErDevices::UNMMKO);
-	StartController();
-	MkoText("ControllerMode()");
+	ThrowErrorIf(unmmko1_bc_configure(controllerSession, bcOptions)<0,
+			controllerSession, controllerStatus, FLAG::UNMMKO);
 }
 ControllerMode::~ControllerMode()
 {
 	StopController();
-	MkoText("~ControllerMode()");
 }
 
 uint16_t ControllerMode::PackCw(uint16_t address, uint16_t rxtx, uint16_t subAddress, uint16_t wordCount)
@@ -41,8 +39,10 @@ int32_t ControllerMode::transmitCmdF1(uint16_t address, uint16_t subAddress, uin
 
 void ControllerMode::StartController() const {
 	unmmko1_bc_start(controllerSession);
+	std::cout << boost::format("CONTROLLER::STARTED %i") %controllerSession << '\n';
 }
 void ControllerMode::StopController() const {
+	std::cout << "CONTROLLER::STOPPED" << '\n';
 	unmmko1_bc_stop(controllerSession);
 }
 

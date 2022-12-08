@@ -6,5 +6,5 @@ class ModuleFactory : public IDevice {
 public:
 	ModuleFactory() { std::cout << "ModuleFactory()" << '\n'; }
 	~ModuleFactory() override { std::cout << "~ModuleFactory()" << '\n'; }
-	MainBus* CreateMKOBus(BUSLINE line) override;
+	std::unique_ptr<MainBus> CreateMKOBus(BUSLINE line) override;
 };

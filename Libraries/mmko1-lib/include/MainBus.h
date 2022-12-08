@@ -16,31 +16,42 @@ enum class BUSLINE {
 	MKO_BUS_B = 0x0002             /* Reserve Bus Line */
 };
 
-class MainBus
-{
+class MainBus {
 public:
 	explicit MainBus(BUSLINE line);
 	~MainBus();
-	[[nodiscard]] bool SelfTest() const; // Mezzanine self-test, info, version, memory test
-	ControllerMode* addController(int bcOptions); /* Add controller and return instance for it */
-	MonitorMode* addMonitor(); /* Add monitor and return instance for it */
-	AbonentMode* addAbonent(uint32_t address);/* Add abonent to abonent and return instance for it */
+	[[nodiscard]] bool SelfTest(); // Mezzanine self-test, info, version, memory test
+	/* Add controller and return instance for it
+	 * bcOptions - Controller bus settings
+	 * UNMMKO1_BC_DEFAULT - TRANSFORMER CONNECTION(DEFAULT)*/
+	std::shared_ptr<ControllerMode>& addController(MainBus* mb, const int& bcOptions = UNMMKO1_BC_DEFAULT);
+	/* Add monitor and return instance for it
+	 * monOptions - Monitor flags settings
+	 * UNMMKO1_MON_TRANSFORM - TRANSFORMER CONNECTION(DEFAULT)
+	 * UNMMKO1_MON_BUS_A_AND_B - MONITORING MESSAGES ONLY BUS A AND B */
+	std::unique_ptr<MonitorMode> addMonitor(const int& monOptions =
+	UNMMKO1_MON_TRANSFORM | UNMMKO1_MON_BUS_A_AND_B);
+	/* Add abonent to abonent and return instance for it
+	 * rtOptions - Abonent device settings
+	 * UNMMKO1_RT_TRANSFORM - TRANSFORMER CONNECTION(DEFAULT)
+	 * UNMMKO1_RT_BUS_A_AND_B - TERMINAL DEVICE RESPONSE TO MESSAGES THAT WERE SENT BY A AND B BUS(DEFAULT)
+	 * UNMMKO1_RT_DEFAULT_RESPONSE - TERMINAL DEVICE CREATES RESPONSES BY DEFAULT ON ALL MESSAGES TYPE*/
+	std::unique_ptr<AbonentMode> addAbonent(uint32_t address, const int& rtOptions =
+	UNMMKO1_RT_DEFAULT | UNMMKO1_RT_BUS_A_AND_B | UNMMKO1_RT_DEFAULT_RESPONSES);
 	/* Getters and Setters */
 	[[nodiscard]] int32_t getMkoStatus() const;
 	[[nodiscard]] uint32_t getMkoSession() const;
 	[[nodiscard]] BUSLINE getLineBus() const;
 private:
-	BUSLINE lineBus {};
+	BUSLINE lineBus;
 	char resourceName[256]{}; // address mezzanine carrier which found MKO
 	uint16_t position{}; // position mezzanine MKO on mezzanine carrier
-	int32_t status = VI_SUCCESS;
+	int32_t status{};
 	uint32_t session{};
 	uint32_t carrierSession{};
-	ControllerMode* controllers{};
-	MonitorMode* monitor{};
-	AbonentMode* abonent{};
 	void DeviceInit(); /*init carrier mezzanine and MKO */
 	void CloseSession() const; // close connect Mezzanine MKO and carrier Mezzanine
 	int32_t search(); // Function for Search MainBus
+	std::map<BUSLINE, std::shared_ptr<ControllerMode>> controllers; // list of controllers
 };
 

@@ -8,5 +8,5 @@ class IDevice {
 public:
 	IDevice() { std::cout << "IDevice()" << '\n'; }
 	virtual ~IDevice() { std::cout << "~IDevice()" << '\n'; }
-	virtual MainBus* CreateMKOBus(BUSLINE line) = 0;
+	virtual std::unique_ptr<MainBus> CreateMKOBus(BUSLINE line) = 0;
 };

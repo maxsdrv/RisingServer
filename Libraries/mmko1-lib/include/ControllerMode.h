@@ -3,19 +3,24 @@
 /* Class for work in Bus-Controller mode */
 
 #include <functional>
+#include <memory>
 
-#include "MainBus.h"
+extern "C" {
+#include "unmmko1.h"
+}
 
 enum class RXTX {
 	RECEIVE,
 	TRANSMIT
 };
 
+class MainBus;
+
 class ControllerMode
 {
 private:
 	friend class MainBus;
-	explicit ControllerMode(MainBus* objectMmko, BUSLINE line, int bcOptions);
+	explicit ControllerMode(MainBus* objectMmko, BUSLINE mkoLine);
 
 public:
 	~ControllerMode();

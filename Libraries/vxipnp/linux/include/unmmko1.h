@@ -53,6 +53,10 @@ ViStatus _VI_FUNC unmmko1_close(ViSession session);
 
 // Структуры и типы данных
 //! Магистраль передачи/приёма информации
+enum class BUSLINE {
+	MKO_BUS_A = 0x0001,
+	MKO_BUS_B = 0x0002
+};
 typedef enum {
     UNMMKO1_BUS_A                   = 0x0001,           //!< Основная магистраль
     UNMMKO1_BUS_B                   = 0x0002            //!< Резервная магистраль

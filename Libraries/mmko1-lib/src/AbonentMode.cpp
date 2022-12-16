@@ -6,7 +6,7 @@ namespace
 {
 	const int maxSendWords = 32;
 }
-AbonentMode::AbonentMode(MainBus* objectMmko, uint32_t address, int rtOptions) :
+AbonentMode::AbonentMode(MainBus* objectMmko, const uint32_t& address) :
 										m_objectMmko(objectMmko),
 										abonentSession(objectMmko->getMkoSession()),
 										abonentStatus(objectMmko->getMkoStatus()),
@@ -14,8 +14,9 @@ AbonentMode::AbonentMode(MainBus* objectMmko, uint32_t address, int rtOptions) :
 {
 	/* TODO change arguments on rtOptions and test it */
 	ThrowErrorIf(unmmko1_rt_configure(abonentSession, abonentAddr,
-			UNMMKO1_RT_TRANSFORM | UNMMKO1_RT_DEFAULT_RESPONSES) < 0, abonentSession, abonentStatus,
-					FLAG::UNMMKO);
+			UNMMKO1_RT_DEFAULT | UNMMKO1_RT_BUS_A_AND_B | UNMMKO1_RT_DEFAULT_RESPONSES) < 0,
+					abonentSession, abonentStatus,FLAG::UNMMKO);
+
 	StartAbonent();
 }
 void AbonentMode::setData(uint16_t subAddr, int dataWordsCount, std::vector<uint16_t> &dataWords) const

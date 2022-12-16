@@ -28,7 +28,7 @@ class IDevice;
 
 class MKOModule {
 public:
-	explicit MKOModule(BUSLINE line);
+	MKOModule();
 	~MKOModule();
 	bool SelfTest(); /* produce the mezzanine self-test and return result */
 	bool WriteToAbonent();

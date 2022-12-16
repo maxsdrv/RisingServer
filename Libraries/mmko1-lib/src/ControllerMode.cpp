@@ -2,20 +2,25 @@
 
 #include "ControllerMode.h"
 #include "MMKOErrors.h"
+#include "MainBus.h"
 
-ControllerMode::ControllerMode(MainBus* objectMmko, BUSLINE line, int bcOptions)
+ControllerMode::ControllerMode(MainBus* objectMmko, BUSLINE mkoLine)
 		:
 		commands(std::make_unique<unmmko1_command>()),
-		busLine(line),
+		busLine(mkoLine),
 		controllerSession(objectMmko->getMkoSession()),
 		controllerStatus(objectMmko->getMkoStatus())
 {
-	ThrowErrorIf(unmmko1_bc_configure(controllerSession, bcOptions)<0,
-			controllerSession, controllerStatus, FLAG::UNMMKO);
+	controllerStatus = unmmko1_bc_configure(controllerSession, UNMMKO1_BC_DEFAULT);
+	/*ThrowMKOErrorIf(controllerStatus < 0,
+			controllerStatus, format("CONTROLLER::CANNOT::CONFIGURE"));*/
+
+	std::cout << "ControllerMode()" << '\n';
 }
 ControllerMode::~ControllerMode()
 {
 	StopController();
+	std::cout << "~ControllerMode()" << '\n';
 }
 
 uint16_t ControllerMode::PackCw(uint16_t address, uint16_t rxtx, uint16_t subAddress, uint16_t wordCount)
@@ -45,6 +50,7 @@ void ControllerMode::StopController() const {
 	std::cout << "CONTROLLER::STOPPED" << '\n';
 	unmmko1_bc_stop(controllerSession);
 }
+
 
 
 

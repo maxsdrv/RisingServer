@@ -3,15 +3,13 @@
 #include <cstring>
 
 #include "MainBus.h"
-#include "ControllerMode.h"
 #include "MonitorMode.h"
 #include "AbonentMode.h"
 #include "MMKOErrors.h"
 #include "unmbase.h"
 
-MainBus::MainBus(const BUSLINE line)
-		:lineBus(line) {
-
+MainBus::MainBus()
+{
 	try {
 		DeviceInit();
 	}
@@ -19,8 +17,8 @@ MainBus::MainBus(const BUSLINE line)
 		std::ios state(nullptr);
 		state.copyfmt(std::cerr);
 		std::cerr << ex.what();
-		std::cerr << __FUNCTION__ << " Error code: " << " " << std::dec << std::uppercase << std::setw(8) << std::setfill('0')
-				  << ex.GetError() << '\n';
+		std::cerr << __FUNCTION__ << " Error code: " << " "
+		<< std::dec << std::uppercase << std::setw(8) << std::setfill('0') << ex.GetError() << '\n';
 		std::cerr.copyfmt(state);
 	}
 	std::cout << "MainBus()" << '\n';
@@ -46,9 +44,6 @@ void MainBus::CloseSession() const {
 }
 int32_t MainBus::getMkoStatus() const {
 	return status;
-}
-BUSLINE MainBus::getLineBus() const {
-	return lineBus;
 }
 uint32_t MainBus::getMkoSession() const {
 	return session;
@@ -178,17 +173,20 @@ void MainBus::DeviceInit() {
 	ThrowErrorIf(unmmko1_init(resourceName, true, true, &session)<0,
 			session, status, FLAG::UNMMKO);    // Initialization Mezzanine Mko
 	ThrowErrorIf(unmmko1_connect(session, carrierSession, position,
-			true, true)<0, session, status, FLAG::UNMMKO);    // Connect to Mko
+			true, true)<0, session, status, FLAG::UNMMKO);    // Connect to MKO
 }
-std::unique_ptr<MonitorMode> MainBus::addMonitor(const int& monOptions) {
-	return std::unique_ptr<MonitorMode>(new MonitorMode(this, monOptions));
+/*std::unique_ptr<MonitorMode> MainBus::CreateMonitor(BUSLINE busLine) {
+	return std::unique_ptr<MonitorMode>
+	        (new MonitorMode(this, busLine, session));
 }
-std::unique_ptr<AbonentMode> MainBus::addAbonent(uint32_t address, const int& rtOptions) {
-	return std::unique_ptr<AbonentMode>(new AbonentMode(this, address, rtOptions));
+std::shared_ptr<AbonentMode> MainBus::CreateAbonent(BUSLINE busLine, const uint32_t& address) {
+	return std::unique_ptr<AbonentMode>
+	        (new AbonentMode(this, busLine, session, address));
+}*/
+ControllerMode* MainBus::CreateController(BUSLINE busline) {
+	return CreateMode<ControllerMode>(this, busline).get();
 }
-std::shared_ptr<ControllerMode>& MainBus::addController(MainBus* mb, const int& bcOptions) {
-	return controllers[lineBus] =
-				   std::shared_ptr<ControllerMode>(new ControllerMode(this, lineBus, bcOptions));
-}
+
+
 
 

@@ -8,13 +8,15 @@ namespace {
 	std::unique_ptr<IDevice> device = std::make_unique<ModuleFactory>();
 }
 
-MKOModule::MKOModule(BUSLINE line)
+MKOModule::MKOModule()
 {
-	mainbus = device->CreateMKOBus(line);
-	if (SelfTest()) {
+	mainbus = device->CreateMKOBus();
+	/*if (SelfTest()) {
 		AddController(BUSLINE::MKO_BUS_A);
 		AddController(BUSLINE::MKO_BUS_B);
-	}
+	}*/
+	AddController(BUSLINE::MKO_BUS_A);
+
 	std::cout << "MKOModule()" << '\n';
 }
 MKOModule::~MKOModule()
@@ -24,8 +26,9 @@ MKOModule::~MKOModule()
 void MKOModule::AddController(BUSLINE line) const
 {
 	try {
-		mainbus->addController(mainbus.get(), line);
-	}catch (const MkoExceptions& ex) {
+		auto ctrl = mainbus->CreateController(line);
+//		ctrl->StartController();
+	}catch(const MkoExceptions& ex) {
 		std::cerr << ex.what() << '\n';
 	}
 }

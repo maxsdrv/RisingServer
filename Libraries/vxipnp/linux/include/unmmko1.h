@@ -39,7 +39,8 @@ extern "C" {
 //! Прототип функции пользовательского обработчика прерываний
 typedef ViBoolean (_VI_FUNCH* UNMMKO1_EVENT_HANDLER) (ViSession session, ViInt32 reason, ViAddr user_data);
 
-ViStatus _VI_FUNC unmmko1_init(ViRsrc resource_name, ViBoolean idn_query, ViBoolean do_reset, ViSession* session);
+ViStatus _VI_FUNC unmmko1_init(ViRsrc resource_name, ViBoolean idn_query, ViBoolean do_reset, ViSession* session,
+		unsigned int* p_int);
 ViStatus _VI_FUNC unmmko1_connect(ViSession session, ViSession carrier_session, ViUInt16 mezzanine_number, ViBoolean idn_query, ViBoolean do_reset);
 ViStatus _VI_FUNC unmmko1_self_test(ViSession session, ViInt16* result, ViChar message[]);
 ViStatus _VI_FUNC unmmko1_test_exchange(ViSession session, ViInt16* result, ViChar message[]);
@@ -53,10 +54,7 @@ ViStatus _VI_FUNC unmmko1_close(ViSession session);
 
 // Структуры и типы данных
 //! Магистраль передачи/приёма информации
-enum class BUSLINE {
-	MKO_BUS_A = 0x0001,
-	MKO_BUS_B = 0x0002
-};
+
 typedef enum {
     UNMMKO1_BUS_A                   = 0x0001,           //!< Основная магистраль
     UNMMKO1_BUS_B                   = 0x0002            //!< Резервная магистраль

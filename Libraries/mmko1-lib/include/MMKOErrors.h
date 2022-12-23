@@ -3,17 +3,12 @@
 #include <iostream>
 #include <boost/format.hpp>
 #include <unmmko1.h>
-
-enum class FLAG {
-	UNMMKO,
-	UNMBASE,
-};
-
+#include "MainBus.h"
 
 using boost::format;
 
-void ThrowErrorIf(bool expression, const uint32_t& session, const int32_t& status, FLAG d);
-void ThrowMKOErrorIf(bool expression, const int& status, const format& f);
+void ThrowMKOErrorIf(bool expression, const int& status, const uint32_t& session,
+		const std::string& name);
 
 class MkoExceptions : public std::runtime_error {
 private:
@@ -22,6 +17,20 @@ public:
 	MkoExceptions(int32_t status, const std::string& msg);
 	MkoExceptions(int32_t status, const format& f);
 	[[nodiscard]] int32_t GetError() const { return mError; }
+	/* */
+	template <typename N, typename S, typename F, typename... Args>
+	static auto CheckFunctions(N name, S session, F function, Args... args) {
+		auto erStatus = function(args...);
+		ThrowMKOErrorIf(erStatus < 0, erStatus, session, name);
+		return erStatus;
+	}
+	template <typename N, typename S, typename F>
+	static auto CheckFunctions(N name, S session, F function) {
+		auto erStatus = function;
+		ThrowMKOErrorIf(erStatus < 0, erStatus, session, name);
+		return erStatus;
+	}
+	/* */
 };
 
 

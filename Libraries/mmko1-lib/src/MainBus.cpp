@@ -3,23 +3,33 @@
 #include <cstring>
 
 #include "MainBus.h"
+#include "ControllerMode.h"
 #include "MonitorMode.h"
 #include "AbonentMode.h"
 #include "MMKOErrors.h"
 #include "unmbase.h"
 
-MainBus::MainBus()
+
+MainBus::MainBus() : resetState(false),
+				     position(0),
+				     status(0),
+					 m_Session(0),
+					 carrierSession(0)
 {
 	try {
 		DeviceInit();
 	}
 	catch (const MkoExceptions& ex) {
-		std::ios state(nullptr);
+		/*std::ios state(nullptr);
 		state.copyfmt(std::cerr);
 		std::cerr << ex.what();
-		std::cerr << __FUNCTION__ << " Error code: " << " "
+		std::cerr <<  " "
 		<< std::dec << std::uppercase << std::setw(8) << std::setfill('0') << ex.GetError() << '\n';
-		std::cerr.copyfmt(state);
+		std::cerr.copyfmt(state);*/
+		std::cerr << ex.what();
+	}
+	catch (const std::exception& ex) {
+		std::cerr << ex.what();
 	}
 	std::cout << "MainBus()" << '\n';
 }
@@ -31,8 +41,8 @@ MainBus::~MainBus() {
 bool MainBus::SelfTest() {
 	char message[256];
 	int16_t resultCode{};
-	status = unmmko1_self_test(session, &resultCode, message);
-	ThrowMKOErrorIf(status<0, status, format("MKO::SELF::TEST::FAILED"));
+	status = MkoExceptions::CheckFunctions("MKO_SELF_TEST", m_Session, unmmko1_self_test,
+			m_Session, &resultCode, message);
 	std::cout << boost::format("Self-test result %s %d \n")%message%resultCode;
 	return true;
 }
@@ -40,13 +50,13 @@ bool MainBus::SelfTest() {
 void MainBus::CloseSession() const {
 	std::cout << "MAINBUS::CLOSED" << '\n';
 	unmbase_close(carrierSession);
-	unmmko1_close(session);
+	unmmko1_close(m_Session);
 }
 int32_t MainBus::getMkoStatus() const {
 	return status;
 }
 uint32_t MainBus::getMkoSession() const {
-	return session;
+	return m_Session;
 }
 int32_t MainBus::search() {
 
@@ -166,27 +176,32 @@ int32_t MainBus::search() {
 	return status;
 }
 void MainBus::DeviceInit() {
+	status = MkoExceptions::CheckFunctions("SEARCH_MKO", m_Session, search()); // Search MKO
+	MkoExceptions::CheckFunctions("UNMBASE_INIT", m_Session, unmbase_init, resourceName,
+			true, true, &carrierSession);
+	MkoExceptions::CheckFunctions("UNMMKO1_INIT", m_Session, unmmko1_init, resourceName, true,
+			true, &m_Session);
+	MkoExceptions::CheckFunctions("UNMMKO1_CONNECT", m_Session, unmmko1_connect, m_Session,
+			carrierSession, position, true, true); // Connect to MKO*/
+}
 
-	ThrowMKOErrorIf(search()<0, status, format("MKO::SEARCH::NOT::FOUND")); // Search Mko device
-	ThrowErrorIf(unmbase_init(resourceName, true, true, &carrierSession)<0,
-			session, status, FLAG::UNMBASE); // Initialization Mezzanine Carrier
-	ThrowErrorIf(unmmko1_init(resourceName, true, true, &session)<0,
-			session, status, FLAG::UNMMKO);    // Initialization Mezzanine Mko
-	ThrowErrorIf(unmmko1_connect(session, carrierSession, position,
-			true, true)<0, session, status, FLAG::UNMMKO);    // Connect to MKO
-}
-/*std::unique_ptr<MonitorMode> MainBus::CreateMonitor(BUSLINE busLine) {
-	return std::unique_ptr<MonitorMode>
-	        (new MonitorMode(this, busLine, session));
-}
-std::shared_ptr<AbonentMode> MainBus::CreateAbonent(BUSLINE busLine, const uint32_t& address) {
-	return std::unique_ptr<AbonentMode>
-	        (new AbonentMode(this, busLine, session, address));
-}*/
 ControllerMode* MainBus::CreateController(BUSLINE busline) {
 	return CreateMode<ControllerMode>(this, busline).get();
 }
+MonitorMode* MainBus::CreateMonitor() {
+	static auto temp = CreateMode<MonitorMode>(this);
+	return temp.get();
+}
 
+AbonentMode* MainBus::CreateAbonent(BUSLINE busLine, const uint32_t& address) {
+	return CreateMode<AbonentMode>(this, busLine, address).get();
+}
+
+void MainBus::reset(uint32_t session) {
+	std::cout << "ResetMKO\n";
+	unmmko1_reset(session);
+	resetState = true;
+}
 
 
 

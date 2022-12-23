@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include <vector>
 
 #include "ModuleFactory.h"
 
@@ -24,7 +25,7 @@ enum class CONTROL_COMMANDS {
 	UNBLOCK_Nth_TR
 };
 
-class IDevice;
+class MainBus;
 
 class MKOModule {
 public:
@@ -35,10 +36,12 @@ public:
 	bool WriteToAbonentCycle();
 	bool ReadFromAbonent();
 private:
+	BUSLINE selectedBus;
 	std::unique_ptr<MainBus> mainbus;
 	void AddController(BUSLINE line) const;
+	std::map<std::string, CONTROL_COMMANDS> f4Commands; // List type the command F4 format
+	std::map<int, int> mkoAddresses; // MKO Addresses according to which they work with any devices
 };
-
 
 
 

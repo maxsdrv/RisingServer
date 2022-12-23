@@ -5,14 +5,11 @@
 #include <functional>
 #include <memory>
 
+#include "enums.h"
+
 extern "C" {
 #include "unmmko1.h"
 }
-
-enum class RXTX {
-	RECEIVE,
-	TRANSMIT
-};
 
 class MainBus;
 
@@ -54,8 +51,8 @@ private:
 	/* uint16_t mRxTx;  data receive/transmit bit. It must point to action which perform terminal-device
 	if 0 that means what Terminal-Device should accept Data-Word(Cmd), if 1 then transmit*/
 	BUSLINE busLine;
-	uint32_t controllerSession;
-	int32_t controllerStatus;
+	uint32_t controllerSession{};
+	int32_t controllerStatus{};
 };
 
 

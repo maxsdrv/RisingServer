@@ -4,15 +4,19 @@
 #include "MMKOErrors.h"
 #include "MonitorMode.h"
 
-MonitorMode::MonitorMode(MainBus* objectMmko, int monOptions)
-		:m_objectMko(objectMmko),
-		 monitorSession(objectMmko->getMkoSession()),
-		 monitorStatus(objectMmko->getMkoStatus()),
-		 m_monOptions(monOptions)
+MonitorMode::MonitorMode(MainBus* objectMmko) :
+		 monitorSession(objectMmko->getMkoSession())
 {
-	ThrowErrorIf(unmmko1_mon_configure(monitorSession, m_monOptions) < 0,
-			monitorSession, monitorStatus, FLAG::UNMMKO);
-	StartMonitor();
+	try {
+		monitorStatus = MkoExceptions::CheckFunctions("MONITOR_CONFIGURE",
+				monitorSession, unmmko1_mon_configure, monitorSession,
+				UNMMKO1_MON_DEFAULT | UNMMKO1_MON_BUS_A_AND_B);
+	}
+	catch(const MkoExceptions& ex) {
+		std::cerr << ex.what();
+		objectMmko->reset(monitorStatus);
+	}
+	std::cout << "MonitorMode\n";
 }
 void MonitorMode::StartMonitor() const {
 	unmmko1_mon_start(monitorSession);
@@ -56,7 +60,7 @@ void MonitorMode::StopMonitor() const {
 	unmmko1_mon_stop(monitorSession);
 }
 MonitorMode::~MonitorMode() {
-	StopMonitor();
+	std::cout << "~MonitorMode()\n";
 }
 
 

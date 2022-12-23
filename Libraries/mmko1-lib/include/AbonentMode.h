@@ -5,8 +5,10 @@
 #include <cstdint>
 #include <vector>
 
-class MainBus;
+#include "unmmko1.h"
+#include "enums.h"
 
+class MainBus;
 class AbonentMode
 {
 private:
@@ -14,7 +16,7 @@ private:
 
 	/* Ctor accepts transmit-device address and rt_options(but rt_options declare by default
 	 * UNMMKO1_RT_DEFAULT_RESPONSES) */
-	explicit AbonentMode(MainBus* objectMmko, const uint32_t& address);
+	explicit AbonentMode(MainBus* objectMmko, BUSLINE busline, const uint32_t& address);
 public:
 	~AbonentMode();
 	/* non-copyable class */
@@ -32,9 +34,9 @@ public:
 	/* method for set data-words in response to command of handling in format-message 5 */
 	void setDataF5(uint16_t commandCode, uint16_t dataWord) const;
 private:
-	MainBus* m_objectMmko;
 	uint32_t abonentSession{};
 	int32_t abonentStatus{};
 	uint32_t abonentAddr{};
+	BUSLINE busLine{};
 };
 

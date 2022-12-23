@@ -4,20 +4,22 @@
 
 namespace
 {
-	const int maxSendWords = 32;
+	constexpr int maxSendWords = 32;
 }
-AbonentMode::AbonentMode(MainBus* objectMmko, const uint32_t& address) :
-										m_objectMmko(objectMmko),
+AbonentMode::AbonentMode(MainBus* objectMmko, BUSLINE busline, const uint32_t& address) :
 										abonentSession(objectMmko->getMkoSession()),
-										abonentStatus(objectMmko->getMkoStatus()),
 										abonentAddr(address)
 {
-	/* TODO change arguments on rtOptions and test it */
-	ThrowErrorIf(unmmko1_rt_configure(abonentSession, abonentAddr,
-			UNMMKO1_RT_DEFAULT | UNMMKO1_RT_BUS_A_AND_B | UNMMKO1_RT_DEFAULT_RESPONSES) < 0,
-					abonentSession, abonentStatus,FLAG::UNMMKO);
-
-	StartAbonent();
+	try {
+		abonentStatus = MkoExceptions::CheckFunctions("ABONENT_CONFIGURE",
+				abonentSession, unmmko1_rt_configure, abonentSession, abonentAddr,
+				UNMMKO1_RT_DEFAULT | UNMMKO1_RT_BUS_A_AND_B | UNMMKO1_RT_DEFAULT_RESPONSES);
+	}
+	catch(const MkoExceptions& ex) {
+		std::cerr << ex.what();
+		objectMmko->reset(abonentSession);
+	}
+	std::cout << "AbonentMode()\n";
 }
 void AbonentMode::setData(uint16_t subAddr, int dataWordsCount, std::vector<uint16_t> &dataWords) const
 {
@@ -26,18 +28,17 @@ void AbonentMode::setData(uint16_t subAddr, int dataWordsCount, std::vector<uint
 		StopAbonent();
 		return;
 	}
-	ThrowErrorIf(unmmko1_rt_set_subaddress_data(abonentSession, abonentAddr,
-			subAddr, dataWordsCount, dataWords.data()) < 0, abonentSession, abonentStatus,
-					FLAG::UNMMKO);
+	/*ThrowErrorIf(unmmko1_rt_set_subaddress_data(abonentSession, abonentAddr,
+			subAddr, dataWordsCount, dataWords.data()) < 0, abonentSession, abonentStatus);*/
 }
 void AbonentMode::setDataF5(uint16_t commandCode, uint16_t dataWord) const
 {
-	ThrowErrorIf(unmmko1_rt_set_command_data(abonentSession, abonentAddr, commandCode, dataWord) < 0,
-			abonentSession, abonentStatus, FLAG::UNMMKO);
+	/*ThrowErrorIf(unmmko1_rt_set_command_data(abonentSession, abonentAddr, commandCode, dataWord) < 0,
+			abonentSession, abonentStatus);*/
 }
 AbonentMode::~AbonentMode()
 {
-	StopAbonent();
+	std::cout << "~AbonentMode()\n";
 }
 void AbonentMode::StopAbonent() const
 {

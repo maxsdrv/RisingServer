@@ -39,7 +39,8 @@ extern "C" {
 //! Прототип функции пользовательского обработчика прерываний
 typedef ViBoolean (_VI_FUNCH* UNMMKO1_EVENT_HANDLER) (ViSession session, ViInt32 reason, ViAddr user_data);
 
-ViStatus _VI_FUNC unmmko1_init(ViRsrc resource_name, ViBoolean idn_query, ViBoolean do_reset, ViSession* session);
+ViStatus _VI_FUNC unmmko1_init(ViRsrc resource_name, ViBoolean idn_query, ViBoolean do_reset, ViSession* session,
+		unsigned int* p_int);
 ViStatus _VI_FUNC unmmko1_connect(ViSession session, ViSession carrier_session, ViUInt16 mezzanine_number, ViBoolean idn_query, ViBoolean do_reset);
 ViStatus _VI_FUNC unmmko1_self_test(ViSession session, ViInt16* result, ViChar message[]);
 ViStatus _VI_FUNC unmmko1_test_exchange(ViSession session, ViInt16* result, ViChar message[]);

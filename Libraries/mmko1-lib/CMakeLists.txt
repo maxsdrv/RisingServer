@@ -11,33 +11,27 @@ set(SOURCE)
 set(SUPPORT)
 set(INTERFACE)
 
-list(APPEND SUPPORT
-        support/Actions.h
-        support/Actions.cpp
-        support/SCurDateTime.cpp
-        support/SCurDateTime.h
-        support/SFileLogger.cpp
-        support/SFileLogger.h)
 list(APPEND HEADERS
         include/MonitorMode.h
         include/ControllerMode.h
         include/MMKOErrors.h
         include/AbonentMode.h
+        include/MainBus.h
+        include/enums.h
         )
 list(APPEND SOURCE
         src/MonitorMode.cpp
         src/ControllerMode.cpp
         src/MMKOErrors.cpp
         src/AbonentMode.cpp
+        src/MainBus.cpp
         )
 
-include_directories(include/ enums/ $ENV{HOME}../../usr/local/vxipnp/linux/unmmko1/
+include_directories(include/ $ENV{HOME}../../usr/local/vxipnp/linux/unmmko1/
 $ENV{HOME}../../usr/local/vxipnp/linux/include/ )
 
-include_directories(include src support logs)
+include_directories(include src logs)
 
-
-#add_executable(${PROJECT_NAME} ${HEADERS} ${SOURCE} main.cpp)
 add_library(${PROJECT_NAME} ${HEADERS} ${SOURCE} ${SUPPORT})
 
 target_link_libraries(${PROJECT_NAME} libunmmko1.so libunmbase.so libvisa.so)

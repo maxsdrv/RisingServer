@@ -6,7 +6,7 @@ namespace
 {
 	constexpr int maxSendWords = 32;
 }
-AbonentMode::AbonentMode(MainBus* objectMmko, BUSLINE busline, const uint32_t& address) :
+AbonentMode::AbonentMode(MainBus* objectMmko, BUSLINE busline, uint32_t address) :
 										abonentSession(objectMmko->getMkoSession()),
 										abonentAddr(address)
 {

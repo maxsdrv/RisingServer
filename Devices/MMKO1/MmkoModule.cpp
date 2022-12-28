@@ -33,8 +33,7 @@ MKOModule::MKOModule()
 		insertIt = mkoAddresses.insert(insertIt, {mA, static_cast<int>(BUSLINE::MKO_BUS_A)});
 	}
 	selectedBus = BUSLINE::MKO_BUS_B;
-	/*try {
-		AddController(BUSLINE::MKO_BUS_A);
+	try {
 		AddController(BUSLINE::MKO_BUS_B);
 	}
 	catch(const MkoExceptions& ex) {
@@ -42,7 +41,8 @@ MKOModule::MKOModule()
 	}
 	catch (const std::exception& ex) {
 		std::cerr << ex.what();
-	}*/
+	}
+//	AddController(BUSLINE::MKO_BUS_B);
 
 	std::cout << "MKOModule()" << '\n';
 }
@@ -56,6 +56,8 @@ void MKOModule::AddController(BUSLINE line) const
 	mainbus->resetState ?
 	throw std::runtime_error("ERROR::ADDING::CONTROLLER::MOD\n") :
 	ctrl->StartController();
+//	auto abonent = mainbus->CreateAbonent(line, 0);
+
 }
 bool MKOModule::SelfTest()
 {

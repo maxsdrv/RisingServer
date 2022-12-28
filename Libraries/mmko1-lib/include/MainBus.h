@@ -6,7 +6,8 @@
 #include <map>
 #include <iostream>
 #include <iterator>
-#include <boost/core/demangle.hpp>
+#include <functional>
+
 #include "enums.h"
 
 extern "C" {
@@ -37,7 +38,7 @@ public:
 	 * UNMMKO1_RT_TRANSFORM - TRANSFORMER CONNECTION(DEFAULT)
 	 * UNMMKO1_RT_BUS_A_AND_B - TERMINAL DEVICE RESPONSE TO MESSAGES THAT WERE SENT BY A AND B BUS(DEFAULT)
 	 * UNMMKO1_RT_DEFAULT_RESPONSE - TERMINAL DEVICE CREATES RESPONSES BY DEFAULT ON ALL MESSAGES TYPE*/
-	AbonentMode* CreateAbonent(BUSLINE busLine, const uint32_t& address);
+	AbonentMode* CreateAbonent(BUSLINE busLine, uint32_t address);
 	/* Getters and Setters */
 	[[nodiscard]] int32_t getMkoStatus() const;
 	[[nodiscard]] uint32_t getMkoSession() const;
@@ -56,21 +57,71 @@ private:
 	void DeviceInit(); /*init carrier mezzanine and MKO */
 	void CloseSession() const; // close connect Mezzanine MKO and carrier Mezzanine
 	int32_t search(); // Function for Search MainBus
-	std::map<BUSLINE, std::shared_ptr<ControllerMode>> controllers; // list of controllers
+	std::map<BUSLINE, std::shared_ptr<ControllerMode>> controllers{}; // list of controllers
 	std::map<BUSLINE, std::shared_ptr<AbonentMode>> terminalDevices; //list of terminal devices
-
 	/* Method for creating MKO-mode that
 	 * return smart-pointer instance in dependency on transmitted arguments*/
-	template<typename TObject, typename... TArgs>
-	auto CreateMode(TArgs&& ... args) {
+
+
+	template<typename T_r, typename... TArgs>
+	auto CreateMode(TArgs&&... args) {
 		std::cout << __func__ << ": ";
 		std::cout << sizeof...(args);
 		std::cout << '\n';
-		if constexpr (sizeof...(args)>1)
-			return std::shared_ptr<TObject>(new TObject(std::forward<TArgs>(args)...));
-		else
-			return std::unique_ptr<TObject>(new TObject(std::forward<TArgs>(args)...));
 
+		auto returningMode = Add<T_r>(std::forward<TArgs>(args) ...);
+		if constexpr (std::is_pointer_v<decltype(returningMode)>) {
+			if (returningMode != NULL)
+				return returningMode;
+			else
+				throw std::runtime_error(__func__);
+		}
+		else
+			throw std::runtime_error(__func__);
 	}
+
+
+	template <typename T_r, typename Obj, typename B>
+	auto FindValueContainer(Obj object, B busLine)  noexcept {
+		const auto pItr = controllers.find(busLine);
+		if (pItr != controllers.end()) {
+			return pItr->second.get();
+		}
+		else {
+			controllers[busLine] = std::shared_ptr<T_r>(new T_r(object, busLine));
+			const auto newpItr = controllers.find(busLine);
+			return newpItr->second.get();
+		}
+	}
+
+	template <typename T_r, typename... TArgs>
+	auto Add(TArgs&&... args) {
+		auto mode = FindValueContainer<T_r>(std::forward<TArgs>(args)...);
+		if constexpr (std::is_pointer_v<decltype(mode)>) {
+			return mode;
+		}
+		else
+			return nullptr;
+	}
+
 	/* */
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -20,12 +20,6 @@ MainBus::MainBus() : resetState(false),
 		DeviceInit();
 	}
 	catch (const MkoExceptions& ex) {
-		/*std::ios state(nullptr);
-		state.copyfmt(std::cerr);
-		std::cerr << ex.what();
-		std::cerr <<  " "
-		<< std::dec << std::uppercase << std::setw(8) << std::setfill('0') << ex.GetError() << '\n';
-		std::cerr.copyfmt(state);*/
 		std::cerr << ex.what();
 	}
 	catch (const std::exception& ex) {
@@ -186,15 +180,22 @@ void MainBus::DeviceInit() {
 }
 
 ControllerMode* MainBus::CreateController(BUSLINE busline) {
-	return CreateMode<ControllerMode>(this, busline).get();
+	try {
+		return CreateMode<ControllerMode>(this, busline);
+	}
+	catch (const std::exception& ex) {
+		std::ios state(nullptr);
+		state.copyfmt(std::cerr);
+		std::cerr << "Error when created ControllerMode: " << ex.what();
+		std::cerr.copyfmt(state);
+	}
 }
 MonitorMode* MainBus::CreateMonitor() {
-	static auto temp = CreateMode<MonitorMode>(this);
-	return temp.get();
+//	return CreateMode<MonitorMode>(this);
 }
 
-AbonentMode* MainBus::CreateAbonent(BUSLINE busLine, const uint32_t& address) {
-	return CreateMode<AbonentMode>(this, busLine, address).get();
+AbonentMode* MainBus::CreateAbonent(BUSLINE busLine, uint32_t address) {
+//	return CreateMode<AbonentMode>(this, busLine, address);
 }
 
 void MainBus::reset(uint32_t session) {
@@ -202,6 +203,7 @@ void MainBus::reset(uint32_t session) {
 	unmmko1_reset(session);
 	resetState = true;
 }
+
 
 
 

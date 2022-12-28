@@ -16,7 +16,7 @@ private:
 
 	/* Ctor accepts transmit-device address and rt_options(but rt_options declare by default
 	 * UNMMKO1_RT_DEFAULT_RESPONSES) */
-	explicit AbonentMode(MainBus* objectMmko, BUSLINE busline, const uint32_t& address);
+	explicit AbonentMode(MainBus* objectMmko, BUSLINE busline, uint32_t address);
 public:
 	~AbonentMode();
 	/* non-copyable class */

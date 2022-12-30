@@ -4,38 +4,38 @@
 #include "MMKOErrors.h"
 #include "MonitorMode.h"
 
-MonitorMode::MonitorMode(MainBus* objectMmko) :
-		 monitorSession(objectMmko->getMkoSession())
+MonitorMode::MonitorMode(MainBus* object_mmko) :
+		monitor_session(object_mmko->get_mko_session())
 {
 	try {
-		monitorStatus = MkoExceptions::CheckFunctions("MONITOR_CONFIGURE",
-				monitorSession, unmmko1_mon_configure, monitorSession,
+		monitor_status = MkoExceptions::check_functions("MONITOR_CONFIGURE",
+				monitor_session, unmmko1_mon_configure, monitor_session,
 				UNMMKO1_MON_DEFAULT | UNMMKO1_MON_BUS_A_AND_B);
 	}
 	catch(const MkoExceptions& ex) {
 		std::cerr << ex.what();
-		objectMmko->reset(monitorStatus);
+		object_mmko->reset(monitor_status);
 	}
 	std::cout << "MonitorMode\n";
 }
-void MonitorMode::StartMonitor() const {
-	unmmko1_mon_start(monitorSession);
+void MonitorMode::start_monitor() const {
+	unmmko1_mon_start(monitor_session);
 }
-bool MonitorMode::MessagesRead() {
+bool MonitorMode::messages_read() {
 	uint32_t messagesCount{};
 	auto lMsg = std::make_unique<unmmko1_message>();
-	if (unmmko1_mon_messages_count(monitorSession, &messagesCount) < 0)
+	if (unmmko1_mon_messages_count(monitor_session, &messagesCount) < 0)
 		return false;
 	/* read messages and store into vector */
-	auto status = unmmko1_mon_messages_read(monitorSession, messagesCount, lMsg.get(), &messagesCount);
+	auto status = unmmko1_mon_messages_read(monitor_session, messagesCount, lMsg.get(), &messagesCount);
 	if (status < 0)
 		return false;
 	else
 		messages.push_back(std::move(lMsg));
 	return true;
 }
-const Msg& MonitorMode::PullMessage() {
-	if (MessagesRead()) {
+const Msg& MonitorMode::pull_message() {
+	if (messages_read()) {
 		for (const auto& msg : messages) {
 			std::cerr << "State:\n";
 			if (UNMMKO1_MSG_ERR_OK == msg->error)
@@ -56,8 +56,8 @@ const Msg& MonitorMode::PullMessage() {
 	}
 	return messages;
 }
-void MonitorMode::StopMonitor() const {
-	unmmko1_mon_stop(monitorSession);
+void MonitorMode::stop_monitor() const {
+	unmmko1_mon_stop(monitor_session);
 }
 MonitorMode::~MonitorMode() {
 	std::cout << "~MonitorMode()\n";

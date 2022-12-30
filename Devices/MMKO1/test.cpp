@@ -3,8 +3,8 @@
 
 
 int main(int argc, char* argv[]) {
-	auto mkoModule = new MKOModule();
-	delete mkoModule;
+	auto mko_module = new MKOModule();
+	delete mko_module;
 
 	return 0;
 }

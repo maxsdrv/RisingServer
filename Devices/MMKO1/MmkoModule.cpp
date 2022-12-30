@@ -7,34 +7,34 @@
 
 
 namespace {
-	std::unique_ptr<IDevice> deviceInstance = std::make_unique<ModuleFactory>();
+	std::unique_ptr<IDevice> device_instance = std::make_unique<ModuleFactory>();
 }
 
 MKOModule::MKOModule()
 {
-	mainbus = deviceInstance->CreateMKOBus(); // Create MainBus object
+	mainbus = device_instance->create_mko_bus(); // Create MainBus object
 
-	f4Commands["ИСХ"] 			= CONTROL_COMMANDS::RESET_TR_DEVICE;
-	f4Commands["БЛКПРД"]		= CONTROL_COMMANDS::BLOCK_TRANSMITTER;
-	f4Commands["РБЛКПРД"] 		= CONTROL_COMMANDS::UNBLOCK_TRANSMITTER;
-	f4Commands["ПОС"] 			= CONTROL_COMMANDS::TR_RESPONSE_WORD;
-	f4Commands["СИНХР"]			= CONTROL_COMMANDS::SYNC;
-	f4Commands["ПРИНУПРИНТ"]	= CONTROL_COMMANDS::CTR_INTERFACE;
-	f4Commands["НАЧСАМОКОНТР"]	= CONTROL_COMMANDS::START_SELF_TEST;
-	f4Commands["ВЕКТОР"]		= CONTROL_COMMANDS::TR_VECTOR_WORD;
-	f4Commands["ПОСЛЕДКОМ"]		= CONTROL_COMMANDS::TR_LAST_CMD;
-	f4Commands["ВСК"]			= CONTROL_COMMANDS::TR_VSK_WORD;
+	f4_commands["ИСХ"] 			= CONTROL_COMMANDS::RESET_TR_DEVICE;
+	f4_commands["БЛКПРД"]		= CONTROL_COMMANDS::BLOCK_TRANSMITTER;
+	f4_commands["РБЛКПРД"] 		= CONTROL_COMMANDS::UNBLOCK_TRANSMITTER;
+	f4_commands["ПОС"] 			= CONTROL_COMMANDS::TR_RESPONSE_WORD;
+	f4_commands["СИНХР"]			= CONTROL_COMMANDS::SYNC;
+	f4_commands["ПРИНУПРИНТ"]	= CONTROL_COMMANDS::CTR_INTERFACE;
+	f4_commands["НАЧСАМОКОНТР"]	= CONTROL_COMMANDS::START_SELF_TEST;
+	f4_commands["ВЕКТОР"]		= CONTROL_COMMANDS::TR_VECTOR_WORD;
+	f4_commands["ПОСЛЕДКОМ"]		= CONTROL_COMMANDS::TR_LAST_CMD;
+	f4_commands["ВСК"]			= CONTROL_COMMANDS::TR_VSK_WORD;
 
-	auto insertIt (std::end(mkoAddresses));
+	auto insert_it (std::end(mko_addresses));
 	for (const auto& mA : {1, 2, 3, 4, 5, 6, 7, 9, 12, 13, 18, 19, 20, 21}) {
-		insertIt = mkoAddresses.insert(insertIt, {mA, static_cast<int>(BUSLINE::MKO_BUS_B)});
+		insert_it = mko_addresses.insert(insert_it, { mA, static_cast<int>(BUSLINE::MKO_BUS_B)});
 	}
 	for (const auto& mA : {10, 11, 23, 24, 14, 15, 16, 17, 27, 22}) {
-		insertIt = mkoAddresses.insert(insertIt, {mA, static_cast<int>(BUSLINE::MKO_BUS_A)});
+		insert_it = mko_addresses.insert(insert_it, { mA, static_cast<int>(BUSLINE::MKO_BUS_A)});
 	}
-	selectedBus = BUSLINE::MKO_BUS_B;
+	selected_bus = BUSLINE::MKO_BUS_B;
 	try {
-		AddController(BUSLINE::MKO_BUS_B);
+		add_controller(BUSLINE::MKO_BUS_B);
 	}
 	catch(const MkoExceptions& ex) {
 		std::cerr << ex.what();
@@ -42,7 +42,7 @@ MKOModule::MKOModule()
 	catch (const std::exception& ex) {
 		std::cerr << ex.what();
 	}
-//	AddController(BUSLINE::MKO_BUS_B);
+//	add_controller(BUSLINE::MKO_BUS_B);
 
 	std::cout << "MKOModule()" << '\n';
 }
@@ -50,35 +50,35 @@ MKOModule::~MKOModule()
 {
 	std::cout << "~MKOModule()" << '\n';
 }
-void MKOModule::AddController(BUSLINE line) const
+void MKOModule::add_controller(BUSLINE line) const
 {
-	auto ctrl = mainbus->CreateController(line);
-	mainbus->resetState ?
+	auto ctrl = mainbus->create_controller(line);
+	mainbus->reset_state ?
 	throw std::runtime_error("ERROR::ADDING::CONTROLLER::MOD\n") :
-	ctrl->StartController();
-//	auto abonent = mainbus->CreateAbonent(line, 0);
+	ctrl->start_controller();
+//	auto abonent = mainbus->create_abonent(line, 0);
 
 }
-bool MKOModule::SelfTest()
+bool MKOModule::self_test()
 {
-	bool testResult;
+	bool test_result;
 	try {
-		testResult = mainbus->SelfTest();
+		test_result = mainbus->self_test();
 	}catch (const MkoExceptions& ex) {
 		std::cerr << ex.what();
 	}
-	return testResult;
+	return test_result;
 }
-bool MKOModule::WriteToAbonent()
+bool MKOModule::write_to_abonent()
 {
 
 	return false;
 }
-bool MKOModule::WriteToAbonentCycle()
+bool MKOModule::write_to_abonent_cycle()
 {
 	return false;
 }
-bool MKOModule::ReadFromAbonent()
+bool MKOModule::read_from_abonent()
 {
 	return false;
 }

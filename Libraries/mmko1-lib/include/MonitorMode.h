@@ -12,7 +12,7 @@ using Msg = std::vector<std::unique_ptr<unmmko1_message>>;
 class MonitorMode {
 private:
 	friend class MainBus;
-	explicit MonitorMode(MainBus* objectMmko);
+	explicit MonitorMode(MainBus* object_mmko);
 public:
 	~MonitorMode();
 	/* non-copyable class */
@@ -21,13 +21,13 @@ public:
 	MonitorMode& operator=(const MonitorMode&) = delete;
 	MonitorMode& operator=(MonitorMode&&) = delete;
 
-	void StartMonitor() const;
-	void StopMonitor() const;
+	void start_monitor() const;
+	void stop_monitor() const;
 	/* Methods for processing messages */
-	const Msg& PullMessage();
+	const Msg& pull_message();
 private:
 	Msg messages; // Monitor messages list
-	uint32_t monitorSession;
-	int32_t monitorStatus;
-	bool MessagesRead(); //read all messages
+	uint32_t monitor_session;
+	int32_t monitor_status;
+	bool messages_read(); //read all messages
 };

@@ -31,16 +31,16 @@ class MKOModule {
 public:
 	MKOModule();
 	~MKOModule();
-	bool SelfTest(); /* produce the mezzanine self-test and return result */
-	bool WriteToAbonent();
-	bool WriteToAbonentCycle();
-	bool ReadFromAbonent();
+	bool self_test(); /* produce the mezzanine self-test and return result */
+	bool write_to_abonent();
+	bool write_to_abonent_cycle();
+	bool read_from_abonent();
 private:
-	BUSLINE selectedBus;
+	BUSLINE selected_bus;
 	std::unique_ptr<MainBus> mainbus;
-	void AddController(BUSLINE line) const;
-	std::map<std::string, CONTROL_COMMANDS> f4Commands; // List type the command F4 format
-	std::map<int, int> mkoAddresses; // MKO Addresses according to which they work with any devices
+	void add_controller(BUSLINE line) const;
+	std::map<std::string, CONTROL_COMMANDS> f4_commands; // List type the command F4 format
+	std::map<int, int> mko_addresses; // MKO Addresses according to which they work with any devices
 };
 
 

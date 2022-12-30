@@ -10,14 +10,14 @@
 #include "unmbase.h"
 
 
-MainBus::MainBus() : resetState(false),
-				     position(0),
-				     status(0),
-					 m_Session(0),
-					 carrierSession(0)
+MainBus::MainBus() :reset_state(false),
+					position(0),
+					status(0),
+					m_Session(0),
+					carrier_session(0)
 {
 	try {
-		DeviceInit();
+		device_init();
 	}
 	catch (const MkoExceptions& ex) {
 		std::cerr << ex.what();
@@ -29,88 +29,89 @@ MainBus::MainBus() : resetState(false),
 }
 
 MainBus::~MainBus() {
-	CloseSession();
+	close_session();
 	std::cout << "~MainBus()" << '\n';
 }
-bool MainBus::SelfTest() {
+bool MainBus::self_test() {
 	char message[256];
 	int16_t resultCode{};
-	status = MkoExceptions::CheckFunctions("MKO_SELF_TEST", m_Session, unmmko1_self_test,
+	status = MkoExceptions::check_functions("MKO_SELF_TEST", m_Session, unmmko1_self_test,
 			m_Session, &resultCode, message);
 	std::cout << boost::format("Self-test result %s %d \n")%message%resultCode;
 	return true;
 }
 
-void MainBus::CloseSession() const {
+void MainBus::close_session() const {
 	std::cout << "MAINBUS::CLOSED" << '\n';
-	unmbase_close(carrierSession);
+	unmbase_close(carrier_session);
 	unmmko1_close(m_Session);
 }
-int32_t MainBus::getMkoStatus() const {
+int32_t MainBus::get_mko_status() const {
 	return status;
 }
-uint32_t MainBus::getMkoSession() const {
+uint32_t MainBus::get_mko_session() const {
 	return m_Session;
 }
 int32_t MainBus::search() {
 
-	uint32_t resourceManagerSession{};
-	const std::string searchPattern{ "?*[0-9]?*::?*::INSTR" };
-	uint32_t findList{};
+	uint32_t resource_manager_session{};
+	const std::string search_pattern{ "?*[0-9]?*::?*::INSTR" };
+	uint32_t find_list{};
 	int32_t found = VI_ERROR_RSRC_NFOUND;
 	uint32_t index{}, count{};
-	uint32_t deviceSession{};
-	uint16_t interfaceType{};
-	int16_t mezzanineNumber = 1;
+	uint32_t device_session{};
+	uint16_t interface_type{};
+	int16_t mezzanine_number = 1;
 	char address[256];
-	const std::string idStr{ "*IDN?\n" };
+	const std::string id_str{ "*IDN?\n" };
 	const std::string tab{ "%t" };
 
 	/* Lambdas instead goto definitions in C implementation common.h */
 	auto Error = [=]() {
-	  if (resourceManagerSession)
-		  viClose(resourceManagerSession);
+	  if (resource_manager_session)
+		  viClose(resource_manager_session);
 	};
 	auto CloseDevice = [=]() {
-	  viClose(deviceSession);
+	  viClose(device_session);
 	  if (VI_SUCCESS==found)
 		  return;
 	};
 
 	//  Open Session with VISA
-	if (viOpenDefaultRM(&resourceManagerSession)<0)
+	if (viOpenDefaultRM(&resource_manager_session)<0)
 		Error();
 
 	// Find devices
-	if (viFindRsrc(resourceManagerSession, const_cast<char*>(searchPattern.c_str()), &findList, &count, address)<0)
+	if (viFindRsrc(resource_manager_session, const_cast<char*>(search_pattern.c_str()), &find_list, &count, address)<0)
 		Error();
 
 	// Pass to all found devices
 	for (index = 0; index<count; ++index) {
 		// Devices not found
-		if (index && viFindNext(findList, address)<0)
+		if (index && viFindNext(find_list, address)<0)
 			Error();
 
 		// Open device
-		if (viOpen(resourceManagerSession, address, VI_NULL, VI_NULL, &deviceSession)<0)
+		if (viOpen(resource_manager_session, address, VI_NULL, VI_NULL, &device_session)<0)
+
 			continue;
 
 		// Read interface type
-		viGetAttribute(deviceSession, VI_ATTR_INTF_TYPE, &interfaceType);
+		viGetAttribute(device_session, VI_ATTR_INTF_TYPE, &interface_type);
 
 		// Interface type VXI или GPIB-VXI
-		if (VI_INTF_VXI==interfaceType || VI_INTF_GPIB_VXI==interfaceType) {
+		if (VI_INTF_VXI==interface_type || VI_INTF_GPIB_VXI==interface_type) {
 			ViUInt32 slot_number = 0;
 			ViUInt16 manufactory_id = 0, model_code = 0;
 
 			// Don't work in slot number 0
-			if (viGetAttribute(deviceSession, VI_ATTR_SLOT, &slot_number)<0 || 0==slot_number)
+			if (viGetAttribute(device_session, VI_ATTR_SLOT, &slot_number)<0 || 0==slot_number)
 				CloseDevice();
 
 			// Request the manufacturer's identifier and device model code
-			if (viGetAttribute(deviceSession, VI_ATTR_MANF_ID, &manufactory_id)<0)
+			if (viGetAttribute(device_session, VI_ATTR_MANF_ID, &manufactory_id)<0)
 				CloseDevice();
-			if (viGetAttribute(deviceSession, VI_ATTR_MODEL_CODE, &model_code)<0)
+			if (viGetAttribute(device_session, VI_ATTR_MODEL_CODE, &model_code)<0)
 				CloseDevice();
 
 			//Compare ID with ID any version Carriers Mezzanines
@@ -123,16 +124,16 @@ int32_t MainBus::search() {
 				CloseDevice();
 		}
 			//Interface type VXI or GPIB-VXI
-		else if (VI_INTF_TCPIP==interfaceType || VI_INTF_USB==interfaceType || VI_INTF_GPIB==interfaceType
-				|| VI_INTF_ASRL==interfaceType) {
+		else if (VI_INTF_TCPIP==interface_type || VI_INTF_USB==interface_type || VI_INTF_GPIB==interface_type
+				|| VI_INTF_ASRL==interface_type) {
 			ViChar idn[256];
 
-			if (viLock(deviceSession, VI_EXCLUSIVE_LOCK, 2000, nullptr, nullptr)<0)
+			if (viLock(device_session, VI_EXCLUSIVE_LOCK, 2000, nullptr, nullptr)<0)
 				CloseDevice();
 
-			status = viQueryf(deviceSession, const_cast<char*>(idStr.c_str()),
+			status = viQueryf(device_session, const_cast<char*>(id_str.c_str()),
 					const_cast<char*>(tab.c_str()), idn);
-			viUnlock(deviceSession);
+			viUnlock(device_session);
 
 			if (status<0)
 				CloseDevice();
@@ -142,46 +143,46 @@ int32_t MainBus::search() {
 		}
 
 		// Initialise Carrier Mezzanine and read code of mezzanines
-		if (unmbase_init(address, VI_ON, VI_ON, &carrierSession)<0)
+		if (unmbase_init(address, VI_ON, VI_ON, &carrier_session)<0)
 			CloseDevice();
 
-		for (mezzanineNumber = 1; mezzanineNumber<=8; ++mezzanineNumber) {
+		for (mezzanine_number = 1; mezzanine_number<=8; ++mezzanine_number) {
 			ViInt16 present, model_code;
-			if (unmbase_m_type_q(carrierSession, mezzanineNumber, &present, &model_code)<0 || 0==present)
+			if (unmbase_m_type_q(carrier_session, mezzanine_number, &present, &model_code)<0 || 0==present)
 				continue;
 
 			if (UNMMKO1_MODEL_CODE==(model_code & 0x0fff)) {
-				strcpy(resourceName, address);
-				position = (ViUInt16)mezzanineNumber;
+				strcpy(resource_name, address);
+				position = (ViUInt16)mezzanine_number;
 				found = VI_SUCCESS;
 				break;
 			}
 		}
 
-		unmbase_close(carrierSession);
+		unmbase_close(carrier_session);
 
 	}
 
 	if (VI_SUCCESS==found)
 		std::cout << "Mezzanine MKO found at "
-				  << resourceName << "on " << position << '\n';
+				  << resource_name << "on " << position << '\n';
 	status = found;
 
 	return status;
 }
-void MainBus::DeviceInit() {
-	status = MkoExceptions::CheckFunctions("SEARCH_MKO", m_Session, search()); // Search MKO
-	MkoExceptions::CheckFunctions("UNMBASE_INIT", m_Session, unmbase_init, resourceName,
-			true, true, &carrierSession);
-	MkoExceptions::CheckFunctions("UNMMKO1_INIT", m_Session, unmmko1_init, resourceName, true,
+void MainBus::device_init() {
+	status = MkoExceptions::check_functions("SEARCH_MKO", m_Session, search()); // Search MKO
+	MkoExceptions::check_functions("UNMBASE_INIT", m_Session, unmbase_init, resource_name,
+			true, true, &carrier_session);
+	MkoExceptions::check_functions("UNMMKO1_INIT", m_Session, unmmko1_init, resource_name, true,
 			true, &m_Session);
-	MkoExceptions::CheckFunctions("UNMMKO1_CONNECT", m_Session, unmmko1_connect, m_Session,
-			carrierSession, position, true, true); // Connect to MKO*/
+	MkoExceptions::check_functions("UNMMKO1_CONNECT", m_Session, unmmko1_connect, m_Session,
+			carrier_session, position, true, true); // Connect to MKO*/
 }
 
-ControllerMode* MainBus::CreateController(BUSLINE busline) {
+ControllerMode* MainBus::create_controller(BUSLINE busLine) {
 	try {
-		return CreateMode<ControllerMode>(this, busline);
+		return create_mode<ControllerMode>(this, busLine);
 	}
 	catch (const std::exception& ex) {
 		std::ios state(nullptr);
@@ -190,18 +191,18 @@ ControllerMode* MainBus::CreateController(BUSLINE busline) {
 		std::cerr.copyfmt(state);
 	}
 }
-MonitorMode* MainBus::CreateMonitor() {
+MonitorMode* MainBus::create_monitor() {
 //	return CreateMode<MonitorMode>(this);
 }
 
-AbonentMode* MainBus::CreateAbonent(BUSLINE busLine, uint32_t address) {
-//	return CreateMode<AbonentMode>(this, busLine, address);
+AbonentMode* MainBus::create_abonent(BUSLINE busLine, uint32_t address) {
+//	return CreateMode<AbonentMode>(this, bus_line, address);
 }
 
 void MainBus::reset(uint32_t session) {
 	std::cout << "ResetMKO\n";
 	unmmko1_reset(session);
-	resetState = true;
+	reset_state = true;
 }
 
 

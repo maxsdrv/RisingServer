@@ -4,47 +4,47 @@
 
 namespace
 {
-	constexpr int maxSendWords = 32;
+	constexpr int max_send_words = 32;
 }
-AbonentMode::AbonentMode(MainBus* objectMmko, BUSLINE busline, uint32_t address) :
-										abonentSession(objectMmko->getMkoSession()),
-										abonentAddr(address)
+AbonentMode::AbonentMode(MainBus* object_mmko, BUSLINE bus_line, uint32_t address) :
+		abonent_session(object_mmko->get_mko_session()),
+		abonent_addr(address)
 {
 	try {
-		abonentStatus = MkoExceptions::CheckFunctions("ABONENT_CONFIGURE",
-				abonentSession, unmmko1_rt_configure, abonentSession, abonentAddr,
+		abonent_status = MkoExceptions::check_functions("ABONENT_CONFIGURE",
+				abonent_session, unmmko1_rt_configure, abonent_session, abonent_addr,
 				UNMMKO1_RT_DEFAULT | UNMMKO1_RT_BUS_A_AND_B | UNMMKO1_RT_DEFAULT_RESPONSES);
 	}
 	catch(const MkoExceptions& ex) {
 		std::cerr << ex.what();
-		objectMmko->reset(abonentSession);
+		object_mmko->reset(abonent_session);
 	}
 	std::cout << "AbonentMode()\n";
 }
-void AbonentMode::setData(uint16_t subAddr, int dataWordsCount, std::vector<uint16_t> &dataWords) const
+void AbonentMode::set_data(uint16_t sub_addr, int data_words_count, std::vector<uint16_t> &data_words) const
 {
-	if (dataWordsCount > maxSendWords) {
-		std::cerr << "Try to send data more than size of word in abonent mode " << maxSendWords << '\n';
-		StopAbonent();
+	if (data_words_count > max_send_words) {
+		std::cerr << "Try to send data more than size of word in abonent mode " << max_send_words << '\n';
+		stop_abonent();
 		return;
 	}
-	/*ThrowErrorIf(unmmko1_rt_set_subaddress_data(abonentSession, abonentAddr,
-			subAddr, dataWordsCount, dataWords.data()) < 0, abonentSession, abonentStatus);*/
+	/*ThrowErrorIf(unmmko1_rt_set_subaddress_data(abonent_session, abonent_addr,
+			sub_addr, data_words_count, data_words.data()) < 0, abonent_session, abonent_status);*/
 }
-void AbonentMode::setDataF5(uint16_t commandCode, uint16_t dataWord) const
+void AbonentMode::set_data_f5(uint16_t command_code, uint16_t data_word) const
 {
-	/*ThrowErrorIf(unmmko1_rt_set_command_data(abonentSession, abonentAddr, commandCode, dataWord) < 0,
-			abonentSession, abonentStatus);*/
+	/*ThrowErrorIf(unmmko1_rt_set_command_data(abonent_session, abonent_addr, command_code, data_word) < 0,
+			abonent_session, abonent_status);*/
 }
 AbonentMode::~AbonentMode()
 {
 	std::cout << "~AbonentMode()\n";
 }
-void AbonentMode::StopAbonent() const
+void AbonentMode::stop_abonent() const
 {
-	unmmko1_rt_stop(abonentSession);
+	unmmko1_rt_stop(abonent_session);
 }
-void AbonentMode::StartAbonent() const
+void AbonentMode::start_abonent() const
 {
-	unmmko1_rt_start(abonentSession);
+	unmmko1_rt_start(abonent_session);
 }

@@ -10,12 +10,11 @@ ControllerMode::ControllerMode(MainBus* object_mmko, BUSLINE mko_line)
 		controller_session(object_mmko->get_mko_session())
 {
 	try {
-		controller_status = MkoExceptions::check_functions("CONTROLLER_CONFIGURE",
+		controller_status = MkoExceptions::check_functions("Controller configure",
 				controller_session, unmmko1_bc_configure, controller_session, UNMMKO1_BC_DEFAULT);
 	}
 	catch(const MkoExceptions& ex) {
 		std::cerr << ex.what();
-		object_mmko->reset(controller_session);
 	}
 	std::cout << "ControllerMode()" << '\n';
 }
@@ -44,12 +43,15 @@ int32_t ControllerMode::transmitCmdF1(uint16_t address, uint16_t sub_address, ui
 }
 
 void ControllerMode::start_controller() const {
-	std::cout << boost::format("CONTROLLER::STARTED %i") %controller_session << '\n';
-	unmmko1_bc_start(controller_session);
+	MkoExceptions::check_functions
+		("start_controller", controller_session, unmmko1_bc_start(controller_session));
+
+	std::cout << boost::format("Controller started %i") %controller_session << '\n';
 }
 void ControllerMode::stop_controller() const {
-	std::cout << "CONTROLLER::STOPPED" << '\n';
-	unmmko1_bc_stop(controller_session);
+	MkoExceptions::check_functions
+		("stop controller", controller_session, unmmko1_bc_stop(controller_session));
+	std::cout << "Controller stopped" << '\n';
 }
 
 

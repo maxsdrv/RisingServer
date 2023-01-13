@@ -12,7 +12,7 @@ endif()
 SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/bin")
 SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/lib")
 
-set(Boost_USE_STATIC_LIBS ON)
+set(Boost_USE_STATIC_LIBS OFF)
 
 find_package(Boost 1.70.0 REQUIRED)
 if (Boost_FOUND)
@@ -21,5 +21,5 @@ endif()
 
 add_subdirectory("Devices")
 add_subdirectory("Libraries")
-
+add_subdirectory("Test")
 

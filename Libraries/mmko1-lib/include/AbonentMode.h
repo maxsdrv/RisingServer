@@ -33,6 +33,7 @@ public:
 	void set_data(uint16_t sub_addr, int data_words_count, std::vector<uint16_t>& data_words) const;
 	/* method for set data-words in response to command of handling in format-message 5 */
 	void set_data_f5(uint16_t command_code, uint16_t data_word) const;
+	[[nodiscard]] uint32_t get_address() const;
 private:
 	uint32_t abonent_session{};
 	int32_t abonent_status{};

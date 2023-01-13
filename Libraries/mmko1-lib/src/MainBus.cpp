@@ -1,5 +1,6 @@
 #include <iomanip>
 #include <boost/format.hpp>
+#include <boost/test/unit_test.hpp>
 #include <cstring>
 
 #include "MainBus.h"
@@ -9,8 +10,9 @@
 #include "MMKOErrors.h"
 #include "unmbase.h"
 
+using namespace boost::unit_test;
 
-MainBus::MainBus() :reset_state(false),
+MainBus::MainBus() :
 					position(0),
 					status(0),
 					m_Session(0),
@@ -35,14 +37,14 @@ MainBus::~MainBus() {
 bool MainBus::self_test() {
 	char message[256];
 	int16_t resultCode{};
-	status = MkoExceptions::check_functions("MKO_SELF_TEST", m_Session, unmmko1_self_test,
+	status = MkoExceptions::check_functions("Mko self-test", m_Session, unmmko1_self_test,
 			m_Session, &resultCode, message);
 	std::cout << boost::format("Self-test result %s %d \n")%message%resultCode;
 	return true;
 }
 
 void MainBus::close_session() const {
-	std::cout << "MAINBUS::CLOSED" << '\n';
+	std::cout << "MainBus close session" << '\n';
 	unmbase_close(carrier_session);
 	unmmko1_close(m_Session);
 }
@@ -171,39 +173,56 @@ int32_t MainBus::search() {
 	return status;
 }
 void MainBus::device_init() {
-	status = MkoExceptions::check_functions("SEARCH_MKO", m_Session, search()); // Search MKO
-	MkoExceptions::check_functions("UNMBASE_INIT", m_Session, unmbase_init, resource_name,
+	status = MkoExceptions::check_functions("Search MKO", m_Session, search()); // Search MKO
+	MkoExceptions::check_functions("Mbase init", m_Session, unmbase_init, resource_name,
 			true, true, &carrier_session);
-	MkoExceptions::check_functions("UNMMKO1_INIT", m_Session, unmmko1_init, resource_name, true,
+	MkoExceptions::check_functions("Mko init", m_Session, unmmko1_init, resource_name, true,
 			true, &m_Session);
-	MkoExceptions::check_functions("UNMMKO1_CONNECT", m_Session, unmmko1_connect, m_Session,
+	MkoExceptions::check_functions("Mko connect", m_Session, unmmko1_connect, m_Session,
 			carrier_session, position, true, true); // Connect to MKO*/
 }
 
-ControllerMode* MainBus::create_controller(BUSLINE busLine) {
-	try {
-		return create_mode<ControllerMode>(this, busLine);
-	}
-	catch (const std::exception& ex) {
-		std::ios state(nullptr);
-		state.copyfmt(std::cerr);
-		std::cerr << "Error when created ControllerMode: " << ex.what();
-		std::cerr.copyfmt(state);
-	}
+ControllerMode* MainBus::create_controller(BUSLINE bus_line) {
+	auto* res = create_mode<ControllerMode>(this, bus_line);
+	if (res != nullptr)
+		return res;
+	else
+		throw MkoExceptions(status, "Error create controller");
 }
 MonitorMode* MainBus::create_monitor() {
-//	return CreateMode<MonitorMode>(this);
+	monitor = std::unique_ptr<MonitorMode>(new MonitorMode(this));
+	return monitor.get();
 }
 
-AbonentMode* MainBus::create_abonent(BUSLINE busLine, uint32_t address) {
-//	return CreateMode<AbonentMode>(this, bus_line, address);
+AbonentMode* MainBus::create_abonent(BUSLINE bus_line, uint32_t address) {
+	auto* res = create_mode<AbonentMode>(this, bus_line, address);
+	if (res != nullptr)
+		return res;
+	else
+		throw MkoExceptions(status, "Error create abonent");
 }
 
-void MainBus::reset(uint32_t session) {
-	std::cout << "ResetMKO\n";
-	unmmko1_reset(session);
-	reset_state = true;
+void MainBus::reset(uint32_t session) const{
+	MkoExceptions::check_functions("Reset MKO", m_Session, unmmko1_reset(session));
 }
+void MainBus::remove_controller(BUSLINE bus_line) {
+	const auto itr = controllers.find(bus_line);
+	if (itr != controllers.end()) {
+		controllers.erase(itr);
+	}
+}
+void MainBus::remove_abonent(BUSLINE bus_line, uint32_t address) {
+	const auto itr = terminal_devices.find(bus_line);
+	if (itr != terminal_devices.end()) {
+		if (itr->second->get_address() == address) {
+			terminal_devices.erase(itr);
+		}
+	}
+}
+void MainBus::remove_monitor() {
+	monitor.reset();
+}
+
 
 
 

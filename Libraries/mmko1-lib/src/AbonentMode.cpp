@@ -7,18 +7,20 @@ namespace
 	constexpr int max_send_words = 32;
 }
 AbonentMode::AbonentMode(MainBus* object_mmko, BUSLINE bus_line, uint32_t address) :
+		bus_line(bus_line),
 		abonent_session(object_mmko->get_mko_session()),
 		abonent_addr(address)
 {
-	try {
+	unmmko1_rt_configure(abonent_session, abonent_addr,
+			UNMMKO1_RT_DEFAULT | UNMMKO1_RT_BUS_A_AND_B | UNMMKO1_RT_DEFAULT_RESPONSES);
+	/*try {
 		abonent_status = MkoExceptions::check_functions("ABONENT_CONFIGURE",
 				abonent_session, unmmko1_rt_configure, abonent_session, abonent_addr,
 				UNMMKO1_RT_DEFAULT | UNMMKO1_RT_BUS_A_AND_B | UNMMKO1_RT_DEFAULT_RESPONSES);
 	}
 	catch(const MkoExceptions& ex) {
 		std::cerr << ex.what();
-		object_mmko->reset(abonent_session);
-	}
+	}*/
 	std::cout << "AbonentMode()\n";
 }
 void AbonentMode::set_data(uint16_t sub_addr, int data_words_count, std::vector<uint16_t> &data_words) const
@@ -47,4 +49,7 @@ void AbonentMode::stop_abonent() const
 void AbonentMode::start_abonent() const
 {
 	unmmko1_rt_start(abonent_session);
+}
+uint32_t AbonentMode::get_address() const {
+	return abonent_addr;
 }

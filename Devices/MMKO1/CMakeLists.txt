@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.0)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_GLIBCXX_DEBUG -fsanitize=address -fno-omit-frame-pointer -fno-optimize-sibling-calls")
 
 if (NOT DEFINED CMAKE_BUILD_TYPE)
         set(CMAKE_BUILD_TYPE "Debug")
@@ -21,4 +22,5 @@ file(GLOB_RECURSE PRJ_HEADERS ${PROJECT_SOURCE_DIR}/*.h)
 
 add_executable(${PROJECT_NAME} ${PRJ_SRC} ${PRJ_HEADERS})
 
-target_link_libraries(${PROJECT_NAME} mmko1lib libunmmko1.so libunmbase.so libvisa.so)
+target_link_libraries(${PROJECT_NAME} mmko1lib libunmmko1.so libunmbase.so libvisa.so
+        ${Boost_LIBRARIES})

@@ -6,10 +6,7 @@
 #include <memory>
 
 #include "enums.h"
-
-extern "C" {
 #include "unmmko1.h"
-}
 
 class MainBus;
 

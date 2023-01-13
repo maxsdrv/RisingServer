@@ -8,13 +8,12 @@ MonitorMode::MonitorMode(MainBus* object_mmko) :
 		monitor_session(object_mmko->get_mko_session())
 {
 	try {
-		monitor_status = MkoExceptions::check_functions("MONITOR_CONFIGURE",
+		monitor_status = MkoExceptions::check_functions("Monitor configure",
 				monitor_session, unmmko1_mon_configure, monitor_session,
 				UNMMKO1_MON_DEFAULT | UNMMKO1_MON_BUS_A_AND_B);
 	}
 	catch(const MkoExceptions& ex) {
 		std::cerr << ex.what();
-		object_mmko->reset(monitor_status);
 	}
 	std::cout << "MonitorMode\n";
 }

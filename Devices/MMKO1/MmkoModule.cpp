@@ -15,16 +15,16 @@ MKOModule::MKOModule()
 {
 	mainbus = device_instance->create_mko_bus(); // Create MainBus object
 
-	f4_commands["ИСХ"] 			= CONTROL_COMMANDS::RESET_TR_DEVICE;
+	f4_commands["ИСХ"] 			= CONTROL_COMMANDS::RESET_DEVICE_TRANSMIT;
 	f4_commands["БЛКПРД"]		= CONTROL_COMMANDS::BLOCK_TRANSMITTER;
 	f4_commands["РБЛКПРД"] 		= CONTROL_COMMANDS::UNBLOCK_TRANSMITTER;
-	f4_commands["ПОС"] 			= CONTROL_COMMANDS::TR_RESPONSE_WORD;
+	f4_commands["ПОС"] 			= CONTROL_COMMANDS::TRANSMIT_RESPONSE_WORD;
 	f4_commands["СИНХР"]			= CONTROL_COMMANDS::SYNC;
 	f4_commands["ПРИНУПРИНТ"]	= CONTROL_COMMANDS::CTR_INTERFACE;
 	f4_commands["НАЧСАМОКОНТР"]	= CONTROL_COMMANDS::START_SELF_TEST;
-	f4_commands["ВЕКТОР"]		= CONTROL_COMMANDS::TR_VECTOR_WORD;
-	f4_commands["ПОСЛЕДКОМ"]		= CONTROL_COMMANDS::TR_LAST_CMD;
-	f4_commands["ВСК"]			= CONTROL_COMMANDS::TR_VSK_WORD;
+	f4_commands["ВЕКТОР"]		= CONTROL_COMMANDS::TRANSMIT_VECTOR_WORD;
+	f4_commands["ПОСЛЕДКОМ"]		= CONTROL_COMMANDS::TRANSMIT_LAST_CMD;
+	f4_commands["ВСК"]			= CONTROL_COMMANDS::TRANSMIT_VSK_WORD;
 
 	auto insert_it (std::end(mko_addresses));
 	for (const auto& mA : {1, 2, 3, 4, 5, 6, 7, 9, 12, 13, 18, 19, 20, 21}) {

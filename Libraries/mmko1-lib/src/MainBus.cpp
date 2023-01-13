@@ -1,6 +1,5 @@
 #include <iomanip>
 #include <boost/format.hpp>
-#include <boost/test/unit_test.hpp>
 #include <cstring>
 
 #include "MainBus.h"
@@ -10,7 +9,6 @@
 #include "MMKOErrors.h"
 #include "unmbase.h"
 
-using namespace boost::unit_test;
 
 MainBus::MainBus() :
 					position(0),

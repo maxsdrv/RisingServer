@@ -21,7 +21,7 @@ class QListView;
 class QScrollBar;
 class QTextDocument;
 class QStringListModel;
-class MezoninServer;
+class MKOServer;
 class CustomTableModel;
 class DialogSettings;
 class QTableView;
@@ -70,7 +70,7 @@ private:
     QTimer logTimer;
     QElapsedTimer workTimer;
 
-    std::shared_ptr<MezoninServer> mezoninServer;
+    std::shared_ptr<MKOServer> mezoninServer;
     std::shared_ptr<DialogSettings> dSettings;
 public:
     QString startTime;

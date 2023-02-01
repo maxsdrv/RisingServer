@@ -6,7 +6,7 @@
 #include "ModuleFactory.h"
 
 /* Enum class of Command Direction by ГОСТ Р52070-2003 */
-enum class CONTROL_COMMANDS {
+/*enum class CONTROL_COMMANDS {
 	CTR_INTERFACE,
 	SYNC,
 	TRANSMIT_RESPONSE_WORD,
@@ -22,7 +22,7 @@ enum class CONTROL_COMMANDS {
 	TRANSMIT_VSK_WORD,
 	BLOCK_Ith_TR,
 	UNBLOCK_Ith_TR
-};
+};*/
 
 class MainBus;
 

@@ -72,7 +72,7 @@ QString MezoninServer::getXML()
 {
     namespace fs = std::filesystem;
     fs::path path_to_xml(fs::current_path());
-    qDebug() << "getXML() MezoninServer";
+    qDebug() << "getXML() MKOServer";
     path_to_xml /= "../../servers/mezonin_server/mezonin_server_directives.xml";
     qDebug() << path_to_xml.c_str();
 

@@ -5,7 +5,6 @@
 #include "AbonentMode.h"
 #include "MonitorMode.h"
 #include "MMKOErrors.h"
-#include "IDevice.h"
 
 namespace {
 	std::unique_ptr<IDevice> device_instance = std::make_unique<ModuleFactory>();
@@ -43,7 +42,6 @@ MKOModule::MKOModule()
 	catch (const std::exception& ex) {
 		std::cerr << ex.what();
 	}
-//	add_controller(BUSLINE::MKO_BUS_B);
 
 	std::cout << "MKOModule()" << '\n';
 }
@@ -53,12 +51,16 @@ MKOModule::~MKOModule()
 }
 void MKOModule::add_controller(BUSLINE line) const
 {
-	/*try {
-		mainbus->create_controller(line);
+	try {
+		mainbus->create_abonent(line, 1);
+		auto ctrl = mainbus->create_controller(line);
+		uint16_t word[10] {1, 2, 3, 4};
+		ctrl->transmit_cmd_f1(RT_3, SA_2, 4, word);
+		ctrl->transmit_data_cycle(RT_3, SA_2, 4, word, 10);
 	}
 	catch (const MkoExceptions& ex) {
 		std::cerr << ex.what();
-	}*/
+	}
 }
 bool MKOModule::self_test()
 {

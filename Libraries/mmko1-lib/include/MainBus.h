@@ -71,10 +71,6 @@ private:
 
 	template<typename T_r, typename... TArgs>
 	T_r* create_mode(TArgs&&... args) {
-		std::cout << __func__ << ": ";
-		std::cout << sizeof...(args);
-		std::cout << '\n';
-
 		auto returning_mode = get<T_r>(std::forward<TArgs>(args) ...);
 		if (returning_mode != NULL)
 			return returning_mode;

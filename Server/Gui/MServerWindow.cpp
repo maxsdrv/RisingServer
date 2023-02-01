@@ -27,7 +27,7 @@ const QString &parserForDelete(QString str)
 
 MServerWindow::MServerWindow(const QString &title, QWidget *parent)
     : QWidget(parent),
-      mezoninServer(std::make_shared<MezoninServer>()),
+      mezoninServer(std::make_shared<MKOServer>()),
       settingsValue("Cometa", "СПО АИК"),
       listAddresses()
 {
@@ -73,7 +73,7 @@ void MServerWindow::createSettingManagerGroupBox()
 
     connect(hostBox, SIGNAL(currentIndexChanged(int)), SLOT(hostBoxChanged()));
     connect(startButton, &QPushButton::clicked, this, &MServerWindow::startServer);
-    connect(this, &MServerWindow::sendIp, mezoninServer.get(), &MezoninServer::runServer);
+    connect(this, &MServerWindow::sendIp, mezoninServer.get(), &MKOServer::runServer);
     connect(addButton, &QPushButton::clicked, this, &MServerWindow::addAddress);
     connect(deleteButton, &QPushButton::clicked, this, &MServerWindow::deleteAddress);
 

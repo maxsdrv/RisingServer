@@ -1,22 +1,19 @@
 #pragma once
 
-#ifdef WIN32
-#include "winsock2.h"
-#endif
 #include <QObject>
 #include <filesystem>
 #include <utility>
+#include <iostream>
 
-#include "TMDBController.hpp"
 #include "enums.h"
-#include "HWModule.h"
+#include "MmkoModule.h"
 
-class MezoninServer : public QObject
+class MKOServer : public QObject
 {
-Q_OBJECT
+	Q_OBJECT
 public:
-    explicit MezoninServer(QObject *parent = nullptr/*int slot_port, int signal_port*/);
-    ~MezoninServer() override;
+    explicit MKOServer(QObject *parent = nullptr/*int slot_port, int signal_port*/);
+    ~MKOServer() override;
 
 public slots:
     void runServer(const QString& _ipAddress);
@@ -39,6 +36,7 @@ public:
         }
         catch (const std::exception& e)
         {
+			std::cerr << e.what();
             //startupErrors.push_back(QString(e.what()));
         }
 
@@ -53,7 +51,7 @@ public:
     template <class T>
     T& getModuleReference() const
     {
-        MODULE_LIST::const_iterator itr = lst_modules.find(T::getNamePrefix());
+        const auto itr = lst_modules.find(T::getNamePrefix());
         if (itr == lst_modules.end())
             throw std::runtime_error(QString("Модуль %1 не присоединен").arg(T::getNamePrefix()).toStdString().c_str());
         if (itr.value()->lst_device.isEmpty())
@@ -67,19 +65,14 @@ public:
     }
 
 public slots:
-    int PODKL_14N736(int KR, int main_MKO, const QString& MKO);
-    int OTKL_14N736();
-    int PODKL_14N737(int KR, const QString& MKO);
-    int OTKL_14N737(int KR, QString MKO);
     int VYDAT_KMD_SH(const QString& device, int KR, const QString& command);
     int SNYAT_KMD_SH(QString address, int KR, QString command);
     QString getXML();
 private:
     //The type of list connected modules
-    using MODULE_LIST = QMap<QString, HWModule*>;
+    std::map<QString, MKOModule*> lst_modules;
     //List of modules
-    MODULE_LIST lst_modules;
-    std::shared_ptr<TMDBController> db_ctrl;
+
 signals:
     /**
     *	\brief Àñèíõðîííûé ñèãíàë, ïåðåäàþùèé êëèåíòó ñîîáùåíèå â æóðíàë

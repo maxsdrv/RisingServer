@@ -22,4 +22,5 @@ endif()
 add_subdirectory("Devices")
 add_subdirectory("Libraries")
 add_subdirectory("Test")
+add_subdirectory("Server")
 

@@ -28,7 +28,7 @@ int main(int argc, char **argv)
     widget.show();*/
     MServerWindow window("Server Settings");
     window.show();
-    MezoninServer test_server;
+    MKOServer test_server;
 
     return QApplication::exec();
 }
